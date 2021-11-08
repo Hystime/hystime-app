@@ -2,5 +2,14 @@
     <string name="app_name">Hystime</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_setting">Setting</string>
+
+    <!--    Setting Strings-->
+    <string name="setting_backend_key">backend_url</string>
+    <string name="setting_backend_title">GraphQL Endpoint</string>
+    <string name="setting_backend_summary">Set backend GraphQL endpoint.</string>
+    <string name="setting_auth_key">auth_code</string>
+    <string name="setting_auth_title">Authorization Code</string>
+    <string name="setting_auth_summary">Set endpoint authorization code.</string>
+
 </resources>

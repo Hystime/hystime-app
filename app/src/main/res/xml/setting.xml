@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory>
+        
+    </PreferenceCategory>
+    <EditTextPreference
+        app:key="@string/setting_backend_key"
+        app:summary="@string/setting_backend_summary"
+        app:title="@string/setting_backend_title" />
+
+    <EditTextPreference
+        app:key="@string/setting_auth_key"
+        app:summary="@string/setting_auth_summary"
+        app:title="@string/setting_auth_title">
+
+    </EditTextPreference>
+
+</PreferenceScreen>
