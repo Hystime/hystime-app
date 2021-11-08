@@ -1,31 +1,12 @@
 package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import top.learningman.hystime.databinding.FragmentSettingBinding
+import androidx.preference.PreferenceFragmentCompat
+import top.learningman.hystime.R
 
-class SettingFragment : Fragment() {
+class SettingFragment : PreferenceFragmentCompat() {
 
-    private var _binding: FragmentSettingBinding? = null
-
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentSettingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.setting, rootKey)
     }
 }

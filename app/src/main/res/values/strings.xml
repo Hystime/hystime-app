@@ -5,11 +5,17 @@
     <string name="title_setting">Setting</string>
 
     <!--    Setting Strings-->
+    <string name="setting_category_server">Server Setting</string>
     <string name="setting_backend_key">backend_url</string>
     <string name="setting_backend_title">GraphQL Endpoint</string>
     <string name="setting_backend_summary">Set backend GraphQL endpoint.</string>
     <string name="setting_auth_key">auth_code</string>
     <string name="setting_auth_title">Authorization Code</string>
     <string name="setting_auth_summary">Set endpoint authorization code.</string>
+
+    <string name="setting_category_user">User Setting</string>
+    <string name="setting_user_key">user</string>
+    <string name="setting_user_title">User</string>
+    <string name="setting_user_summary">Set username</string>
 
 </resources>
