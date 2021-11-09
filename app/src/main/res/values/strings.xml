@@ -4,8 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_setting">Setting</string>
 
-    <!--    Setting Strings-->
-    <string name="setting_category_server">Server Setting</string>
+    <!-- Setting Strings -->
+    <string name="setting_category_server">Server</string>
     <string name="setting_backend_key">backend_url</string>
     <string name="setting_backend_title">GraphQL Endpoint</string>
     <string name="setting_backend_summary">Set backend GraphQL endpoint.</string>
@@ -13,9 +13,15 @@
     <string name="setting_auth_title">Authorization Code</string>
     <string name="setting_auth_summary">Set endpoint authorization code.</string>
 
-    <string name="setting_category_user">User Setting</string>
+    <string name="setting_category_user">User</string>
     <string name="setting_user_key">user</string>
-    <string name="setting_user_title">User</string>
+    <string name="setting_user_title">Username</string>
     <string name="setting_user_summary">Set username</string>
+
+    <string name="setting_category_app">Application</string>
+    <string name="setting_fetch_policy_title">Always Fetch</string>
+    <string name="setting_fetch_policy_key">fetch_policy</string>
+    <string name="setting_fetch_policy_summary_on">Always fetch data from backend.</string>
+    <string name="setting_fetch_policy_summary_off">Sync data only when first opened.</string>
 
 </resources>
