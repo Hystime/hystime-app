@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
-                R.id.navigation_dashboard-> {
+                R.id.navigation_dashboard -> {
                     viewPager.currentItem = 0
                     return true
                 }
-                R.id.navigation_home  -> {
+                R.id.navigation_home -> {
                     viewPager.currentItem = 1
                     return true
                 }
@@ -56,6 +56,13 @@ class MainActivity : AppCompatActivity() {
                 2 -> supportActionBar?.title = getString(R.string.title_setting)
                 else -> throw IllegalArgumentException("Invalid position")
             }
+//            if (position == 1) {
+//                supportActionBar?.hide()
+//            } else {
+//                if (supportActionBar?.isShowing == false) {
+//                    supportActionBar?.show()
+//                }
+//            }
         }
     }
 
