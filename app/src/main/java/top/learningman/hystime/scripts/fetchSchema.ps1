@@ -1,0 +1,1 @@
+gradlew downloadApolloSchema --endpoint="http://localhost:4000/" --schema="app/src/main/java/top/learningman/hystime/graphql/schema/schema.graphqls"
