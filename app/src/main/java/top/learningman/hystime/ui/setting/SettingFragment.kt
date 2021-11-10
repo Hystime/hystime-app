@@ -1,6 +1,7 @@
 package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.R
 

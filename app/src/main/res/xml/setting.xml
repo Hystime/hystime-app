@@ -28,10 +28,12 @@
     <PreferenceCategory app:title="@string/setting_category_app">
         <SwitchPreference
             app:defaultValue="true"
+            app:enabled="false"
             app:icon="@drawable/ic_network_black_24dp"
             app:key="@string/setting_fetch_policy_key"
             app:summaryOff="@string/setting_fetch_policy_summary_off"
             app:summaryOn="@string/setting_fetch_policy_summary_on"
             app:title="@string/setting_fetch_policy_title" />
+        <!-- TODO:Support native mode -->
     </PreferenceCategory>
 </PreferenceScreen>
