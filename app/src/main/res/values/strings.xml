@@ -24,4 +24,8 @@
     <string name="setting_fetch_policy_summary_on">Always fetch data from backend.</string>
     <string name="setting_fetch_policy_summary_off">Sync data only when first opened.</string>
 
+    <!-- Tab Strings -->
+    <string name="tab_normal_timing">Normal</string>
+    <string name="tab_pomodoro_timing">Pomodoro</string>
+
 </resources>

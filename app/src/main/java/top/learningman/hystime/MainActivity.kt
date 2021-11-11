@@ -56,13 +56,13 @@ class MainActivity : AppCompatActivity() {
                 2 -> supportActionBar?.title = getString(R.string.title_setting)
                 else -> throw IllegalArgumentException("Invalid position")
             }
-//            if (position == 1) {
-//                supportActionBar?.hide()
-//            } else {
-//                if (supportActionBar?.isShowing == false) {
-//                    supportActionBar?.show()
-//                }
-//            }
+            if (position == 1) {
+                supportActionBar?.hide()
+            } else {
+                if (supportActionBar?.isShowing == false) {
+                    supportActionBar?.show()
+                }
+            }
         }
     }
 
@@ -72,9 +72,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)
-
         viewPager = binding.pager
 
         val pagerAdapter = MainPagerAdapter(this)
