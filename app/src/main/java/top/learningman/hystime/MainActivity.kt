@@ -1,7 +1,9 @@
 package top.learningman.hystime
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.tabs.TabLayout
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.home.HomeFragment
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
 
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -51,19 +55,38 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Invalid position")
             }
             when (position) {
-                0 -> supportActionBar?.title = getString(R.string.title_dashboard)
-                1 -> supportActionBar?.title = getString(R.string.title_home)
-                2 -> supportActionBar?.title = getString(R.string.title_setting)
+                0 -> {
+                    showActionBar()
+                    supportActionBar?.title = getString(R.string.title_dashboard)
+                }
+                1 -> hideActionBar()
+                2 -> {
+                    showActionBar()
+                    supportActionBar?.title = getString(R.string.title_setting)
+                }
                 else -> throw IllegalArgumentException("Invalid position")
             }
-            if (position == 1) {
-                supportActionBar?.hide()
-            } else {
-                if (supportActionBar?.isShowing == false) {
-                    supportActionBar?.show()
-                }
-            }
         }
+
+        fun showActionBar() {
+            tabLayout.visibility = TabLayout.GONE
+            supportActionBar?.show()
+
+        }
+
+        fun hideActionBar() {
+            tabLayout.visibility = TabLayout.VISIBLE
+            supportActionBar?.hide()
+        }
+
+//        override fun onPageScrolled(
+//            position: Int,
+//            positionOffset: Float,
+//            positionOffsetPixels: Int
+//        ) {
+//            Log.d("Scroll","$position $positionOffset $positionOffsetPixels")
+//            super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+
+        tabLayout = binding.tabLayout
 
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)
@@ -91,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment =
             when (position) {
                 0 -> DashboardFragment()
-                1 -> HomeFragment()
+                1 -> HomeFragment(tabLayout)
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
