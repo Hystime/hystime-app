@@ -78,15 +78,6 @@ class MainActivity : AppCompatActivity() {
             tabLayout.visibility = TabLayout.VISIBLE
             supportActionBar?.hide()
         }
-
-//        override fun onPageScrolled(
-//            position: Int,
-//            positionOffset: Float,
-//            positionOffsetPixels: Int
-//        ) {
-//            Log.d("Scroll","$position $positionOffset $positionOffsetPixels")
-//            super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
