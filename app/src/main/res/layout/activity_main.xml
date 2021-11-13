@@ -27,9 +27,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="?attr/colorPrimary"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"
-        app:tabTextAppearance="@style/TextAppearance.AppCompat.Title" />
+        app:tabTextAppearance="@style/TextAppearance.HysTime.TabLayout" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
