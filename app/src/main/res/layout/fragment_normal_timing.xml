@@ -5,9 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.timing.NormalTimingFragment">
 
-    <TextView
+    <top.learningman.hystime.view.TimerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>

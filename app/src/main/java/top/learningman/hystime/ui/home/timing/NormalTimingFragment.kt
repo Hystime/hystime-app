@@ -10,10 +10,6 @@ import top.learningman.hystime.R
 
 class NormalTimingFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NormalTimingFragment()
-    }
-
     private lateinit var viewModel: NormalTimingViewModel
 
     override fun onCreateView(
@@ -25,7 +21,7 @@ class NormalTimingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NormalTimingViewModel::class.java)
+        viewModel = ViewModelProvider(this)[NormalTimingViewModel::class.java]
         // TODO: Use the ViewModel
     }
 
