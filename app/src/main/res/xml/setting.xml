@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/setting_category_server">
         <EditTextPreference
             app:icon="@drawable/ic_graphql_black_24dp"
@@ -36,5 +36,12 @@
             app:summaryOn="@string/setting_fetch_policy_summary_on"
             app:title="@string/setting_fetch_policy_title" />
         <!-- TODO:Support native mode -->
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/setting_category_other">
+        <Preference
+            app:icon="@drawable/ic_about_black_24dp"
+            app:key="@string/setting_about_key"
+            app:summary="Version"
+            app:title="@string/setting_about_title" />
     </PreferenceCategory>
 </PreferenceScreen>
