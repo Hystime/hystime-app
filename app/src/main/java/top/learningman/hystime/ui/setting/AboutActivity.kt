@@ -25,7 +25,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "kotlin",
                     "JetBrains",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://github.com/JetBrains/kotlin"
                 )
             )
@@ -33,7 +33,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "MultiType",
                     "drakeet",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://github.com/drakeet/MultiType"
                 )
             )
@@ -41,7 +41,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "about-page",
                     "drakeet",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://github.com/drakeet/about-page"
                 )
             )
@@ -49,7 +49,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "AndroidX",
                     "Google",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://source.google.com"
                 )
             )
@@ -57,7 +57,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "Android Jetpack",
                     "Google",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://source.google.com"
                 )
             )
@@ -65,7 +65,7 @@ class AboutActivity : AbsAboutActivity() {
                 License(
                     "material-components-android",
                     "Google",
-                    License.APACHE_2,
+                    License.Apache_2_0,
                     "https://github.com/material-components/material-components-android"
                 )
             )

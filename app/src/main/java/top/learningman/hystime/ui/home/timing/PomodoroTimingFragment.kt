@@ -1,12 +1,11 @@
 package top.learningman.hystime.ui.home.timing
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import top.learningman.hystime.R
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import top.learningman.hystime.databinding.FragmentPomodoroTimingBinding
 import top.learningman.hystime.ui.home.HomeViewModel
 

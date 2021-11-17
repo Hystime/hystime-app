@@ -20,19 +20,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/default_target" />
+            android:layout_marginBottom="@dimen/timing_vertical_margin"
+            android:text="@string/default_target"
+            android:textSize="20sp" />
 
         <top.learningman.hystime.view.TimerView
+            android:id="@+id/timer"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="300dp"
+            android:layout_marginHorizontal="60dp"
             app:type="normal" />
 
-        <androidx.appcompat.widget.AppCompatButton
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
+            android:text="@string/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/start" />
+            android:layout_marginTop="@dimen/timing_vertical_margin"
+            android:textAllCaps="false"
+            app:cornerRadius="5dp" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 

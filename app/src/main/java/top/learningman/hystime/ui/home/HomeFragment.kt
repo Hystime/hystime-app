@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,12 +12,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentHomeBinding
-import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.home.timing.NormalTimingFragment
 import top.learningman.hystime.ui.home.timing.PomodoroTimingFragment
-import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.utils.FadePageTransformer
-import kotlin.coroutines.coroutineContext
 
 class HomeFragment(private val tabLayout: TabLayout) : Fragment() {
 
