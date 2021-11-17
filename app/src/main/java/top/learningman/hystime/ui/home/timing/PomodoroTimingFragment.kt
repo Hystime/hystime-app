@@ -7,26 +7,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import top.learningman.hystime.R
+import top.learningman.hystime.databinding.FragmentPomodoroTimingBinding
+import top.learningman.hystime.ui.home.HomeViewModel
 
 class PomodoroTimingFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PomodoroTimingFragment()
+    private val model: HomeViewModel by lazy {
+        ViewModelProvider(requireActivity())[HomeViewModel::class.java]
     }
 
-    private lateinit var viewModel: PomodoroTimingViewModel
+    private lateinit var binding: FragmentPomodoroTimingBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_pomodoro_timing, container, false)
+    ): View {
+        binding = FragmentPomodoroTimingBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PomodoroTimingViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        model.target.observe(viewLifecycleOwner) { target ->
+            binding.target.text = target
+        }
     }
+
 
 }

@@ -1,15 +1,13 @@
 package top.learningman.hystime
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import top.learningman.hystime.databinding.ActivityMainBinding

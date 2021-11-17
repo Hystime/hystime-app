@@ -27,6 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="?attr/colorPrimary"
+        app:tabInlineLabel="true"
         app:tabSelectedTextColor="?attr/colorPrimary"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"

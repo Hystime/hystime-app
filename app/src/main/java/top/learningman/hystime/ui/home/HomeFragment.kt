@@ -17,14 +17,14 @@ import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.home.timing.NormalTimingFragment
 import top.learningman.hystime.ui.home.timing.PomodoroTimingFragment
 import top.learningman.hystime.ui.setting.SettingFragment
+import top.learningman.hystime.utils.FadePageTransformer
 import kotlin.coroutines.coroutineContext
 
-class HomeFragment(val tabLayout: TabLayout) : Fragment() {
+class HomeFragment(private val tabLayout: TabLayout) : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
 
-    private lateinit var timingAdapter: TimingAdapter
     private lateinit var viewPager: ViewPager2
 
     private val binding get() = _binding!!
@@ -34,12 +34,12 @@ class HomeFragment(val tabLayout: TabLayout) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        timingAdapter = TimingAdapter(this)
         viewPager = binding.pager
-        viewPager.adapter = timingAdapter
+        viewPager.adapter = TimingAdapter(this)
+        viewPager.setPageTransformer(FadePageTransformer())
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = getFragmentName(position)
@@ -61,7 +61,7 @@ class HomeFragment(val tabLayout: TabLayout) : Fragment() {
         }
     }
 
-    fun getFragmentName(position: Int): String {
+    private fun getFragmentName(position: Int): String {
         return when (position) {
             0 -> context?.getString(R.string.tab_normal_timing) ?: ""
             1 -> context?.getString(R.string.tab_pomodoro_timing) ?: ""
