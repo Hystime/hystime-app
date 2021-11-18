@@ -15,7 +15,7 @@ enum class TimerViewType {
     POMODORO
 }
 
-class TimerView(context: Context) : View(context) {
+class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private lateinit var mType: TimerViewType
     private var mArcRectF: RectF? = null
     private var angle = 0f
@@ -50,7 +50,7 @@ class TimerView(context: Context) : View(context) {
         strokeWidth = 20F
     }
 
-    constructor(context: Context, attrs: AttributeSet) : this(context) {
+    init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView)
         mType = typedArray.getInt(R.styleable.TimerView_type, 0).let {
             when (it) {
@@ -60,9 +60,9 @@ class TimerView(context: Context) : View(context) {
             }
         }
         typedArray.recycle()
-        //FIXME: will not return correct view to layout inflater
     }
 
+    constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : this(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : this(
         context,
