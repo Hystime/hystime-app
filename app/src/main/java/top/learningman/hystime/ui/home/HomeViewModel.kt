@@ -7,7 +7,7 @@ import java.util.*
 
 class HomeViewModel : ViewModel() {
 
-    enum class timerStatus {
+    enum class TimerStatus {
         STOP,
         PAUSE,
         RUNNING
@@ -18,32 +18,32 @@ class HomeViewModel : ViewModel() {
     }
     val target: LiveData<String> = _target
 
-    private val _status = MutableLiveData<timerStatus>().apply {
-        value = timerStatus.STOP
+    private val _status = MutableLiveData<TimerStatus>().apply {
+        value = TimerStatus.STOP
     }
-    val status: LiveData<timerStatus> = _status
+    val status: LiveData<TimerStatus> = _status
 
     private var _targetStart: Long? = null
     private var _pauseStart: Long? = null
     private var _pauseLength: Long = 0
 
     fun start() {
-        _status.value = timerStatus.RUNNING
+        _status.value = TimerStatus.RUNNING
         _targetStart = Date().time
     }
 
     fun pause() {
-        _status.value = timerStatus.PAUSE
+        _status.value = TimerStatus.PAUSE
         _pauseStart = Date().time
     }
 
     fun resume() {
-        _status.value = timerStatus.RUNNING
+        _status.value = TimerStatus.RUNNING
         _pauseLength += Date().time - _pauseStart!!
     }
 
     fun stop() {
-        _status.value = timerStatus.STOP
+        _status.value = TimerStatus.STOP
         _targetStart = null
         _pauseLength = 0
     }

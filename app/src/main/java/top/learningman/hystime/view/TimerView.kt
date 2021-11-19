@@ -1,6 +1,5 @@
 package top.learningman.hystime.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.DashPathEffect
@@ -9,6 +8,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.Transformation
 import top.learningman.hystime.R
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -17,8 +18,16 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         POMODORO
     }
 
-    val progressAnimation = object : Animation() {
+    class ProgressAnimation(val view: TimerView, newAngle: Float) : Animation() {
+        var diffAngle: Float = 0f
 
+        init {
+            diffAngle = newAngle - view.angle
+        }
+
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            view.angle = diffAngle * interpolatedTime + view.angle
+        }
     }
 
     private var cx: Float = 0f
@@ -27,7 +36,11 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private var mType: TimerViewType
     private var mArcRectF: RectF = RectF()
-    private var angle = 0f
+    var angle = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private var mCurrentPaint: Paint
     private var mCurrentBasePaint: Paint
@@ -111,5 +124,12 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         canvas.drawArc(mArcRectF, -90f, angle, false, mCurrentPaint)
     }
 
-
+    fun setAngleWithAnimation(angle: Float) {
+        val progressAnimation = ProgressAnimation(this, angle)
+        progressAnimation.duration = 1000
+        progressAnimation.interpolator = LinearInterpolator()
+        progressAnimation.fillAfter = true
+        progressAnimation.fillBefore = false
+        startAnimation(progressAnimation)
+    }
 }
