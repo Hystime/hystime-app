@@ -37,6 +37,14 @@
             app:title="@string/setting_fetch_policy_title" />
         <!-- TODO:Support native mode -->
     </PreferenceCategory>
+    <PreferenceCategory app:title="@string/setting_category_timer">
+        <PreferenceScreen app:title="@string/setting_screen_normal">
+
+        </PreferenceScreen>
+        <PreferenceScreen app:title="@string/setting_screen_pomodoro">
+            
+        </PreferenceScreen>
+    </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_other">
         <Preference
             app:icon="@drawable/ic_about_black_24dp"

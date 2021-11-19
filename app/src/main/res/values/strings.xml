@@ -6,27 +6,40 @@
 
     <!-- Setting Strings -->
     <string name="setting_category_server">Server</string>
-    <string name="setting_backend_key">backend_url</string>
+    <string name="setting_backend_key" translatable="false">backend_url</string>
     <string name="setting_backend_title">GraphQL Endpoint</string>
     <string name="setting_backend_summary">Set backend GraphQL endpoint.</string>
-    <string name="setting_auth_key">auth_code</string>
+    <string name="setting_auth_key" translatable="false">auth_code</string>
     <string name="setting_auth_title">Authorization Code</string>
     <string name="setting_auth_summary">Set endpoint authorization code.</string>
 
     <string name="setting_category_user">User</string>
-    <string name="setting_user_key">user</string>
+    <string name="setting_user_key" translatable="false">user</string>
     <string name="setting_user_title">Username</string>
     <string name="setting_user_summary">Set username</string>
 
     <string name="setting_category_app">Application</string>
     <string name="setting_fetch_policy_title">Always Fetch</string>
-    <string name="setting_fetch_policy_key">fetch_policy</string>
+    <string name="setting_fetch_policy_key" translatable="false">fetch_policy</string>
     <string name="setting_fetch_policy_summary_on">Always fetch data from backend.</string>
     <string name="setting_fetch_policy_summary_off">Sync data only when first opened.</string>
 
+    <string name="setting_category_timer">Timer</string>
+
+    <string name="setting_screen_normal">Normal Timer Setting</string>
+    <string name="setting_normal_length_key" translatable="false">normal_length</string>
+    <string name="setting_normal_length_title">Focus time length</string>
+
+    <string name="setting_screen_pomodoro">Pomodoro Timer Setting</string>
+    <string name="setting_pomodoro_length_key" translatable="false">pomodoro_length</string>
+    <string name="setting_pomodoro_length_title">Pomodoro time length</string>
+    <string name="setting_pomodoro_short_break_key" translatable="false">pomodoro_short_break</string>
+    <string name="setting_pomodoro_short_break_title">Short break length</string>
+
+
     <string name="setting_category_other">Other</string>
     <string name="setting_about_title">About</string>
-    <string name="setting_about_key">about</string>
+    <string name="setting_about_key" translatable="false">about</string>
 
     <!-- Tab Strings -->
     <string name="tab_normal_timing">Normal</string>
@@ -37,6 +50,6 @@
     <string name="terminate">Terminate</string>
 
     <!-- Place Holder -->
-    <string name="default_target">Timing</string>
+    <string name="default_target" translatable="false">Timing</string>
 
 </resources>

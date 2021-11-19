@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hystime</string>
+    <string name="title_home">计时</string>
+    <string name="title_dashboard">控制台</string>
+    <string name="title_setting">设置</string>
+    <string name="setting_category_server">服务器</string>
+    <string name="setting_backend_title">GraphQL 端点</string>
+    <string name="setting_backend_summary">设置 GraphQL 端点</string>
+    <string name="setting_auth_title">授权码</string>
+    <string name="setting_auth_summary">设置端点授权码</string>
+    <string name="setting_category_user">用户</string>
+    <string name="setting_user_title">用户名</string>
+    <string name="setting_user_summary">设置用户名</string>
+    <string name="setting_category_app">应用</string>
+    <string name="setting_fetch_policy_title">总是获取</string>
+    <string name="setting_fetch_policy_summary_on">总是从后端获取数据。</string>
+    <string name="setting_fetch_policy_summary_off">只在首次打开时同步数据</string>
+    <string name="setting_category_timer">计时器</string>
+    <string name="setting_screen_normal">常规计时器设置</string>
+    <string name="setting_screen_pomodoro">番茄计时器设置</string>
+    <string name="setting_category_other">其他</string>
+    <string name="setting_about_title">关于</string>
+    <string name="tab_normal_timing">常规</string>
+    <string name="tab_pomodoro_timing">番茄</string>
+    <string name="start">开始</string>
+    <string name="pause">暂停</string>
+    <string name="terminate">终止</string>
+    <string name="setting_normal_length_title">专注时间长度</string>
+    <string name="setting_pomodoro_length_title">番茄时间长度</string>
+    <string name="setting_pomodoro_short_break_title">短休息长度</string>
+</resources>

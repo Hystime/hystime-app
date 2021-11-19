@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
+import kotlin.concurrent.timer
 
 class HomeViewModel : ViewModel() {
 
@@ -23,13 +24,24 @@ class HomeViewModel : ViewModel() {
     }
     val status: LiveData<TimerStatus> = _status
 
+    private val _normalTimerString = MutableLiveData<String>()
+    val normalTimerString: LiveData<String> = _normalTimerString
+
+    private val _pomodoroTimerString = MutableLiveData<String>()
+    val pomodoroTimerString: LiveData<String> = _pomodoroTimerString
+
     private var _targetStart: Long? = null
     private var _pauseStart: Long? = null
     private var _pauseLength: Long = 0
 
+    private var _timer: Timer? = null
+
     fun start() {
         _status.value = TimerStatus.RUNNING
         _targetStart = Date().time
+        _timer = timer("Timer", true, 0.toLong(), 1000.toLong()) {
+            
+        }
     }
 
     fun pause() {
@@ -48,11 +60,15 @@ class HomeViewModel : ViewModel() {
         _pauseLength = 0
     }
 
-    fun getTimeString(): String {
+    fun getNormalTimeString(): String {
         val time = (Date().time - _targetStart!! - _pauseLength) / 1000
         val seconds = time % 60
         val minutes = time / 60
         return "$minutes:$seconds"
+    }
+
+    fun getPomodoroTimeString(): String {
+        return ""
     }
 
 }
