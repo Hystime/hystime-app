@@ -8,17 +8,29 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.Animation
 import top.learningman.hystime.R
 
-enum class TimerViewType {
-    NORMAL,
-    POMODORO
-}
-
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
-    private lateinit var mType: TimerViewType
-    private var mArcRectF: RectF? = null
+    enum class TimerViewType {
+        NORMAL,
+        POMODORO
+    }
+
+    val progressAnimation = object : Animation() {
+
+    }
+
+    private var cx: Float = 0f
+    private var cy: Float = 0f
+    private var radius: Float = 0f
+
+    private var mType: TimerViewType
+    private var mArcRectF: RectF = RectF()
     private var angle = 0f
+
+    private var mCurrentPaint: Paint
+    private var mCurrentBasePaint: Paint
 
     private val mPomodoroBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
@@ -60,6 +72,18 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             }
         }
         typedArray.recycle()
+
+        when (mType) {
+            TimerViewType.NORMAL -> {
+                mCurrentPaint = mNormalCirclePaint
+                mCurrentBasePaint = mNormalBaseCirclePaint
+            }
+            TimerViewType.POMODORO -> {
+                mCurrentPaint = mPomodoroCirclePaint
+                mCurrentBasePaint = mPomodoroBaseCirclePaint
+            }
+        }
+
     }
 
     constructor(context: Context) : this(context, null)
@@ -70,36 +94,22 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         defStyleAttr
     )
 
-    @SuppressLint("DrawAllocation")
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        mArcRectF.set(cx - radius, cy - radius, cx + radius, cy + radius)
+        cx = width / 2f
+        cy = height / 2f
+        radius = cx.coerceAtMost(cy) - 20
+
+    }
+
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val cx = width / 2f
-        val cy = height / 2f
-        val radius = cx.coerceAtMost(cy) - 20
 
-        if (mArcRectF == null) {
-            mArcRectF = RectF(cx - radius, cy - radius, cx + radius, cy + radius)
-        }
-
-        when (mType) {
-            TimerViewType.NORMAL -> {
-                canvas.drawCircle(cx, cy, radius, mNormalBaseCirclePaint)
-                canvas.drawArc(mArcRectF!!, -90f, angle, false, mNormalCirclePaint)
-            }
-            TimerViewType.POMODORO -> {
-                canvas.drawCircle(cx, cy, radius, mPomodoroBaseCirclePaint)
-                canvas.drawArc(mArcRectF!!, -90f, angle, false, mPomodoroCirclePaint)
-            }
-        }
+        canvas.drawCircle(cx, cy, radius, mCurrentBasePaint)
+        canvas.drawArc(mArcRectF, -90f, angle, false, mCurrentPaint)
     }
 
-    fun update(angle: Float) {
-        this.angle = angle
-        postInvalidate()
-    }
 
-    fun update(percent: Int) {
-        this.angle = percent * 3.6f
-        postInvalidate()
-    }
 }
