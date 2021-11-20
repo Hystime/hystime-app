@@ -14,9 +14,7 @@
             app:key="@string/setting_auth_key"
             app:summary="@string/setting_auth_summary"
             app:title="@string/setting_auth_title"
-            app:useSimpleSummaryProvider="true">
-
-        </EditTextPreference>
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_user">
         <EditTextPreference
@@ -39,10 +37,14 @@
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_timer">
         <PreferenceScreen app:title="@string/setting_screen_normal">
-
+            <top.learningman.hystime.utils.NumberPickerPreference
+                android:defaultValue="40"
+                android:key="@string/setting_normal_length_key"
+                android:title="@string/setting_normal_length_title" />
         </PreferenceScreen>
+<!--        FIXME: https://developer.android.com/guide/topics/ui/settings/organize-your-settings-->
         <PreferenceScreen app:title="@string/setting_screen_pomodoro">
-            
+
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_other">
