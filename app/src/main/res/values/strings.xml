@@ -26,13 +26,15 @@
 
     <string name="setting_category_timer">Timer</string>
 
-    <string name="setting_screen_normal">Normal Timer</string>
-    <string name="setting_screen_normal_summary" translatable="false">Normal timer setting</string>
+    <string name="setting_pref_normal_key" translatable="false">normal_timer_pref</string>
+    <string name="setting_pref_normal_title">Normal Timer</string>
+    <string name="setting_pref_normal_summary">Normal timer setting</string>
     <string name="setting_normal_length_key" translatable="false">normal_length</string>
     <string name="setting_normal_length_title">Focus time length</string>
 
-    <string name="setting_screen_pomodoro">Pomodoro Timer</string>
-    <string name="setting_screen_pomodoro_summary">Pomodoro timer setting</string>
+    <string name="setting_pref_pomodoro_key" translatable="false">pomodoro_timer_pref</string>
+    <string name="setting_pref_pomodoro_title">Pomodoro Timer</string>
+    <string name="setting_pref_pomodoro_summary">Pomodoro timer setting</string>
     <string name="setting_pomodoro_length_key" translatable="false">pomodoro_length</string>
     <string name="setting_pomodoro_length_title">Pomodoro time length</string>
     <string name="setting_pomodoro_short_break_key" translatable="false">pomodoro_short_break</string>

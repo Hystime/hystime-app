@@ -70,4 +70,5 @@ dependencies {
     // About Page
     implementation 'com.github.Zxilly:about-page:5e4d1ac9de'
     implementation 'com.drakeet.multitype:multitype:4.3.0'
+    implementation 'androidx.preference:preference:1.1.1'
 }

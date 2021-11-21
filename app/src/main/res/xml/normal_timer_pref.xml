@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <top.learningman.hystime.utils.NumberPickerPreference-->
+<!--        android:defaultValue="40"-->
+<!--        android:key="@string/setting_normal_length_key"-->
+<!--        android:title="@string/setting_normal_length_title" />-->
+</PreferenceScreen>

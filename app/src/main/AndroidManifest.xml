@@ -10,8 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hystime">
         <activity
+            android:name=".ui.setting.SettingActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            />
+        <activity
             android:name=".ui.setting.AboutActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
