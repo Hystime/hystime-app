@@ -12,7 +12,6 @@
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
             />
         <activity
             android:name=".ui.setting.AboutActivity"

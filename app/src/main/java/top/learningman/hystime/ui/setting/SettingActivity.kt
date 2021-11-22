@@ -1,6 +1,8 @@
 package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import androidx.annotation.XmlRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
@@ -17,7 +19,7 @@ class SettingActivity : AppCompatActivity() {
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
-        setContentView(R.layout.settings_activity)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onResume() {
@@ -26,19 +28,29 @@ class SettingActivity : AppCompatActivity() {
             if (it == 0) {
                 throw Error("Not found a valid xml ID in Intent")
             }
-            supportFragmentManager.beginTransaction().replace(
-                R.id.settings,
-                SettingsFragment(it)
-            ).commit()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.settings, SettingsFragment(it))
+                .commit()
 
-            //FIXME: not display title
-            supportActionBar?.setDisplayShowTitleEnabled(true)
-            supportActionBar?.setHomeButtonEnabled(true)
-            supportActionBar?.title = when (it) {
-                R.xml.normal_timer_pref ->getString(R.string.setting_pref_normal_title)
-                R.xml.pomodoro_timer_pref -> getString(R.string.setting_pref_pomodoro_title)
-                else -> throw Error("Not found a valid xml ID in Intent")
+            supportActionBar?.apply {
+                title = when (it) {
+                    R.xml.normal_timer_pref ->getString(R.string.setting_pref_normal_title)
+                    R.xml.pomodoro_timer_pref -> getString(R.string.setting_pref_pomodoro_title)
+                    else -> throw Error("Not found a valid xml ID in Intent")
+                }
+            }?: Log.d("Setting","Support" +
+                    "bar not found")
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
