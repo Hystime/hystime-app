@@ -16,12 +16,13 @@ import top.learningman.hystime.ui.home.timing.NormalTimingFragment
 import top.learningman.hystime.ui.home.timing.PomodoroTimingFragment
 import top.learningman.hystime.utils.FadePageTransformer
 
-class HomeFragment(private val tabLayout: TabLayout) : Fragment() {
+class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var viewPager: ViewPager2
+    private var tabLayout: TabLayout? = null
 
     private val binding get() = _binding!!
 
@@ -37,11 +38,17 @@ class HomeFragment(private val tabLayout: TabLayout) : Fragment() {
         viewPager.adapter = TimingAdapter(this)
         viewPager.setPageTransformer(FadePageTransformer())
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = getFragmentName(position)
-        }.attach()
+        tabLayout?.let {
+            TabLayoutMediator(it, viewPager) { tab, position ->
+                tab.text = getFragmentName(position)
+            }.attach()
+        }
 
         return binding.root
+    }
+
+    fun setTabLayout(tabLayout: TabLayout) {
+        this.tabLayout = tabLayout
     }
 
     class TimingAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

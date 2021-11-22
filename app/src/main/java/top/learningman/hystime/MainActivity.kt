@@ -105,7 +105,9 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment =
             when (position) {
                 0 -> DashboardFragment()
-                1 -> HomeFragment(tabLayout)
+                1 -> HomeFragment().apply {
+                    setTabLayout(tabLayout)
+                }
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }

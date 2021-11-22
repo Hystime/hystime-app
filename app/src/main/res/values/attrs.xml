@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="TimerView">
         <attr name="type" format="enum">
             <enum name="normal" value="0" />
             <enum name="pomodoro" value="1" />
         </attr>
     </declare-styleable>
+
+
+    <declare-styleable name="NumberPickerPreferenceCompat">
+        <attr name="minValue" format="integer" />
+        <attr name="maxValue" format="integer" />
+        <attr name="unitText" format="string|reference" />
+        <attr name="wrapSelectorWheel" format="boolean" />
+        <attr name="entries" format="reference" tools:ignore="ResourceName" />
+        <attr name="android:entries" />
+    </declare-styleable>
+
 </resources>

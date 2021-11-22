@@ -69,6 +69,14 @@ class AboutActivity : AbsAboutActivity() {
                     "https://github.com/material-components/material-components-android"
                 )
             )
+            add(
+                License(
+                    "NumberPicker",
+                    "ShawnLin013",
+                    License.MIT,
+                    "https://github.com/ShawnLin013/NumberPicker"
+                )
+            )
         }
     }
 }

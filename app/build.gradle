@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "top.learningman.hystime"
         minSdk 28
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -50,15 +50,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-
-    implementation 'androidx.preference:preference-ktx:1.2.0-beta01'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
 
@@ -70,5 +69,6 @@ dependencies {
     // About Page
     implementation 'com.github.Zxilly:about-page:5e4d1ac9de'
     implementation 'com.drakeet.multitype:multitype:4.3.0'
-    implementation 'androidx.preference:preference:1.1.1'
+
+    implementation 'io.github.ShawnLin013:number-picker:2.4.13'
 }
