@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.XmlRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.SettingsActivityBinding
+import top.learningman.hystime.utils.numberPicker.NumberPickerPreference
+import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceDialog
 
 class SettingActivity : AppCompatActivity() {
 
@@ -35,12 +38,14 @@ class SettingActivity : AppCompatActivity() {
 
             supportActionBar?.apply {
                 title = when (it) {
-                    R.xml.normal_timer_pref ->getString(R.string.setting_pref_normal_title)
+                    R.xml.normal_timer_pref -> getString(R.string.setting_pref_normal_title)
                     R.xml.pomodoro_timer_pref -> getString(R.string.setting_pref_pomodoro_title)
                     else -> throw Error("Not found a valid xml ID in Intent")
                 }
-            }?: Log.d("Setting","Support" +
-                    "bar not found")
+            } ?: Log.d(
+                "Setting", "Support" +
+                        "bar not found"
+            )
         }
     }
 
@@ -55,8 +60,23 @@ class SettingActivity : AppCompatActivity() {
     }
 
     class SettingsFragment(@XmlRes val type: Int) : PreferenceFragmentCompat() {
+        @Suppress("PrivatePropertyName")
+        private val DIALOG_FRAGMENT_TAG = "NumberPickerDialog"
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(type, rootKey)
+        }
+
+        override fun onDisplayPreferenceDialog(preference: Preference) {
+            if (parentFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
+                return
+            }
+            if (preference is NumberPickerPreference) {
+                val dialog = NumberPickerPreferenceDialog.newInstance(preference.key)
+                dialog.setTargetFragment(this, 0)
+                dialog.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+            } else
+                super.onDisplayPreferenceDialog(preference)
         }
     }
 }
