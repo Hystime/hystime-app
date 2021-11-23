@@ -78,9 +78,9 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 null
             }
-            f.let {
-                it?.setTargetFragment(this, 0)
-                it?.show(parentFragmentManager, dialogFragmentTag)
+            f?.let {
+                it.setTargetFragment(this, 0)
+                it.show(parentFragmentManager, dialogFragmentTag)
             } ?: super.onDisplayPreferenceDialog(preference)
         }
 
