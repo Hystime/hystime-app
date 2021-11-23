@@ -34,4 +34,7 @@
     <string name="second">秒</string>
     <string name="minute">分钟</string>
     <string name="hour">小时</string>
+    <string name="setting_pomodoro_long_break_title">长休息长度</string>
+    <string name="setting_normal_break_length_title">休息长度</string>
+    <string name="setting_category_timer_setting_title">计时器设置</string>
 </resources>

@@ -39,11 +39,13 @@
         <Preference
             app:key="@string/setting_pref_normal_key"
             app:summary="@string/setting_pref_normal_summary"
-            app:title="@string/setting_pref_normal_title" />
+            app:title="@string/setting_pref_normal_title"
+            app:icon="@drawable/ic_clock_outline_24dp"/>
         <Preference
             app:key="@string/setting_pref_pomodoro_key"
             app:summary="@string/setting_pref_pomodoro_summary"
-            app:title="@string/setting_pref_pomodoro_title" />
+            app:title="@string/setting_pref_pomodoro_title"
+            app:icon="@drawable/ic_tomato_black_24dp"/>
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_other">
         <Preference

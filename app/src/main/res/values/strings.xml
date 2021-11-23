@@ -31,12 +31,15 @@
     <string name="setting_fetch_policy_summary_off">Sync data only when first opened.</string>
 
     <string name="setting_category_timer">Timer</string>
+    <string name="setting_category_timer_setting_title">Timer Setting</string>
 
     <string name="setting_pref_normal_key" translatable="false">normal_timer_pref</string>
     <string name="setting_pref_normal_title">Normal Timer</string>
     <string name="setting_pref_normal_summary">Normal timer setting</string>
     <string name="setting_normal_length_key" translatable="false">normal_length</string>
     <string name="setting_normal_length_title">Focus time length</string>
+    <string name="setting_normal_break_length_key" translatable="false">normal_break_length</string>
+    <string name="setting_normal_break_length_title">Break time length</string>
 
     <string name="setting_pref_pomodoro_key" translatable="false">pomodoro_timer_pref</string>
     <string name="setting_pref_pomodoro_title">Pomodoro Timer</string>
@@ -45,6 +48,8 @@
     <string name="setting_pomodoro_length_title">Pomodoro time length</string>
     <string name="setting_pomodoro_short_break_key" translatable="false">pomodoro_short_break</string>
     <string name="setting_pomodoro_short_break_title">Short break length</string>
+    <string name="setting_pomodoro_long_break_key" translatable="false">pomodoro_long_break</string>
+    <string name="setting_pomodoro_long_break_title">Long break length</string>
 
 
     <string name="setting_category_other">Other</string>

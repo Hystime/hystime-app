@@ -10,7 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
-import top.learningman.hystime.databinding.SettingsActivityBinding
+import top.learningman.hystime.databinding.ActivitySettingsBinding
 import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
 import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceDialogFragmentCompat
 
@@ -19,7 +19,7 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = SettingsActivityBinding.inflate(layoutInflater)
+        val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val toolbar = binding.toolbar
@@ -74,7 +74,7 @@ class SettingActivity : AppCompatActivity() {
                 return
             }
             val f = if (preference is NumberPickerPreferenceCompat) {
-                NumberPickerPreferenceDialogFragmentCompat.newInstance(preference.getKey())
+                NumberPickerPreferenceDialogFragmentCompat.newInstance(preference.key)
             } else {
                 null
             }

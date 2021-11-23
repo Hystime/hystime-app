@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
-        app:key="@string/setting_normal_length_key"
-        app:maxValue="120"
-        app:minValue="1"
-        app:title="@string/setting_normal_length_title"
-        app:unitText="@string/minute" />
+    <PreferenceCategory app:title="@string/setting_category_timer_setting_title">
+        <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
+            app:defaultValue="45"
+            app:key="@string/setting_normal_length_key"
+            app:maxValue="90"
+            app:minValue="1"
+            app:title="@string/setting_normal_length_title"
+            app:unitText="@string/minute" />
+
+        <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
+            app:defaultValue="15"
+            app:key="@string/setting_normal_break_length_key"
+            app:maxValue="30"
+            app:minValue="1"
+            app:title="@string/setting_normal_break_length_title"
+            app:unitText="@string/minute" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
