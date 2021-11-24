@@ -31,6 +31,10 @@ android {
 
     apollo {
         generateKotlinModels.set(true)
+        service("schema") {
+            sourceFolder = "schema"
+            rootPackageName.set("top.learningman.hystime.sdk")
+        }
     }
 }
 

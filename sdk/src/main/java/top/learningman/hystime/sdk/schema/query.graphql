@@ -1,6 +1,18 @@
-query User($username: String!) {
+query GetUserInfo($username: String!) {
     user(username: $username) {
         id
         created_at
+    }
+}
+
+query GetUserTargets($username: String!) {
+    user(username: $username) {
+        id
+        targets {
+            id
+            name
+            type
+            timeSpent
+        }
     }
 }
