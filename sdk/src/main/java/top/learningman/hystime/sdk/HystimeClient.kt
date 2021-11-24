@@ -1,6 +1,8 @@
 package top.learningman.hystime.sdk
 
 import com.apollographql.apollo.ApolloClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -16,6 +18,9 @@ class HystimeClient(endpoint: String, authCode: String) {
                 .addInterceptor(AuthorizationInterceptor())
                 .build()
         ).build()
+
+    private val job = Job()
+    private val scope = CoroutineScope(job)
 
     init {
         this.endpoint = endpoint

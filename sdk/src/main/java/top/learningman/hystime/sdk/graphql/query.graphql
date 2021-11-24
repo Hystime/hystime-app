@@ -16,3 +16,14 @@ query GetUserTargets($username: String!) {
         }
     }
 }
+
+query GetTarget($targetId: ID!) {
+    target(target_id: $targetId) {
+        id
+        created_at
+        name
+        type
+        timeSpent
+    }
+}
+
