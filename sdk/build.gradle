@@ -30,11 +30,12 @@ android {
     }
 
     apollo {
-        generateKotlinModels.set(true)
-        service("schema") {
-            sourceFolder = "schema"
-            rootPackageName.set("top.learningman.hystime.sdk")
-        }
+        generateKotlinModels = true
+
+        graphqlSourceDirectorySet.srcDirs += 'src/main/java/top/learningman/hystime/sdk/graphql'
+        graphqlSourceDirectorySet.exclude("**/*.graphqlconfig")
+        graphqlSourceDirectorySet.exclude("**/*.json")
+
     }
 }
 
