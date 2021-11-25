@@ -1,13 +1,12 @@
-query GetUserInfo($username: String!) {
+query UserInfo($username: String!) {
     user(username: $username) {
         id
         created_at
     }
 }
 
-query GetUserTargets($username: String!) {
+query UserTargets($username: String!) {
     user(username: $username) {
-        id
         targets {
             id
             name
@@ -17,13 +16,36 @@ query GetUserTargets($username: String!) {
     }
 }
 
-query GetTarget($targetId: ID!) {
+query Target($targetId: ID!) {
     target(target_id: $targetId) {
         id
         created_at
         name
         type
         timeSpent
+    }
+}
+
+query TargetTimePieces($targetId: ID!, $first: Int!, $after: String) {
+    target(target_id: $targetId) {
+        timePieces(first: $first, after: $after) {
+            totalCount
+            edges {
+                node {
+                    id
+                    start
+                    duration
+                    type
+                }
+                cursor
+            }
+            pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+            }
+        }
     }
 }
 
