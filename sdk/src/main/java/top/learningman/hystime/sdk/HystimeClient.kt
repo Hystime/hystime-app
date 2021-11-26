@@ -1,16 +1,16 @@
 package top.learningman.hystime.sdk
 
 import TargetQuery
-import TimePiecesQuery
+import TargetTimePiecesQuery
 import UserInfoQuery
 import UserTargetsQuery
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import type.CustomType
+import java.util.*
 
 class HystimeClient(endpoint: String, authCode: String) {
     private val authCode: String
@@ -27,7 +27,9 @@ class HystimeClient(endpoint: String, authCode: String) {
                     chain.proceed(request)
                 }
                 .build()
-        ).build()
+        )
+        .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.dateTimeAdapter)
+        .build()
 
     init {
         if (!endpoint.isUrl()) {
@@ -72,8 +74,8 @@ class HystimeClient(endpoint: String, authCode: String) {
         targetId: String,
         first: Int,
         after: Input<String>
-    ): TimePiecesQuery.TimePieces? {
-        val resp = client.query(TimePiecesQuery(targetId, first, after)).await()
+    ): TargetTimePiecesQuery.TimePieces? {
+        val resp = client.query(TargetTimePiecesQuery(targetId, first, after)).await()
         resp.data?.target?.let {
             return it.timePieces
         }
@@ -83,15 +85,28 @@ class HystimeClient(endpoint: String, authCode: String) {
 
     suspend fun getLastWeekTargetTimePieces(
         targetId: String
-    ):TimePiecesQuery.Node? {
-
+    ): List<TargetTimePiecesQuery.Node> {
+        val pieces = mutableListOf<TargetTimePiecesQuery.Node>()
         while (true) {
-            val resp = client.query(TimePiecesQuery(targetId, 30)).await()
-            resp.data?.target?.timePieces?.let {
+            val resp = client.query(TargetTimePiecesQuery(targetId, 30)).await()
+            resp.data?.target?.timePieces?.let { timePieces ->
+                if (timePieces.totalCount == 0) {
+                    return pieces.toList();
+                }
+                for (nd in timePieces.edges) {
+                    nd.node.let {
+                        if (it.start.inAWeek()) {
+                            pieces.add(nd.node)
+                        } else {
+                            return pieces.toList()
+                        }
+                    }
+                }
+                if (!timePieces.pageInfo.hasNextPage){
+                    return pieces.toList()
+                }
             }
         }
-
-        return null
     }
 }
 
@@ -99,5 +114,17 @@ class HystimeClient(endpoint: String, authCode: String) {
 fun String.isUrl(): Boolean {
     val regex = Regex("^https://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
     return regex.matches(this)
+}
+
+// Check if date in the past week
+fun Date.inAWeek(): Boolean {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    cal.add(Calendar.DAY_OF_YEAR, 7)
+    return cal.time.after(Date())
 }
 

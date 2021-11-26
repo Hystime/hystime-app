@@ -32,10 +32,13 @@ android {
     apollo {
         generateKotlinModels = true
 
+        customTypeMapping = [
+                "DateTime" : "java.util.Date"
+        ]
+
         graphqlSourceDirectorySet.srcDirs += 'src/main/java/top/learningman/hystime/sdk/graphql'
         graphqlSourceDirectorySet.exclude("**/*.graphqlconfig")
         graphqlSourceDirectorySet.exclude("**/*.json")
-
     }
 }
 
