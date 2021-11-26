@@ -84,9 +84,13 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getLastWeekTargetTimePieces(
         targetId: String
     ):TimePiecesQuery.Node? {
-        val resp = client.query(TimePiecesQuery(targetId, 30)).await()
 
-        Log.e("getLastWeekTargetTimePieces", resp.errors.toString())
+        while (true) {
+            val resp = client.query(TimePiecesQuery(targetId, 30)).await()
+            resp.data?.target?.timePieces?.let {
+            }
+        }
+
         return null
     }
 }
