@@ -4,6 +4,7 @@ import TargetQuery
 import TargetTimePiecesQuery
 import UserInfoQuery
 import UserTargetsQuery
+import UserTimePiecesQuery
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
@@ -70,6 +71,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         return null
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     suspend fun getTargetTimePieces(
         targetId: String,
         first: Int,
@@ -83,15 +85,56 @@ class HystimeClient(endpoint: String, authCode: String) {
         return null
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    suspend fun getUserTimePieces(
+        userID: String,
+        first: Int,
+        after: Input<String>
+    ): UserTimePiecesQuery.Timepieces? {
+        val resp = client.query(UserTimePiecesQuery(userID, first, after)).await()
+        resp.data?.let {
+            return it.timepieces
+        }
+        Log.e("getUserTimePieces", resp.errors.toString())
+        return null
+    }
+
+    suspend fun getLastWeekUserTimePieces(
+        userID: String
+    ): List<UserTimePiecesQuery.Node> {
+        val pieces = mutableListOf<UserTimePiecesQuery.Node>()
+        var cursor: Input<String> = Input.absent()
+        while (true) {
+            getUserTimePieces(userID, 30, cursor)?.let { timePieces ->
+                if (timePieces.totalCount == 0) {
+                    return pieces.toList()
+                }
+                for (nd in timePieces.edges) {
+                    nd.node.let {
+                        if (it.start.inAWeek()) {
+                            pieces.add(nd.node)
+                        } else {
+                            return pieces.toList()
+                        }
+                    }
+                    if (!timePieces.pageInfo.hasNextPage) {
+                        return pieces.toList()
+                    }
+                    cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
+                }
+            }
+        }
+    }
+
     suspend fun getLastWeekTargetTimePieces(
         targetId: String
     ): List<TargetTimePiecesQuery.Node> {
         val pieces = mutableListOf<TargetTimePiecesQuery.Node>()
+        var cursor: Input<String> = Input.absent()
         while (true) {
-            val resp = client.query(TargetTimePiecesQuery(targetId, 30)).await()
-            resp.data?.target?.timePieces?.let { timePieces ->
+            getTargetTimePieces(targetId, 30, cursor)?.let { timePieces ->
                 if (timePieces.totalCount == 0) {
-                    return pieces.toList();
+                    return pieces.toList()
                 }
                 for (nd in timePieces.edges) {
                     nd.node.let {
@@ -102,10 +145,11 @@ class HystimeClient(endpoint: String, authCode: String) {
                         }
                     }
                 }
-                if (!timePieces.pageInfo.hasNextPage){
+                if (!timePieces.pageInfo.hasNextPage) {
                     return pieces.toList()
                 }
-            }
+                cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
+            } ?: return pieces.toList()
         }
     }
 }

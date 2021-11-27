@@ -49,3 +49,26 @@ query TargetTimePieces($targetId: ID!, $first: Int!, $after: String) {
     }
 }
 
+query UserTimePieces($userId: ID!, $first: Int!, $after: String) {
+    timepieces(user_id: $userId, first: $first, after: $after) {
+        totalCount
+        edges {
+            node {
+                id
+                start
+                duration
+                type
+            }
+            cursor
+        }
+        pageInfo {
+            startCursor
+            endCursor
+            hasPreviousPage
+            hasNextPage
+        }
+    }
+}
+
+
+
