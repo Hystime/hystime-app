@@ -84,7 +84,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getTargetTimePieces(
         targetID: String,
         first: Int,
-        after: Input<String> = Input.absent()
+        after: Input<String>
     ): TargetTimePiecesQuery.TimePieces? {
         val resp = client.query(TargetTimePiecesQuery(targetID, first, after)).await()
         resp.data?.target?.let {
@@ -98,7 +98,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getUserTimePieces(
         userID: String,
         first: Int,
-        after: Input<String> = Input.absent()
+        after: Input<String>
     ): UserTimePiecesQuery.Timepieces? {
         val resp = client.query(UserTimePiecesQuery(userID, first, after)).await()
         resp.data?.let {
