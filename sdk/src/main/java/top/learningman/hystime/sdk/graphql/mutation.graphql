@@ -1,0 +1,70 @@
+mutation UserCreate($input: UserCreateInput!) {
+    userCreate(input: $input) {
+        id
+        created_at
+        username
+    }
+}
+
+mutation UserUpdate($userId: ID!, $input: UserUpdateInput!) {
+    userUpdate(user_id: $userId, input: $input) {
+        id
+        created_at
+        username
+    }
+}
+
+mutation TargetCreate($userId: ID!, $input: TargetCreateInput!) {
+    targetCreate(user_id: $userId, input: $input) {
+        id
+        created_at
+        name
+        type
+        timeSpent
+    }
+}
+
+mutation TargetUpdate($targetId: ID!, $input: TargetUpdateInput!) {
+    targetUpdate(target_id: $targetId, input: $input) {
+        id
+        created_at
+        name
+        type
+        timeSpent
+    }
+}
+
+mutation TargetDelete($targetId: ID!) {
+    targetDelete(target_id: $targetId)
+}
+
+mutation TimePieceCreate($targetId: String!, $input: TimePieceCreateInput!) {
+    timePieceCreate(target_id: $targetId, input: $input) {
+        id
+        start
+        duration
+        type
+    }
+}
+
+mutation TimePieceUpdate($timepieceId: Int!, $input: TimePieceUpdateInput!) {
+    timePieceUpdate(timepiece_id: $timepieceId, input: $input) {
+        id
+        start
+        duration
+        type
+    }
+}
+
+mutation TimePieceDelete($timepieceId: Int!) {
+    timePieceDelete(timepiece_id: $timepieceId)
+}
+
+mutation TimePiecesCreateForTarget($targetId: String!, $input: [TimePieceCreateInput!]!) {
+    timePiecesCreateForTarget(target_id: $targetId, input: $input) {
+        id
+        start
+        duration
+        type
+    }
+}
