@@ -47,7 +47,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                 }
                 .build()
         )
-        .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.dateTimeAdapter)
+        .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
         .build()
 
     init {

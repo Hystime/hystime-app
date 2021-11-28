@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.*
 
 object ScalarAdapter {
-    val dateTimeAdapter = object : CustomTypeAdapter<Date> {
+    val DateTimeAdapter = object : CustomTypeAdapter<Date> {
         override fun encode(value: Date): CustomTypeValue<*> {
             return CustomTypeValue.GraphQLString(
                 SimpleDateFormat(
