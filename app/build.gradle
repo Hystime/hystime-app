@@ -46,6 +46,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+
+    implementation 'com.apollographql.apollo:apollo-runtime:2.5.9'
+    implementation 'com.apollographql.apollo:apollo-coroutines-support:2.5.9'
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 

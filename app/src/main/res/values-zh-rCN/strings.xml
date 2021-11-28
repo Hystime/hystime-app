@@ -37,4 +37,6 @@
     <string name="setting_pomodoro_long_break_title">长休息长度</string>
     <string name="setting_normal_break_length_title">休息长度</string>
     <string name="setting_category_timer_setting_title">计时器设置</string>
+    <string name="setting_category_server_title_valid">服务器 （有效）</string>
+    <string name="setting_category_server_title_invalid">服务器 （无效）</string>
 </resources>
