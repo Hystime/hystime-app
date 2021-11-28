@@ -5,6 +5,7 @@ import TargetDeleteMutation
 import TargetQuery
 import TargetTimePiecesQuery
 import TargetUpdateMutation
+import TestQuery
 import TimePieceCreateMutation
 import TimePieceDeleteMutation
 import TimePieceUpdateMutation
@@ -23,8 +24,16 @@ import type.*
 import java.util.*
 
 class HystimeClient(endpoint: String, authCode: String) {
+    enum class Status {
+        OK,
+        ERROR,
+        PENDING
+    }
+
     private val authCode: String
     private val endpoint: String
+
+    private var status: Status = Status.PENDING
 
     private val client = ApolloClient.builder()
         .serverUrl(endpoint)
@@ -43,14 +52,29 @@ class HystimeClient(endpoint: String, authCode: String) {
 
     init {
         if (!endpoint.isUrl()) {
-            throw IllegalArgumentException("endpoint is not a valid url")
+            this.status = Status.ERROR
         }
         if (authCode.length != 32) {
-            throw IllegalArgumentException("authCode length must be 32")
+            this.status = Status.ERROR
         }
 
         this.endpoint = endpoint
         this.authCode = authCode
+    }
+
+    suspend fun isValid(): Boolean {
+        return if (status == Status.PENDING) {
+            val test = client.query(TestQuery()).await()
+            if (test.data?.test == true) {
+                status = Status.OK
+                true
+            } else {
+                status = Status.ERROR
+                false
+            }
+        } else {
+            status == Status.OK
+        }
     }
 
     suspend fun getUserInfo(username: String): UserInfoQuery.User? {

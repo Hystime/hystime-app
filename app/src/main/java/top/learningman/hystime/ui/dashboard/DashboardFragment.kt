@@ -1,5 +1,6 @@
 package top.learningman.hystime.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import top.learningman.hystime.data.Target
 import top.learningman.hystime.databinding.FragmentDashboardBinding
+import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 
 class DashboardFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private var _binding: FragmentDashboardBinding? = null
 
-    private lateinit var mRecyclerView : RecyclerView
+    private lateinit var mRecyclerView: RecyclerView
 
     private val binding get() = _binding!!
 
@@ -30,13 +33,11 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // https://www.section.io/engineering-education/implementing-mvvm-architecture-in-android-using-kotlin/
         mRecyclerView = binding.recyclerView
 
-//        val textView: TextView = binding.textDashboard
-//        dashboardViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
+        dashboardViewModel.targetList.observe(viewLifecycleOwner) {
+            mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireContext())
+        }
 
         return root
     }
@@ -44,5 +45,35 @@ class DashboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    class TargetRecyclerAdapter(
+        val viewModel: DashboardViewModel,
+        private val list: List<Target>,
+        val context: Context
+    ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
+        inner class TargetViewHolder(private val binding: View) : RecyclerView.ViewHolder(binding) {
+            fun bind(target: Target) {
+                binding
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetViewHolder {
+            val root = ItemDashboardTargetBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return TargetViewHolder(root.root)
+        }
+
+        override fun onBindViewHolder(holder: TargetViewHolder, position: Int) {
+            holder.bind(list[position])
+        }
+
+        override fun getItemCount(): Int {
+            return list.size
+        }
     }
 }
