@@ -1,4 +1,4 @@
-package top.learningman.hystime.ui.home
+package top.learningman.hystime.ui.timer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import java.util.*
 import kotlin.concurrent.timer
 
-class HomeViewModel : ViewModel() {
+class TimerViewModel : ViewModel() {
 
     enum class TimerStatus {
         STOP,

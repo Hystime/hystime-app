@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/normal_timing"
-    tools:context=".ui.home.timing.NormalTimingFragment">
+    tools:context=".ui.timer.timing.NormalTimingFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

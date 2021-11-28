@@ -9,6 +9,7 @@ query UserTargets($username: String!) {
     user(username: $username) {
         targets {
             id
+            created_at
             name
             type
             timeSpent

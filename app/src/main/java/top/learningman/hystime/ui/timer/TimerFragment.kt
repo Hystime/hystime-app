@@ -1,4 +1,4 @@
-package top.learningman.hystime.ui.home
+package top.learningman.hystime.ui.timer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import top.learningman.hystime.R
-import top.learningman.hystime.databinding.FragmentHomeBinding
-import top.learningman.hystime.ui.home.timing.NormalTimingFragment
-import top.learningman.hystime.ui.home.timing.PomodoroTimingFragment
+import top.learningman.hystime.databinding.FragmentTimerBinding
+import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
+import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import top.learningman.hystime.utils.FadePageTransformer
 
-class HomeFragment : Fragment() {
+class TimerFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var timerViewModel: TimerViewModel
+    private var _binding: FragmentTimerBinding? = null
 
     private lateinit var viewPager: ViewPager2
     private var tabLayout: TabLayout? = null
@@ -31,8 +31,8 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        timerViewModel = ViewModelProvider(requireActivity())[TimerViewModel::class.java]
+        _binding = FragmentTimerBinding.inflate(inflater, container, false)
 
         viewPager = binding.pager
         viewPager.adapter = TimingAdapter(this)

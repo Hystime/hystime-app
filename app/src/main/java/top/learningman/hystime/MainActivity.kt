@@ -12,7 +12,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.ui.dashboard.DashboardFragment
-import top.learningman.hystime.ui.home.HomeFragment
+import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 
 private const val NUM_PAGES = 3
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment =
             when (position) {
                 0 -> DashboardFragment()
-                1 -> HomeFragment().apply {
+                1 -> TimerFragment().apply {
                     setTabLayout(tabLayout)
                 }
                 2 -> SettingFragment()

@@ -1,20 +1,18 @@
-package top.learningman.hystime.ui.home.timing
+package top.learningman.hystime.ui.timer.timing
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import top.learningman.hystime.databinding.FragmentNormalTimingBinding
-import top.learningman.hystime.ui.home.HomeViewModel
+import top.learningman.hystime.ui.timer.TimerViewModel
 
 class NormalTimingFragment : Fragment() {
 
-    private val model: HomeViewModel by lazy {
-        ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+    private val model: TimerViewModel by lazy {
+        ViewModelProvider(requireActivity())[TimerViewModel::class.java]
     }
 
     private lateinit var binding: FragmentNormalTimingBinding
