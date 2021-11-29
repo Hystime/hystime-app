@@ -23,6 +23,7 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import okhttp3.OkHttpClient
 import type.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class HystimeClient(endpoint: String, authCode: String) {
     enum class Status {
@@ -53,7 +54,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                                 .addHeader("Auth", authCode)
                                 .build()
                             chain.proceed(request)
-                        }
+                        }.callTimeout(1000, TimeUnit.MILLISECONDS)
                         .build()
                 )
                 .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
@@ -73,7 +74,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                     false
                 }
             } catch (e: ApolloNetworkException) {
-                Log.e("HystimeClient", e.message ?: "")
+                Log.e("HystimeClient", e.errorString())
                 false
             }
         } else {
@@ -90,7 +91,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("getUserInfo", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("getUserInfo", e.message.toString())
+            Log.e("getUserInfo", e.errorString())
         }
         return null
     }
@@ -104,7 +105,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("getUserTargets", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("getUserTargets", e.message.toString())
+            Log.e("getUserTargets", e.errorString())
         }
         return null
     }
@@ -118,7 +119,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("getTarget", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("getTarget", e.message.toString())
+            Log.e("getTarget", e.errorString())
         }
         return null
     }
@@ -137,7 +138,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("getTimePiece", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("getTimePiece", e.message.toString())
+            Log.e("getTimePiece", e.errorString())
         }
         return null
     }
@@ -156,7 +157,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("getUserTimePieces", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("getUserTimePieces", e.message.toString())
+            Log.e("getUserTimePieces", e.errorString())
         }
         return null
     }
@@ -184,7 +185,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                     }
                     cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
                 }
-            }
+            } ?: return pieces.toList()
         }
     }
 
@@ -225,7 +226,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("createUser", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("createUser", e.message.toString())
+            Log.e("createUser", e.errorString())
         }
 
         return null
@@ -244,7 +245,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("updateUser", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("updateUser", e.message.toString())
+            Log.e("updateUser", e.errorString())
         }
         return null
     }
@@ -264,7 +265,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("createTarget", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("createTarget", e.message.toString())
+            Log.e("createTarget", e.errorString())
         }
         return null
     }
@@ -284,7 +285,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("updateTarget", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("updateTarget", e.message.toString())
+            Log.e("updateTarget", e.errorString())
         }
         return null
     }
@@ -300,7 +301,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("deleteTarget", resp.errors.toString())
             return false
         } catch (e: ApolloNetworkException) {
-            Log.e("deleteTarget", e.message.toString())
+            Log.e("deleteTarget", e.errorString())
         }
         return false
     }
@@ -320,7 +321,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("createTimePiece", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("createTimePiece", e.message.toString())
+            Log.e("createTimePiece", e.errorString())
         }
         return null
     }
@@ -340,7 +341,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("updateTimePiece", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("updateTimePiece", e.message.toString())
+            Log.e("updateTimePiece", e.errorString())
         }
         return null
     }
@@ -356,7 +357,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("deleteTimePiece", resp.errors.toString())
             return false
         } catch (e: ApolloNetworkException) {
-            Log.e("deleteTimePiece", e.message.toString())
+            Log.e("deleteTimePiece", e.errorString())
         }
         return false
     }
@@ -373,12 +374,11 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("createTimePiecesForTarget", resp.errors.toString())
             return null
         } catch (e: ApolloNetworkException) {
-            Log.e("createTimePiecesForTarget", e.message.toString())
+            Log.e("createTimePiecesForTarget", e.errorString())
         }
         return null
     }
 }
-
 
 
 // Check if url is valid and safe
@@ -399,3 +399,10 @@ fun Date.inPastWeek(): Boolean {
     return cal.time.after(Date())
 }
 
+fun Exception.errorString():String {
+    if (BuildConfig.DEBUG) {
+        return this.stackTraceToString()
+    } else {
+        return this.localizedMessage ?: "Unknown error"
+    }
+}

@@ -12,15 +12,12 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.launch
 import top.learningman.hystime.BuildConfig
 import top.learningman.hystime.Constant
-import top.learningman.hystime.MainApplication
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
+import top.learningman.hystime.utils.requireClient
+import top.learningman.hystime.utils.setClient
 
 class SettingFragment : PreferenceFragmentCompat() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        preferenceManager.sharedPreferencesName = getString(R.string.setting_filename)
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
@@ -29,6 +26,45 @@ class SettingFragment : PreferenceFragmentCompat() {
             getString(R.string.setting_filename),
             Context.MODE_PRIVATE
         )
+        val serverTitle =
+            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
+
+        fun serverCheck(pref: Preference?, newValue: Any?):Boolean{
+            serverTitle.title = getString(R.string.setting_category_server_title_pending)
+            sp?.let {
+                var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
+                var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
+                pref?.let {
+                    when (pref.key) {
+                        getString(R.string.setting_backend_key) -> {
+                            endpoint = newValue as String
+                        }
+                        getString(R.string.setting_auth_key) -> {
+                            authCode = newValue as String
+                        }
+                    }
+                }
+                setClient(
+                    this, HystimeClient(
+                        endpoint, authCode
+                    )
+                )
+                lifecycleScope.launch {
+                    if (requireClient(this@SettingFragment)!!.isValid()) {
+                        serverTitle.title =
+                            getString(R.string.setting_category_server_title_valid)
+                    } else {
+                        serverTitle.title =
+                            getString(R.string.setting_category_server_title_invalid)
+                    }
+                }
+
+            } ?: Toast.makeText(context, "SharedPreferences not found", Toast.LENGTH_SHORT)
+                .show()
+            return true
+        }
+
+        serverCheck(null, null);
 
         setOf(
             getString(R.string.setting_auth_key),
@@ -49,30 +85,9 @@ class SettingFragment : PreferenceFragmentCompat() {
             getString(R.string.setting_backend_key),
             getString(R.string.setting_auth_key)
         ).forEach { key ->
-            val serverTitle =
-                preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
             preferenceScreen.findPreference<EditTextPreference>(key)?.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { oldValue, newValue ->
-                    sp?.let {
-                        if (oldValue != newValue) {
-                            (requireActivity().application as MainApplication).client =
-                                HystimeClient(
-                                    sp.getString(getString(R.string.setting_backend_key), "")!!,
-                                    sp.getString(getString(R.string.setting_auth_key), "")!!
-                                )
-                            lifecycleScope.launch {
-                                if ((requireActivity().application as MainApplication).client!!.isValid()) {
-                                    serverTitle.title =
-                                        getString(R.string.setting_category_server_title_valid)
-                                } else {
-                                    serverTitle.title =
-                                        getString(R.string.setting_category_server_title_invalid)
-                                }
-                            }
-                        }
-                    } ?: Toast.makeText(context, "SharedPreferences not found", Toast.LENGTH_SHORT)
-                        .show()
-                    true
+                Preference.OnPreferenceChangeListener { pref, newValue ->
+                    serverCheck(pref, newValue)
                 }
         }
 

@@ -11,11 +11,12 @@
     <string name="hour">Hour</string>
 
     <!-- Setting Strings -->
-    <string name="setting_filename" translatable="false">setting</string>
+    <string name="setting_filename" translatable="false">top.learningman.hystime_preferences</string>
 
     <string name="setting_category_server">Server</string>
     <string name="setting_category_server_key" translatable="false">server_category</string>
     <string name="setting_category_server_title_valid">Server (Valid)</string>
+    <string name="setting_category_server_title_pending">Server (Checking)</string>
     <string name="setting_category_server_title_invalid">Server (Invalid)</string>
 
     <string name="setting_backend_key" translatable="false">backend_url</string>
