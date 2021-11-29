@@ -21,9 +21,9 @@
     <PreferenceCategory app:title="@string/setting_category_user">
         <EditTextPreference
             app:icon="@drawable/ic_account_black_24dp"
-            app:key="@string/setting_user_key"
-            app:summary="@string/setting_user_summary"
-            app:title="@string/setting_user_title"
+            app:key="@string/setting_username_key"
+            app:summary="@string/setting_username_summary"
+            app:title="@string/setting_username_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_app">

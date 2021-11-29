@@ -10,8 +10,8 @@
     <string name="setting_auth_title">授权码</string>
     <string name="setting_auth_summary">设置端点授权码</string>
     <string name="setting_category_user">用户</string>
-    <string name="setting_user_title">用户名</string>
-    <string name="setting_user_summary">设置用户名</string>
+    <string name="setting_username_title">用户名</string>
+    <string name="setting_username_summary">设置用户名</string>
     <string name="setting_category_app">应用</string>
     <string name="setting_fetch_policy_title">总是获取</string>
     <string name="setting_fetch_policy_summary_on">总是从后端获取数据。</string>
@@ -40,4 +40,7 @@
     <string name="setting_category_server_title_valid">服务器 （有效）</string>
     <string name="setting_category_server_title_invalid">服务器 （无效）</string>
     <string name="setting_category_server_title_pending">服务器 （检查中）</string>
+    <string name="setting_category_user_title_valid">用户（有效）</string>
+    <string name="setting_category_user_title_pending">用户（检查中）</string>
+    <string name="setting_category_user_title_invalid">用户（无效）</string>
 </resources>

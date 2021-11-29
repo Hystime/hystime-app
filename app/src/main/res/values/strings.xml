@@ -27,9 +27,14 @@
     <string name="setting_auth_summary">Set endpoint authorization code.</string>
 
     <string name="setting_category_user">User</string>
-    <string name="setting_user_key" translatable="false">user</string>
-    <string name="setting_user_title">Username</string>
-    <string name="setting_user_summary">Set username</string>
+    <string name="setting_category_user_key" translatable="false">user_category</string>
+    <string name="setting_category_user_title_valid">User (Valid)</string>
+    <string name="setting_category_user_title_pending">User (Checking)</string>
+    <string name="setting_category_user_title_invalid">User (Invalid)</string>
+
+    <string name="setting_username_key" translatable="false">user</string>
+    <string name="setting_username_title">Username</string>
+    <string name="setting_username_summary">Set username</string>
 
     <string name="setting_category_app">Application</string>
     <string name="setting_fetch_policy_title">Always Fetch</string>

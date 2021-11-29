@@ -3,7 +3,6 @@ package top.learningman.hystime.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
@@ -25,53 +24,84 @@ class SettingFragment : PreferenceFragmentCompat() {
         val sp = context?.getSharedPreferences(
             getString(R.string.setting_filename),
             Context.MODE_PRIVATE
-        )
+        )!!
         val serverTitle =
             preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
 
-        fun serverCheck(pref: Preference?, newValue: Any?):Boolean{
+        fun serverCheck(pref: Preference?, newValue: Any?): Boolean {
             serverTitle.title = getString(R.string.setting_category_server_title_pending)
-            sp?.let {
-                var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
-                var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
-                pref?.let {
-                    when (pref.key) {
-                        getString(R.string.setting_backend_key) -> {
-                            endpoint = newValue as String
-                        }
-                        getString(R.string.setting_auth_key) -> {
-                            authCode = newValue as String
-                        }
-                    }
-                }
-                setClient(
-                    this, HystimeClient(
-                        endpoint, authCode
-                    )
-                )
-                lifecycleScope.launch {
-                    if (requireClient(this@SettingFragment)!!.isValid()) {
-                        serverTitle.title =
-                            getString(R.string.setting_category_server_title_valid)
-                    } else {
-                        serverTitle.title =
-                            getString(R.string.setting_category_server_title_invalid)
-                    }
-                }
 
-            } ?: Toast.makeText(context, "SharedPreferences not found", Toast.LENGTH_SHORT)
-                .show()
+            var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
+            var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
+            pref?.let {
+                when (pref.key) {
+                    getString(R.string.setting_backend_key) -> {
+                        endpoint = newValue as String
+                    }
+                    getString(R.string.setting_auth_key) -> {
+                        authCode = newValue as String
+                    }
+                }
+            }
+            setClient(
+                this, HystimeClient(
+                    endpoint, authCode
+                )
+            )
+            lifecycleScope.launch {
+                if (requireClient(this@SettingFragment)!!.isValid()) {
+                    serverTitle.title =
+                        getString(R.string.setting_category_server_title_valid)
+                } else {
+                    serverTitle.title =
+                        getString(R.string.setting_category_server_title_invalid)
+                }
+            }
+
+
             return true
         }
 
-        serverCheck(null, null);
+        fun userCheck(username:String?) {
+            val userTitle =
+                preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
+            lifecycleScope.launch {
+                requireClient(this@SettingFragment)?.let {
+                    if (it.isValid()) {
+                        val usernameQuery =
+                            username ?: sp.getString(getString(R.string.setting_username_key), "")!!
+                        val user = requireClient(this@SettingFragment)!!.getUserInfo(usernameQuery)
+                        if (user != null) {
+                            userTitle.title = getString(R.string.setting_category_user_key)
+                        } else {
+                            userTitle.title =
+                                getString(R.string.setting_category_user_title_invalid)
+                        }
+                    }
+                } ?: run {
+                    userTitle.title = getString(R.string.setting_category_user)
+                }
+            }
+        }
+
+        serverCheck(null, null)
+        userCheck(null)
+
 
         setOf(
             getString(R.string.setting_auth_key),
-            getString(R.string.setting_user_key)
+            getString(R.string.setting_username_key)
         ).forEach { key ->
             preferenceScreen.findPreference<EditTextPreference>(key)
                 ?.setOnBindEditTextListener { it.setSingleLine(); }
+        }
+
+        getString(R.string.setting_username_key).let {
+            preferenceScreen.findPreference<EditTextPreference>(it)
+                ?.setOnPreferenceChangeListener { _, newValue ->
+                    userCheck(newValue as String)
+                    true
+                }
         }
 
         getString(R.string.setting_backend_key).let { key ->
