@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.refresh -> {
+                // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
                 supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")?.let {
                     (it as Interface.RefreshableFragment).refresh()
                 }
