@@ -1,6 +1,7 @@
 package top.learningman.hystime
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
+import top.learningman.hystime.utils.Interface
 
 private const val NUM_PAGES = 3
 
@@ -69,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         fun showActionBar() {
             tabLayout.visibility = TabLayout.GONE
             supportActionBar?.show()
-
         }
 
         fun hideActionBar() {
@@ -97,6 +98,24 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
 
+        viewPager.currentItem
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> {
+                supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")?.let {
+                    (it as Interface.RefreshableFragment).refresh()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

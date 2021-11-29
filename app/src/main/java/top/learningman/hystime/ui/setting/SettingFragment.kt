@@ -15,74 +15,18 @@ import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.requireClient
 import top.learningman.hystime.utils.setClient
+import top.learningman.hystime.utils.Interface.RefreshableFragment
 
-class SettingFragment : PreferenceFragmentCompat() {
+class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
+    private val sp by lazy {
+        requireContext().getSharedPreferences(
+            getString(R.string.setting_filename),
+            Context.MODE_PRIVATE
+        )
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
-
-        val sp = context?.getSharedPreferences(
-            getString(R.string.setting_filename),
-            Context.MODE_PRIVATE
-        )!!
-        val serverTitle =
-            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
-
-        fun serverCheck(pref: Preference?, newValue: Any?): Boolean {
-            serverTitle.title = getString(R.string.setting_category_server_title_pending)
-
-            var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
-            var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
-            pref?.let {
-                when (pref.key) {
-                    getString(R.string.setting_backend_key) -> {
-                        endpoint = newValue as String
-                    }
-                    getString(R.string.setting_auth_key) -> {
-                        authCode = newValue as String
-                    }
-                }
-            }
-            setClient(
-                this, HystimeClient(
-                    endpoint, authCode
-                )
-            )
-            lifecycleScope.launch {
-                if (requireClient(this@SettingFragment)!!.isValid()) {
-                    serverTitle.title =
-                        getString(R.string.setting_category_server_title_valid)
-                } else {
-                    serverTitle.title =
-                        getString(R.string.setting_category_server_title_invalid)
-                }
-            }
-
-
-            return true
-        }
-
-        fun userCheck(username:String?) {
-            val userTitle =
-                preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
-            lifecycleScope.launch {
-                requireClient(this@SettingFragment)?.let {
-                    if (it.isValid()) {
-                        val usernameQuery =
-                            username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                        val user = requireClient(this@SettingFragment)!!.getUserInfo(usernameQuery)
-                        if (user != null) {
-                            userTitle.title = getString(R.string.setting_category_user_key)
-                        } else {
-                            userTitle.title =
-                                getString(R.string.setting_category_user_title_invalid)
-                        }
-                    }
-                } ?: run {
-                    userTitle.title = getString(R.string.setting_category_user)
-                }
-            }
-        }
 
         serverCheck(null, null)
         userCheck(null)
@@ -152,5 +96,69 @@ class SettingFragment : PreferenceFragmentCompat() {
                 }
         }
 
+    }
+
+    private fun serverCheck(pref: Preference?, newValue: Any?): Boolean {
+        val serverTitle =
+            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
+        serverTitle.title = getString(R.string.setting_category_server_title_pending)
+
+        var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
+        var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
+        pref?.let {
+            when (pref.key) {
+                getString(R.string.setting_backend_key) -> {
+                    endpoint = newValue as String
+                }
+                getString(R.string.setting_auth_key) -> {
+                    authCode = newValue as String
+                }
+            }
+        }
+        setClient(
+            this, HystimeClient(
+                endpoint, authCode
+            )
+        )
+        lifecycleScope.launch {
+            if (requireClient(this@SettingFragment)!!.isValid()) {
+                serverTitle.title =
+                    getString(R.string.setting_category_server_title_valid)
+            } else {
+                serverTitle.title =
+                    getString(R.string.setting_category_server_title_invalid)
+            }
+        }
+
+
+        return true
+    }
+
+    private fun userCheck(username: String?) {
+        val userTitle =
+            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
+        lifecycleScope.launch {
+            requireClient(this@SettingFragment)?.let {
+                userTitle.title = getString(R.string.setting_category_user_title_pending)
+                if (it.isValid()) {
+                    val usernameQuery =
+                        username ?: sp.getString(getString(R.string.setting_username_key), "")!!
+                    val user = requireClient(this@SettingFragment)!!.getUserInfo(usernameQuery)
+                    if (user != null) {
+                        userTitle.title = getString(R.string.setting_category_user_title_valid)
+                    } else {
+                        userTitle.title =
+                            getString(R.string.setting_category_user_title_invalid)
+                    }
+                }
+            } ?: run {
+                userTitle.title = getString(R.string.setting_category_user)
+            }
+        }
+    }
+
+    override fun refresh() {
+        serverCheck(null, null)
+        userCheck(null)
     }
 }

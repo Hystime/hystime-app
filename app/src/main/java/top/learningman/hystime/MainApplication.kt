@@ -4,5 +4,5 @@ import android.app.Application
 import top.learningman.hystime.sdk.HystimeClient
 
 class MainApplication: Application() {
-    public var client: HystimeClient? = null
+    var client: HystimeClient? = null
 }

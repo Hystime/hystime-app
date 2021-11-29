@@ -18,7 +18,9 @@
             app:title="@string/setting_auth_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-    <PreferenceCategory app:title="@string/setting_category_user">
+    <PreferenceCategory
+        app:title="@string/setting_category_user"
+        app:key="@string/setting_category_user_key">
         <EditTextPreference
             app:icon="@drawable/ic_account_black_24dp"
             app:key="@string/setting_username_key"

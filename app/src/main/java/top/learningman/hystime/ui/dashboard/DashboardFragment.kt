@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.data.Target
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
+import top.learningman.hystime.utils.Interface
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(),Interface.RefreshableFragment {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private var _binding: FragmentDashboardBinding? = null
@@ -75,5 +77,9 @@ class DashboardFragment : Fragment() {
         override fun getItemCount(): Int {
             return list.size
         }
+    }
+
+    override fun refresh() {
+        Toast.makeText(requireContext(), "refresh", Toast.LENGTH_LONG).show()
     }
 }
