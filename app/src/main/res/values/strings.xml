@@ -80,5 +80,6 @@
     <!-- Place Holder -->
     <string name="default_target" translatable="false">Timing</string>
     <string name="refresh">Refresh</string>
+    <string name="target_title_placeholder">Target Title</string>
 
 </resources>

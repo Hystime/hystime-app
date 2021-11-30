@@ -14,6 +14,7 @@ import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.Interface.RefreshableFragment
+import top.learningman.hystime.utils.getUser
 
 class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
     private val sp by lazy {
@@ -27,8 +28,6 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
         setPreferencesFromResource(R.xml.setting, rootKey)
 
         serverCheck(null, null)
-        userCheck(null)
-
 
         setOf(
             getString(R.string.setting_auth_key),
@@ -123,6 +122,7 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_invalid)
             }
+            userCheck(getUser(requireContext()))
         }
 
 

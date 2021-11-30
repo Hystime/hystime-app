@@ -35,7 +35,7 @@ class HystimeClient(endpoint: String, authCode: String) {
 
     private var status: Status = Status.PENDING
 
-    private var client: ApolloClient
+    private lateinit var client: ApolloClient
 
     init {
         if (!endpoint.isUrl()) {
@@ -63,15 +63,11 @@ class HystimeClient(endpoint: String, authCode: String) {
                     .build()
             } catch (e: Exception) {
                 this.status = Status.CLIENT_ERROR
-                client = ApolloClient.builder().serverUrl("http://localhost")
-                    .build()
                 Log.e("ClientInit", e.errorString())
             }
             status = Status.OK
-        } else {
-            client = ApolloClient.builder().serverUrl("http://localhost")
-                .build() // Will not be use, just for prevent nullptr
         }
+
         instance = this
     }
 
@@ -411,10 +407,12 @@ class HystimeClient(endpoint: String, authCode: String) {
         private var instance: HystimeClient? = null
         fun getInstance(): HystimeClient {
             if (instance == null) {
-                instance = HystimeClient("http://localhost", "") // Error Client, prevent nullptr
+                instance = getErrorClient() // Error Client, prevent nullptr
             }
             return instance!!
         }
+
+        private fun getErrorClient():HystimeClient = HystimeClient("", "")
     }
 }
 
