@@ -150,6 +150,9 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
                         userTitle.title =
                             getString(R.string.setting_category_user_title_invalid)
                     }
+                } else {
+                    userTitle.title =
+                        getString(R.string.setting_category_user_title_failed)
                 }
             } ?: run {
                 userTitle.title = getString(R.string.setting_category_user)

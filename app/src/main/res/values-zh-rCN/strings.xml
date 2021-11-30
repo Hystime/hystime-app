@@ -44,4 +44,5 @@
     <string name="setting_category_user_title_pending">用户（检查中）</string>
     <string name="setting_category_user_title_invalid">用户（无效）</string>
     <string name="refresh">刷新</string>
+    <string name="setting_category_user_title_failed">用户（检查失败）</string>
 </resources>

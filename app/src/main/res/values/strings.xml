@@ -30,6 +30,7 @@
     <string name="setting_category_user_key" translatable="false">user_category</string>
     <string name="setting_category_user_title_valid">User (Valid)</string>
     <string name="setting_category_user_title_pending">User (Checking)</string>
+    <string name="setting_category_user_title_failed">User (Check Failed)</string>
     <string name="setting_category_user_title_invalid">User (Invalid)</string>
 
     <string name="setting_username_key" translatable="false">user</string>
