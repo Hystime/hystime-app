@@ -15,6 +15,7 @@ import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import top.learningman.hystime.utils.FadePageTransformer
+import top.learningman.hystime.view.TimerView
 
 class TimerFragment : Fragment() {
 
@@ -36,7 +37,12 @@ class TimerFragment : Fragment() {
 
         viewPager = binding.pager
         viewPager.adapter = TimingAdapter(this)
-        viewPager.setPageTransformer(FadePageTransformer())
+        viewPager.setPageTransformer(object : FadePageTransformer(){
+            override fun transformPage(view: View, position: Float) {
+                val clockView = view.findViewById<TimerView>(R.id.timer)
+                super.transformPage(clockView, position)
+            }
+        })
 
         tabLayout?.let {
             TabLayoutMediator(it, viewPager) { tab, position ->
