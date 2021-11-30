@@ -5,17 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import top.learningman.hystime.data.Target
+import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.utils.Interface
+import top.learningman.hystime.utils.getUser
 
-class DashboardFragment : Fragment(),Interface.RefreshableFragment {
+class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private var _binding: FragmentDashboardBinding? = null
@@ -29,17 +28,19 @@ class DashboardFragment : Fragment(),Interface.RefreshableFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dashboardViewModel =
-            ViewModelProvider(this)[DashboardViewModel::class.java]
+        dashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
+
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         mRecyclerView = binding.recyclerView
 
-        dashboardViewModel.targetList.observe(viewLifecycleOwner) {
+        dashboardViewModel.targetBeanList.observe(viewLifecycleOwner) {
             mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireContext())
         }
+
+        refresh()
 
         return root
     }
@@ -51,11 +52,11 @@ class DashboardFragment : Fragment(),Interface.RefreshableFragment {
 
     class TargetRecyclerAdapter(
         val viewModel: DashboardViewModel,
-        private val list: List<Target>,
+        private val list: List<TargetBean>,
         val context: Context
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
         inner class TargetViewHolder(private val binding: View) : RecyclerView.ViewHolder(binding) {
-            fun bind(target: Target) {
+            fun bind(targetBean: TargetBean) {
                 binding
             }
 
@@ -79,7 +80,9 @@ class DashboardFragment : Fragment(),Interface.RefreshableFragment {
         }
     }
 
+
+
     override fun refresh() {
-        Toast.makeText(requireContext(), "refresh", Toast.LENGTH_LONG).show()
+        dashboardViewModel.refreshTarget(getUser(requireContext()))
     }
 }

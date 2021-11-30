@@ -28,23 +28,24 @@ import java.util.concurrent.TimeUnit
 class HystimeClient(endpoint: String, authCode: String) {
     enum class Status {
         OK,
-        ERROR,
+        CLIENT_ERROR,
+        NETWORK_ERROR,
         PENDING
     }
 
     private var status: Status = Status.PENDING
 
-    private lateinit var client: ApolloClient
+    private var client: ApolloClient
 
     init {
         if (!endpoint.isUrl()) {
-            this.status = Status.ERROR
+            this.status = Status.CLIENT_ERROR
         }
         if (authCode.length != 8) {
-            this.status = Status.ERROR
+            this.status = Status.CLIENT_ERROR
         }
 
-        if (this.status != Status.ERROR) {
+        if (this.status != Status.CLIENT_ERROR) {
             client = ApolloClient.builder()
                 .serverUrl(endpoint)
                 .okHttpClient(
@@ -59,30 +60,33 @@ class HystimeClient(endpoint: String, authCode: String) {
                 )
                 .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
                 .build()
+        } else {
+            client = ApolloClient.builder().serverUrl("http://localhost").build() // Will not be use, just for prevent nullptr
         }
+        instance = this
     }
 
-    suspend fun isValid(): Boolean {
-        return if (status == Status.PENDING) {
-            try {
-                val test = client.query(TestQuery()).await()
-                if (test.data?.test == true) {
-                    status = Status.OK
-                    true
-                } else {
-                    status = Status.ERROR
-                    false
-                }
-            } catch (e: ApolloNetworkException) {
-                Log.e("HystimeClient", e.errorString())
+    suspend fun checkValid(): Boolean {
+        return try {
+            if (status == Status.CLIENT_ERROR) return false
+            val test = client.query(TestQuery()).await()
+            if (test.data?.test == true) {
+                status = Status.OK
+                true
+            } else {
+                status = Status.NETWORK_ERROR
                 false
             }
-        } else {
-            status == Status.OK
+        } catch (e: ApolloNetworkException) {
+            Log.e("HystimeClient", e.errorString())
+            false
         }
     }
 
+    private fun isValid() = status == Status.OK
+
     suspend fun getUserInfo(username: String): UserInfoQuery.User? {
+        if (!isValid()) return null
         try {
             val resp = client.query(UserInfoQuery(username)).await()
             resp.data?.let {
@@ -97,6 +101,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     suspend fun getUserTargets(username: String): List<UserTargetsQuery.Target>? {
+        if (!isValid()) return null
         try {
             val resp = client.query(UserTargetsQuery(username)).await()
             resp.data?.user?.let {
@@ -111,6 +116,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     suspend fun getTarget(username: String): TargetQuery.Target? {
+        if (!isValid()) return null
         try {
             val resp = client.query(TargetQuery(username)).await()
             resp.data?.let {
@@ -130,6 +136,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ): TargetTimePiecesQuery.TimePieces? {
+        if (!isValid()) return null
         try {
             val resp = client.query(TargetTimePiecesQuery(targetID, first, after)).await()
             resp.data?.target?.let {
@@ -149,6 +156,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ): UserTimePiecesQuery.Timepieces? {
+        if (!isValid()) return null
         try {
             val resp = client.query(UserTimePiecesQuery(userID, first, after)).await()
             resp.data?.let {
@@ -165,6 +173,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getLastWeekUserTimePieces(
         userID: String
     ): List<UserTimePiecesQuery.Node> {
+        if (!isValid()) return emptyList()
         val pieces = mutableListOf<UserTimePiecesQuery.Node>()
         var cursor: Input<String> = Input.absent()
         while (true) {
@@ -192,6 +201,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getLastWeekTargetTimePieces(
         targetID: String
     ): List<TargetTimePiecesQuery.Node> {
+        if (!isValid()) return emptyList()
         val pieces = mutableListOf<TargetTimePiecesQuery.Node>()
         var cursor: Input<String> = Input.absent()
         while (true) {
@@ -217,6 +227,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     suspend fun createUser(username: String): UserCreateMutation.UserCreate? {
+        if (!isValid()) return null
         try {
             val input = UserCreateInput(username)
             val resp = client.mutate(UserCreateMutation(input)).await()
@@ -236,6 +247,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         userID: String,
         username: Input<String>
     ): UserUpdateMutation.UserUpdate? {
+        if (!isValid()) return null
         try {
             val input = UserUpdateInput(username)
             val resp = client.mutate(UserUpdateMutation(userID, input)).await()
@@ -256,6 +268,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         timeSpent: Input<Int>,
         type: Input<TargetType>
     ): TargetCreateMutation.TargetCreate? {
+        if (!isValid()) return null
         try {
             val input = TargetCreateInput(name, timeSpent, type)
             val resp = client.mutate(TargetCreateMutation(userID, input)).await()
@@ -276,6 +289,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         timeSpent: Input<Int>,
         type: Input<TargetType>
     ): TargetUpdateMutation.TargetUpdate? {
+        if (!isValid()) return null
         try {
             val input = TargetUpdateInput(name, timeSpent, type)
             val resp = client.mutate(TargetUpdateMutation(targetID, input)).await()
@@ -293,6 +307,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun deleteTarget(
         targetID: String
     ): Boolean {
+        if (!isValid()) return false
         try {
             val resp = client.mutate(TargetDeleteMutation(targetID)).await()
             resp.data?.let {
@@ -312,6 +327,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         duration: Int,
         type: Input<TimePieceType>
     ): TimePieceCreateMutation.TimePieceCreate? {
+        if (!isValid()) return null
         try {
             val input = TimePieceCreateInput(start, duration, type)
             val resp = client.mutate(TimePieceCreateMutation(targetID, input)).await()
@@ -332,6 +348,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         duration: Input<Int>,
         type: Input<TimePieceType>
     ): TimePieceUpdateMutation.TimePieceUpdate? {
+        if (!isValid()) return null
         try {
             val input = TimePieceUpdateInput(start, duration, type)
             val resp = client.mutate(TimePieceUpdateMutation(timePieceID, input)).await()
@@ -349,6 +366,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun deleteTimePiece(
         timePieceID: Int
     ): Boolean {
+        if (!isValid()) return false
         try {
             val resp = client.mutate(TimePieceDeleteMutation(timePieceID)).await()
             resp.data?.let {
@@ -366,6 +384,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         targetID: String,
         inputs: List<TimePieceCreateInput>
     ): List<TimePiecesCreateForTargetMutation.TimePiecesCreateForTarget>? {
+        if (!isValid()) return null
         try {
             val resp = client.mutate(TimePiecesCreateForTargetMutation(targetID, inputs)).await()
             resp.data?.let {
@@ -377,6 +396,16 @@ class HystimeClient(endpoint: String, authCode: String) {
             Log.e("createTimePiecesForTarget", e.errorString())
         }
         return null
+    }
+
+    companion object {
+        private var instance: HystimeClient? = null
+        fun getInstance(): HystimeClient {
+            if (instance == null) {
+                instance = HystimeClient("", "")
+            }
+            return instance!!
+        }
     }
 }
 
@@ -399,10 +428,10 @@ fun Date.inPastWeek(): Boolean {
     return cal.time.after(Date())
 }
 
-fun Exception.errorString():String {
-    if (BuildConfig.DEBUG) {
-        return this.stackTraceToString()
+fun Exception.errorString(): String {
+    return if (BuildConfig.DEBUG) {
+        this.stackTraceToString()
     } else {
-        return this.localizedMessage ?: "Unknown error"
+        this.localizedMessage ?: "Unknown error"
     }
 }

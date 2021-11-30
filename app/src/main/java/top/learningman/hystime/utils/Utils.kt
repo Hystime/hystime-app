@@ -2,25 +2,30 @@ package top.learningman.hystime.utils
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.fragment.app.Fragment
-import top.learningman.hystime.MainActivity
-import top.learningman.hystime.MainApplication
-import top.learningman.hystime.sdk.HystimeClient
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.lang.Exception
+import top.learningman.hystime.R
 
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
-fun requireMainApplication(context: Fragment): MainApplication {
-    return context.requireActivity().application as MainApplication
-}
+fun getSettingSharedPreferences(context: Context) =
+    context.getSharedPreferences(
+        context.getString(R.string.setting_filename),
+        Context.MODE_PRIVATE
+    )!!
 
-fun requireClient(context: Fragment): HystimeClient? {
-    return requireMainApplication(context).client
-}
+fun getUser(context: Context): String = getSettingSharedPreferences(context).getString(
+    context.getString(R.string.setting_username_key),
+    ""
+)!!
 
-fun setClient(context: Fragment, client: HystimeClient) {
-    requireMainApplication(context).client = client
-}
+fun getEndpoint(context: Context): String = getSettingSharedPreferences(context).getString(
+    context.getString(R.string.setting_backend_key),
+    ""
+)!!
+
+fun getAuthCode(context: Context): String = getSettingSharedPreferences(context).getString(
+    context.getString(R.string.setting_auth_key),
+    ""
+)!!
+
+

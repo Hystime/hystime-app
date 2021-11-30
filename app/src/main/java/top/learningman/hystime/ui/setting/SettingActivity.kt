@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
@@ -5,7 +7,6 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.XmlRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant

@@ -13,8 +13,6 @@ import top.learningman.hystime.BuildConfig
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.utils.requireClient
-import top.learningman.hystime.utils.setClient
 import top.learningman.hystime.utils.Interface.RefreshableFragment
 
 class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
@@ -115,13 +113,10 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
                 }
             }
         }
-        setClient(
-            this, HystimeClient(
-                endpoint, authCode
-            )
-        )
+        HystimeClient(endpoint, authCode)
+
         lifecycleScope.launch {
-            if (requireClient(this@SettingFragment)!!.isValid()) {
+            if (HystimeClient.getInstance().checkValid()) {
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_valid)
             } else {
@@ -138,12 +133,12 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
         val userTitle =
             preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
         lifecycleScope.launch {
-            requireClient(this@SettingFragment)?.let {
+
                 userTitle.title = getString(R.string.setting_category_user_title_pending)
-                if (it.isValid()) {
+                if (HystimeClient.getInstance().checkValid()) {
                     val usernameQuery =
                         username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                    val user = requireClient(this@SettingFragment)!!.getUserInfo(usernameQuery)
+                    val user = HystimeClient.getInstance().getUserInfo(usernameQuery)
                     if (user != null) {
                         userTitle.title = getString(R.string.setting_category_user_title_valid)
                     } else {
@@ -154,9 +149,7 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
                     userTitle.title =
                         getString(R.string.setting_category_user_title_failed)
                 }
-            } ?: run {
-                userTitle.title = getString(R.string.setting_category_user)
-            }
+
         }
     }
 

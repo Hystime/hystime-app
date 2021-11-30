@@ -12,10 +12,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import top.learningman.hystime.databinding.ActivityMainBinding
+import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.utils.Interface
+import top.learningman.hystime.utils.getAuthCode
+import top.learningman.hystime.utils.getEndpoint
+import top.learningman.hystime.utils.getUser
 
 private const val NUM_PAGES = 3
 
@@ -98,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
 
-        viewPager.currentItem
+        HystimeClient(getEndpoint(this), getAuthCode(this))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -111,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             R.id.refresh -> {
                 // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
                 supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")?.let {
-                    if (it is Interface.RefreshableFragment){
+                    if (it is Interface.RefreshableFragment) {
                         it.refresh()
                     }
                 }

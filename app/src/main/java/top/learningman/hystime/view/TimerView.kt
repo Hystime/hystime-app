@@ -19,7 +19,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     }
 
     class ProgressAnimation(val view: TimerView, newAngle: Float) : Animation() {
-        var diffAngle: Float = 0f
+        private var diffAngle: Float = 0f
 
         init {
             diffAngle = newAngle - view.angle

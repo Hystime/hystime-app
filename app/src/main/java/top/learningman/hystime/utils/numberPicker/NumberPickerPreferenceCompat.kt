@@ -84,7 +84,6 @@ class NumberPickerPreferenceCompat : DialogPreference {
     /**
      * Saves the value to the [android.content.SharedPreferences].
      *
-     * @param value The value to save
      */
     var value: Int
         get() = mValue
@@ -165,7 +164,7 @@ class NumberPickerPreferenceCompat : DialogPreference {
             value = source.readInt()
         }
 
-        constructor(superState: Parcelable?) : super(superState) {}
+        constructor(superState: Parcelable?) : super(superState)
 
         override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
