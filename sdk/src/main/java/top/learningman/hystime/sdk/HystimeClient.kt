@@ -46,22 +46,31 @@ class HystimeClient(endpoint: String, authCode: String) {
         }
 
         if (this.status != Status.CLIENT_ERROR) {
-            client = ApolloClient.builder()
-                .serverUrl(endpoint)
-                .okHttpClient(
-                    OkHttpClient.Builder()
-                        .addInterceptor { chain ->
-                            val request = chain.request().newBuilder()
-                                .addHeader("Auth", authCode)
-                                .build()
-                            chain.proceed(request)
-                        }.callTimeout(1000, TimeUnit.MILLISECONDS)
-                        .build()
-                )
-                .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
-                .build()
+            try {
+                client = ApolloClient.builder()
+                    .serverUrl(endpoint)
+                    .okHttpClient(
+                        OkHttpClient.Builder()
+                            .addInterceptor { chain ->
+                                val request = chain.request().newBuilder()
+                                    .addHeader("Auth", authCode)
+                                    .build()
+                                chain.proceed(request)
+                            }.callTimeout(1000, TimeUnit.MILLISECONDS)
+                            .build()
+                    )
+                    .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
+                    .build()
+            } catch (e: Exception) {
+                this.status = Status.CLIENT_ERROR
+                client = ApolloClient.builder().serverUrl("http://localhost")
+                    .build()
+                Log.e("ClientInit", e.errorString())
+            }
+            status = Status.OK
         } else {
-            client = ApolloClient.builder().serverUrl("http://localhost").build() // Will not be use, just for prevent nullptr
+            client = ApolloClient.builder().serverUrl("http://localhost")
+                .build() // Will not be use, just for prevent nullptr
         }
         instance = this
     }
@@ -402,7 +411,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         private var instance: HystimeClient? = null
         fun getInstance(): HystimeClient {
             if (instance == null) {
-                instance = HystimeClient("http://localhost", "")
+                instance = HystimeClient("http://localhost", "") // Error Client, prevent nullptr
             }
             return instance!!
         }
