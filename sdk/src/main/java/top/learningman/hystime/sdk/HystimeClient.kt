@@ -402,7 +402,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         private var instance: HystimeClient? = null
         fun getInstance(): HystimeClient {
             if (instance == null) {
-                instance = HystimeClient("", "")
+                instance = HystimeClient("http://localhost", "")
             }
             return instance!!
         }

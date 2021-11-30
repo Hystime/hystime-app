@@ -9,7 +9,7 @@ import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.sdk.HystimeClient
 
 class DashboardViewModel : ViewModel() {
-    val client: HystimeClient by lazy {
+    private val client: HystimeClient by lazy {
         HystimeClient.getInstance()
     }
 
@@ -21,7 +21,6 @@ class DashboardViewModel : ViewModel() {
     private val _targetBeanList = MutableLiveData<List<TargetBean>>().apply {
         value = emptyList()
     }
-
     val targetBeanList: LiveData<List<TargetBean>> = _targetBeanList
 
     fun refreshTarget(username: String) {

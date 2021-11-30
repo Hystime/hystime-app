@@ -59,7 +59,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             fun bind(targetBean: TargetBean) {
                 binding
             }
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetViewHolder {
@@ -79,8 +78,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             return list.size
         }
     }
-
-
 
     override fun refresh() {
         dashboardViewModel.refreshTarget(getUser(requireContext()))
