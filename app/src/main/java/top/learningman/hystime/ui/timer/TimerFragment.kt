@@ -15,6 +15,7 @@ import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import top.learningman.hystime.view.TimerView
+import top.learningman.hystime.data.TargetBean
 import kotlin.math.abs
 
 class TimerFragment : Fragment() {
@@ -27,17 +28,8 @@ class TimerFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        timerViewModel = ViewModelProvider(requireActivity())[TimerViewModel::class.java]
-        _binding = FragmentTimerBinding.inflate(inflater, container, false)
-
-        viewPager = binding.pager
-        viewPager.adapter = TimingAdapter(this)
-        viewPager.setPageTransformer { view, position ->
+    private val mTransformer =
+        ViewPager2.PageTransformer { view, position ->
             view.apply {
                 val pageWidth = width
                 when {
@@ -60,6 +52,18 @@ class TimerFragment : Fragment() {
                 }
             }
         }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        timerViewModel = ViewModelProvider(requireActivity())[TimerViewModel::class.java]
+        _binding = FragmentTimerBinding.inflate(inflater, container, false)
+
+        viewPager = binding.pager
+        viewPager.adapter = TimingAdapter(this)
+        viewPager.setPageTransformer(mTransformer)
 
         tabLayout?.let {
             TabLayoutMediator(it, viewPager) { tab, position ->
@@ -98,5 +102,9 @@ class TimerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun setTarget(target: TargetBean) {
+        timerViewModel.setTarget(target)
     }
 }

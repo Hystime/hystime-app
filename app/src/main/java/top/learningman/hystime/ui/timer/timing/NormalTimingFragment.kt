@@ -29,10 +29,8 @@ class NormalTimingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         model.target.observe(viewLifecycleOwner) { target ->
-            binding.target.text = target
+            binding.target.text = target.name
         }
-
-
     }
 
 }

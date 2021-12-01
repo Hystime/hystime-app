@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.MainActivity
@@ -39,7 +40,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         mRecyclerView = binding.recyclerView
 
         dashboardViewModel.targetBeanList.observe(viewLifecycleOwner) {
-            mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireContext())
+            mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireActivity())
         }
 
         refresh()
@@ -55,7 +56,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     class TargetRecyclerAdapter(
         val viewModel: DashboardViewModel,
         private val list: List<TargetBean>,
-        val context: Context
+        val context: FragmentActivity
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
         fun Int.toLocalTimeString(): String {
             val hour = this / 3600
@@ -69,7 +70,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
                 binding.startTimer.setOnClickListener {
-                    MainActivity.getPager().setCurrentItem(1, true)
+                    (context as MainActivity).toTimer(targetBean)
                 }
             }
         }

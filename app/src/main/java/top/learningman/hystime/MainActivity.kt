@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
+import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.refresh -> {
                 // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
-                supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")?.let {
+                currentFragment()?.let {
                     if (it is Interface.RefreshableFragment) {
                         it.refresh()
                     }
@@ -124,6 +125,19 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun toTimer(targetBean: TargetBean) {
+        viewPager.currentItem = 1
+        currentFragment()?.let {
+            if (it is TimerFragment){
+                it.setTarget(targetBean)
+            }
+        }
+    }
+
+    private fun currentFragment(): Fragment? =
+        supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
+
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount() = NUM_PAGES

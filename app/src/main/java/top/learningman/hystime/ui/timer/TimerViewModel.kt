@@ -3,6 +3,7 @@ package top.learningman.hystime.ui.timer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import top.learningman.hystime.data.TargetBean
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -14,10 +15,12 @@ class TimerViewModel : ViewModel() {
         RUNNING
     }
 
-    private val _target = MutableLiveData<String>().apply {
-        value = "Example Target"
+    private val _target = MutableLiveData<TargetBean>()
+    val target: LiveData<TargetBean> = _target
+
+    fun setTarget(targetBean: TargetBean) {
+        _target.value = targetBean
     }
-    val target: LiveData<String> = _target
 
     private val _status = MutableLiveData<TimerStatus>().apply {
         value = TimerStatus.STOP
