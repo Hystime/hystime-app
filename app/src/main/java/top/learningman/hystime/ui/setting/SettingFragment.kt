@@ -36,7 +36,7 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
     ): View {
         val root = super.onCreateView(inflater, container, savedInstanceState)
         val activity = activity as MainActivity
-        val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.topPanel)
         activity.setSupportActionBar(toolbar)
         val actionbar = activity.supportActionBar
         requireNotNull(actionbar).setTitle(R.string.title_setting)

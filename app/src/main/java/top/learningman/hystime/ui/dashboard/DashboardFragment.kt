@@ -38,7 +38,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
         val root = binding.root
 
-        val toolbar = root.findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = root.findViewById<Toolbar>(R.id.topPanel)
         val activity = activity as MainActivity
         activity.setSupportActionBar(toolbar)
         val actionbar = activity.supportActionBar

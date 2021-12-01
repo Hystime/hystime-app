@@ -1,28 +1,25 @@
 package top.learningman.hystime
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
-import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
-import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.getAuthCode
 import top.learningman.hystime.utils.getEndpoint
-import top.learningman.hystime.utils.getUser
+import kotlin.math.abs
 
 private const val NUM_PAGES = 3
 
@@ -60,30 +57,49 @@ class MainActivity : AppCompatActivity() {
                 2 -> R.id.navigation_setting
                 else -> throw IllegalArgumentException("Invalid position")
             }
-//            when (position) {
-//                0 -> {
-//                    showActionBar()
-//                    supportActionBar?.title = getString(R.string.title_dashboard)
-//                }
-//                1 -> hideActionBar()
-//                2 -> {
-//                    showActionBar()
-//                    supportActionBar?.title = getString(R.string.title_setting)
-//                }
-//                else -> throw IllegalArgumentException("Invalid position")
-//            }
         }
-
-//        fun showActionBar() {
-//            tabLayout.visibility = TabLayout.GONE
-//            supportActionBar?.show()
-//        }
-//
-//        fun hideActionBar() {
-//            tabLayout.visibility = TabLayout.VISIBLE
-//            supportActionBar?.hide()
-//        }
     }
+
+    private val mTransformer =
+        ViewPager2.PageTransformer { view, position ->
+            val pageWidth = view.width
+            view.findViewById<Toolbar>(R.id.topPanel)?.apply {
+                when {
+                    -1 <= position && position <= 1 -> { // [-1,1]
+                        translationX = pageWidth * -position
+                    }
+                }
+                alpha = when {
+                    position < -1 -> {
+                        0f
+                    }
+                    position <= 1 -> {
+                        1 - abs(position)
+                    }
+                    else -> {
+                        0f
+                    }
+                }
+            }
+            view.findViewById<TabLayout>(R.id.tabLayout)?.apply {
+                when {
+                    -1 <= position && position <= 1 -> { // [-1,1]
+                        translationX = pageWidth * -position
+                    }
+                }
+                alpha = when {
+                    position < -1 -> {
+                        0f
+                    }
+                    position <= 1 -> {
+                        1 - abs(position)
+                    }
+                    else -> {
+                        0f
+                    }
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         val pagerAdapter = MainPagerAdapter(this)
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
+        viewPager.setPageTransformer(mTransformer)
 
         HystimeClient(getEndpoint(this), getAuthCode(this))
     }
