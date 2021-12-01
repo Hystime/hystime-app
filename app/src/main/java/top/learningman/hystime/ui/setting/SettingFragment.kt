@@ -3,6 +3,10 @@ package top.learningman.hystime.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
@@ -11,6 +15,7 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.launch
 import top.learningman.hystime.BuildConfig
 import top.learningman.hystime.Constant
+import top.learningman.hystime.MainActivity
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.Interface.RefreshableFragment
@@ -22,6 +27,21 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
             getString(R.string.setting_filename),
             Context.MODE_PRIVATE
         )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val root = super.onCreateView(inflater, container, savedInstanceState)
+        val activity = activity as MainActivity
+        val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
+        activity.setSupportActionBar(toolbar)
+        val actionbar = activity.supportActionBar
+        requireNotNull(actionbar).setTitle(R.string.title_setting)
+        setHasOptionsMenu(true)
+        return root
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

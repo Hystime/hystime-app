@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -33,9 +34,16 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     ): View {
         dashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
-
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+
+        val root = binding.root
+
+        val toolbar = root.findViewById<Toolbar>(R.id.toolbar)
+        val activity = activity as MainActivity
+        activity.setSupportActionBar(toolbar)
+        val actionbar = activity.supportActionBar
+        requireNotNull(actionbar).setTitle(R.string.title_dashboard)
+        setHasOptionsMenu(true)
 
         mRecyclerView = binding.recyclerView
 
@@ -69,9 +77,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             fun bind(targetBean: TargetBean) {
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
-                binding.startTimer.setOnClickListener {
-                    (context as MainActivity).toTimer(targetBean)
-                }
             }
         }
 

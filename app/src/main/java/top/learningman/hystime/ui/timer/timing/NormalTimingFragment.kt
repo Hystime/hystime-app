@@ -11,7 +11,7 @@ import top.learningman.hystime.ui.timer.TimerViewModel
 
 class NormalTimingFragment : Fragment() {
 
-    private val model: TimerViewModel by lazy {
+    private val viewModel: TimerViewModel by lazy {
         ViewModelProvider(requireActivity())[TimerViewModel::class.java]
     }
 
@@ -28,9 +28,7 @@ class NormalTimingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        model.target.observe(viewLifecycleOwner) { target ->
-            binding.target.text = target.name
-        }
+
     }
 
 }

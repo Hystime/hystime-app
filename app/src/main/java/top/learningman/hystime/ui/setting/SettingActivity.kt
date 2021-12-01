@@ -4,12 +4,17 @@ package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.XmlRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant
+import top.learningman.hystime.MainActivity
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ActivitySettingsBinding
 import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
@@ -22,10 +27,6 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onResume() {
@@ -34,21 +35,15 @@ class SettingActivity : AppCompatActivity() {
             if (it == 0) {
                 throw Error("Not found a valid xml ID in Intent")
             }
+            val title = when (it) {
+                R.xml.normal_timer_pref -> getString(R.string.setting_pref_normal_title)
+                R.xml.pomodoro_timer_pref -> getString(R.string.setting_pref_pomodoro_title)
+                else -> throw Error("Not found a valid xml ID in Intent")
+            }
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.settings, SettingsFragment(it))
+                .replace(R.id.settings, SettingsFragment(it, title))
                 .commit()
-
-            supportActionBar?.apply {
-                title = when (it) {
-                    R.xml.normal_timer_pref -> getString(R.string.setting_pref_normal_title)
-                    R.xml.pomodoro_timer_pref -> getString(R.string.setting_pref_pomodoro_title)
-                    else -> throw Error("Not found a valid xml ID in Intent")
-                }
-            } ?: Log.d(
-                "Setting", "Support" +
-                        "bar not found"
-            )
         }
     }
 
@@ -62,11 +57,29 @@ class SettingActivity : AppCompatActivity() {
         }
     }
 
-    class SettingsFragment(@XmlRes val type: Int) : PreferenceFragmentCompat() {
+    class SettingsFragment(@XmlRes val type: Int, private val fragmentTitle: String) : PreferenceFragmentCompat() {
         private val dialogFragmentTag = "androidx.preference.PreferenceFragment.DIALOG"
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(type, rootKey)
+        }
+
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
+            val root = super.onCreateView(inflater, container, savedInstanceState)
+
+            val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
+            val activity = activity as SettingActivity
+            activity.setSupportActionBar(toolbar)
+            activity.supportActionBar!!.apply {
+                setDisplayHomeAsUpEnabled(true)
+                title = fragmentTitle
+            }
+            setHasOptionsMenu(true)
+            return root
         }
 
         override fun onDisplayPreferenceDialog(preference: Preference) {

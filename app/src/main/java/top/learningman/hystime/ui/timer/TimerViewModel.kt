@@ -15,12 +15,6 @@ class TimerViewModel : ViewModel() {
         RUNNING
     }
 
-    private val _target = MutableLiveData<TargetBean>()
-    val target: LiveData<TargetBean> = _target
-
-    fun setTarget(targetBean: TargetBean) {
-        _target.value = targetBean
-    }
 
     private val _status = MutableLiveData<TimerStatus>().apply {
         value = TimerStatus.STOP

@@ -24,7 +24,7 @@ class TimerFragment : Fragment() {
     private var _binding: FragmentTimerBinding? = null
 
     private lateinit var viewPager: ViewPager2
-    private var tabLayout: TabLayout? = null
+    private lateinit var tabLayout: TabLayout
 
     private val binding get() = _binding!!
 
@@ -65,17 +65,14 @@ class TimerFragment : Fragment() {
         viewPager.adapter = TimingAdapter(this)
         viewPager.setPageTransformer(mTransformer)
 
-        tabLayout?.let {
+        tabLayout = binding.tabLayout
+        tabLayout.let {
             TabLayoutMediator(it, viewPager) { tab, position ->
                 tab.text = getFragmentName(position)
             }.attach()
         }
 
         return binding.root
-    }
-
-    fun setTabLayout(tabLayout: TabLayout) {
-        this.tabLayout = tabLayout
     }
 
     class TimingAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -93,8 +90,8 @@ class TimerFragment : Fragment() {
 
     private fun getFragmentName(position: Int): String {
         return when (position) {
-            0 -> context?.getString(R.string.tab_normal_timing) ?: ""
-            1 -> context?.getString(R.string.tab_pomodoro_timing) ?: ""
+            0 -> requireContext().getString(R.string.tab_normal_timing)
+            1 -> requireContext().getString(R.string.tab_pomodoro_timing)
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
@@ -102,9 +99,5 @@ class TimerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    fun setTarget(target: TargetBean) {
-        timerViewModel.setTarget(target)
     }
 }

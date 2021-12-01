@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -28,7 +29,7 @@ private const val NUM_PAGES = 3
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var tabLayout: TabLayout
+    private lateinit var viewModel: MainViewModel
 
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -59,41 +60,41 @@ class MainActivity : AppCompatActivity() {
                 2 -> R.id.navigation_setting
                 else -> throw IllegalArgumentException("Invalid position")
             }
-            when (position) {
-                0 -> {
-                    showActionBar()
-                    supportActionBar?.title = getString(R.string.title_dashboard)
-                }
-                1 -> hideActionBar()
-                2 -> {
-                    showActionBar()
-                    supportActionBar?.title = getString(R.string.title_setting)
-                }
-                else -> throw IllegalArgumentException("Invalid position")
-            }
+//            when (position) {
+//                0 -> {
+//                    showActionBar()
+//                    supportActionBar?.title = getString(R.string.title_dashboard)
+//                }
+//                1 -> hideActionBar()
+//                2 -> {
+//                    showActionBar()
+//                    supportActionBar?.title = getString(R.string.title_setting)
+//                }
+//                else -> throw IllegalArgumentException("Invalid position")
+//            }
         }
 
-        fun showActionBar() {
-            tabLayout.visibility = TabLayout.GONE
-            supportActionBar?.show()
-        }
-
-        fun hideActionBar() {
-            tabLayout.visibility = TabLayout.VISIBLE
-            supportActionBar?.hide()
-        }
+//        fun showActionBar() {
+//            tabLayout.visibility = TabLayout.GONE
+//            supportActionBar?.show()
+//        }
+//
+//        fun hideActionBar() {
+//            tabLayout.visibility = TabLayout.VISIBLE
+//            supportActionBar?.hide()
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-
-        tabLayout = binding.tabLayout
+//        val toolbar = binding.toolbar
+//        setSupportActionBar(toolbar)
 
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)
@@ -106,37 +107,28 @@ class MainActivity : AppCompatActivity() {
         HystimeClient(getEndpoint(this), getAuthCode(this))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.toolbar_menu, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.refresh -> {
-                // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
-                currentFragment()?.let {
-                    if (it is Interface.RefreshableFragment) {
-                        it.refresh()
-                    }
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.refresh -> {
+//                // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
+//                currentFragment()?.let {
+//                    if (it is Interface.RefreshableFragment) {
+//                        it.refresh()
+//                    }
+//                }
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
-    fun toTimer(targetBean: TargetBean) {
-        viewPager.currentItem = 1
-        currentFragment()?.let {
-            if (it is TimerFragment){
-                it.setTarget(targetBean)
-            }
-        }
-    }
-
-    private fun currentFragment(): Fragment? =
-        supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
+//    private fun currentFragment(): Fragment? =
+//        supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
 
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
@@ -145,9 +137,7 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment =
             when (position) {
                 0 -> DashboardFragment()
-                1 -> TimerFragment().apply {
-                    setTabLayout(tabLayout)
-                }
+                1 -> TimerFragment()
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
