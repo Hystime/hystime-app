@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.timer.TimerFragment">
+
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +21,9 @@
         app:tabSelectedTextColor="?attr/colorPrimary"
         app:tabTextAppearance="@style/TextAppearance.HysTime.TabLayout" />
 
+
     <top.learningman.hystime.utils.NestedScrollableHost
+        android:id="@+id/timerHost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"

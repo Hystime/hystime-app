@@ -71,7 +71,7 @@ class SettingActivity : AppCompatActivity() {
         ): View {
             val root = super.onCreateView(inflater, container, savedInstanceState)
 
-            val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.topPanel)
+            val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
             val activity = activity as SettingActivity
             activity.setSupportActionBar(toolbar)
             activity.supportActionBar!!.apply {

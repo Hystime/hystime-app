@@ -38,14 +38,11 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
         val root = binding.root
 
-        val toolbar = root.findViewById<Toolbar>(R.id.topPanel)
-        val activity = activity as MainActivity
-        activity.setSupportActionBar(toolbar)
-        val actionbar = activity.supportActionBar
-        requireNotNull(actionbar).setTitle(R.string.title_dashboard)
+        val toolbar = root.findViewById<Toolbar>(R.id.toolbar)
+        requireNotNull(toolbar).setTitle(R.string.title_dashboard)
         setHasOptionsMenu(true)
 
-        mRecyclerView = binding.recyclerView
+        mRecyclerView = binding.targets
 
         dashboardViewModel.targetBeanList.observe(viewLifecycleOwner) {
             mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireActivity())

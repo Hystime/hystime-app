@@ -2,6 +2,7 @@ package top.learningman.hystime
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
+import top.learningman.hystime.utils.NestedScrollableHost
 import top.learningman.hystime.utils.getAuthCode
 import top.learningman.hystime.utils.getEndpoint
 import kotlin.math.abs
@@ -30,17 +32,26 @@ class MainActivity : AppCompatActivity() {
 
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
+            fun goItem(item: Int) {
+                if (item == viewPager.currentItem) return
+                if (abs(item - viewPager.currentItem) > 1) {
+                    viewPager.setCurrentItem(item, false)
+                } else {
+                    viewPager.setCurrentItem(item, true)
+                }
+            }
+
             when (item.itemId) {
                 R.id.navigation_dashboard -> {
-                    viewPager.currentItem = 0
+                    goItem(0)
                     return true
                 }
                 R.id.navigation_home -> {
-                    viewPager.currentItem = 1
+                    goItem(1)
                     return true
                 }
                 R.id.navigation_setting -> {
-                    viewPager.currentItem = 2
+                    goItem(2)
                     return true
                 }
             }
@@ -63,42 +74,38 @@ class MainActivity : AppCompatActivity() {
     private val mTransformer =
         ViewPager2.PageTransformer { view, position ->
             val pageWidth = view.width
-            view.findViewById<Toolbar>(R.id.topPanel)?.apply {
-                when {
-                    -1 <= position && position <= 1 -> { // [-1,1]
-                        translationX = pageWidth * -position
-                    }
-                }
-                alpha = when {
-                    position < -1 -> {
-                        0f
-                    }
-                    position <= 1 -> {
-                        1 - abs(position)
-                    }
-                    else -> {
-                        0f
+            fun stay(view: View?) {
+                view?.let {
+                    when {
+                        -1 <= position && position <= 1 -> {
+                            view.translationX = pageWidth * -position
+                        }
                     }
                 }
             }
-            view.findViewById<TabLayout>(R.id.tabLayout)?.apply {
-                when {
-                    -1 <= position && position <= 1 -> { // [-1,1]
-                        translationX = pageWidth * -position
-                    }
-                }
-                alpha = when {
-                    position < -1 -> {
-                        0f
-                    }
-                    position <= 1 -> {
-                        1 - abs(position)
-                    }
-                    else -> {
-                        0f
+
+            fun fade(view: View?) {
+                view?.let {
+                    it.alpha = when {
+                        position < -1 -> {
+                            0f
+                        }
+                        position <= 1 -> {
+                            1 - abs(position)
+                        }
+                        else -> {
+                            0f
+                        }
                     }
                 }
             }
+            val toolbar:View? = view.findViewById(R.id.toolbar)
+            val tabLayout:View? = view.findViewById(R.id.tabLayout)
+
+            stay(toolbar)
+            stay(tabLayout)
+            fade(toolbar)
+            fade(tabLayout)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
