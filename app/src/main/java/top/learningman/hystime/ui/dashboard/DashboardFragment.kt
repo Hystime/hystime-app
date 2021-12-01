@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import top.learningman.hystime.MainActivity
+import top.learningman.hystime.R
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
@@ -55,9 +57,20 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         private val list: List<TargetBean>,
         val context: Context
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
-        inner class TargetViewHolder(private val binding: View) : RecyclerView.ViewHolder(binding) {
+        fun Int.toLocalTimeString(): String {
+            val hour = this / 3600
+            val minute = (this % 3600) / 60
+            return "$hour ${context.getString(R.string.hour)} $minute ${context.getString(R.string.minute)}"
+        }
+
+        inner class TargetViewHolder(private val binding: ItemDashboardTargetBinding) :
+            RecyclerView.ViewHolder(binding.root) {
             fun bind(targetBean: TargetBean) {
-                binding
+                binding.title.text = targetBean.name
+                binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
+                binding.startTimer.setOnClickListener {
+                    MainActivity.getPager().setCurrentItem(1, true)
+                }
             }
         }
 
@@ -67,7 +80,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
                 parent,
                 false
             )
-            return TargetViewHolder(root.root)
+            return TargetViewHolder(root)
         }
 
         override fun onBindViewHolder(holder: TargetViewHolder, position: Int) {
@@ -83,3 +96,4 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         dashboardViewModel.refreshTarget(getUser(requireContext()))
     }
 }
+

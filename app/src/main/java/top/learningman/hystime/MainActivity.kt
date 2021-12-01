@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,7 +27,6 @@ private const val NUM_PAGES = 3
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
@@ -137,5 +137,10 @@ class MainActivity : AppCompatActivity() {
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
+    }
+
+    companion object {
+        private lateinit var viewPager: ViewPager2
+        fun getPager(): ViewPager2 = viewPager
     }
 }
