@@ -1,11 +1,9 @@
 package top.learningman.hystime
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -13,14 +11,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.tabs.TabLayout
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
-import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
-import top.learningman.hystime.utils.Interface
-import top.learningman.hystime.utils.NestedScrollableHost
+import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.utils.getAuthCode
 import top.learningman.hystime.utils.getEndpoint
 import kotlin.math.abs
@@ -102,12 +97,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            val toolbar: View? = view.findViewById(R.id.toolbar)
             val tabLayout: View? = view.findViewById(R.id.tabLayout)
+            val appbar: View? = view.findViewById(R.id.appbar)
 
-            stay(toolbar)
+            stay(appbar)
             stay(tabLayout)
-            fade(toolbar)
+            fade(appbar)
             fade(tabLayout)
         }
 
