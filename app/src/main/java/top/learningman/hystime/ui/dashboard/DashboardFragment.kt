@@ -24,6 +24,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     private var _binding: FragmentDashboardBinding? = null
 
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var toolbar: Toolbar
 
     private val binding get() = _binding!!
 
@@ -38,8 +39,8 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
         val root = binding.root
 
-        val toolbar = root.findViewById<Toolbar>(R.id.toolbar)
-        requireNotNull(toolbar).setTitle(R.string.title_dashboard)
+        toolbar = root.findViewById(R.id.toolbar)
+        toolbar.setTitle(R.string.title_dashboard)
         setHasOptionsMenu(true)
 
         mRecyclerView = binding.targets

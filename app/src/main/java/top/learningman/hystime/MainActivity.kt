@@ -1,6 +1,7 @@
 package top.learningman.hystime
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import top.learningman.hystime.ui.setting.SettingFragment
+import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.NestedScrollableHost
 import top.learningman.hystime.utils.getAuthCode
 import top.learningman.hystime.utils.getEndpoint
@@ -99,8 +101,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            val toolbar:View? = view.findViewById(R.id.toolbar)
-            val tabLayout:View? = view.findViewById(R.id.tabLayout)
+
+            val toolbar: View? = view.findViewById(R.id.toolbar)
+            val tabLayout: View? = view.findViewById(R.id.tabLayout)
 
             stay(toolbar)
             stay(tabLayout)
@@ -150,9 +153,6 @@ class MainActivity : AppCompatActivity() {
 //            else -> super.onOptionsItemSelected(item)
 //        }
 //    }
-
-//    private fun currentFragment(): Fragment? =
-//        supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
 
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

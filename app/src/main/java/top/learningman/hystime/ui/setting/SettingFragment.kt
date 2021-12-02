@@ -18,10 +18,10 @@ import top.learningman.hystime.Constant
 import top.learningman.hystime.MainActivity
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.utils.Interface.RefreshableFragment
+import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.getUser
 
-class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
+class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
     private val sp by lazy {
         requireContext().getSharedPreferences(
             getString(R.string.setting_filename),
@@ -29,14 +29,16 @@ class SettingFragment : PreferenceFragmentCompat(), RefreshableFragment {
         )
     }
 
+    private lateinit var toolbar: Toolbar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val root = super.onCreateView(inflater, container, savedInstanceState)
-        val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
-        requireNotNull(toolbar).setTitle(R.string.title_setting)
+        toolbar = requireNotNull(root).findViewById(R.id.toolbar)
+        toolbar.setTitle(R.string.title_setting)
         setHasOptionsMenu(true)
         return root
     }
