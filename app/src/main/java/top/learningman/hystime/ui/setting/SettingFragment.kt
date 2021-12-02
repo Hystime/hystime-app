@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
@@ -41,6 +42,21 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         toolbar.setTitle(R.string.title_setting)
         setHasOptionsMenu(true)
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> {
+                refresh()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

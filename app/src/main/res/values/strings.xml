@@ -81,5 +81,6 @@
     <string name="default_target" translatable="false">Timing</string>
     <string name="refresh">Refresh</string>
     <string name="target_title_placeholder">Target Title</string>
+    <string name="add_target">Add Target</string>
 
 </resources>

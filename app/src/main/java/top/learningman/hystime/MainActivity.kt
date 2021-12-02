@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.setPageTransformer(mTransformer)
 
         HystimeClient(getEndpoint(this), getAuthCode(this))
+
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {

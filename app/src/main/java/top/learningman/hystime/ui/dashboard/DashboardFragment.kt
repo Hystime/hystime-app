@@ -2,9 +2,7 @@ package top.learningman.hystime.ui.dashboard
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -54,11 +52,31 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.dashboard_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> {
+                refresh()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    // TODO: p630
     class TargetRecyclerAdapter(
         val viewModel: DashboardViewModel,
         private val list: List<TargetBean>,
