@@ -150,7 +150,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         HystimeClient(endpoint, authCode)
 
         lifecycleScope.launch {
-            if (HystimeClient.getInstance().checkValid()) {
+            if (HystimeClient.getInstance().refreshValid()) {
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_valid)
             } else {
@@ -170,7 +170,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         lifecycleScope.launch {
 
                 userTitle.title = getString(R.string.setting_category_user_title_pending)
-                if (HystimeClient.getInstance().checkValid()) {
+                if (HystimeClient.getInstance().refreshValid()) {
                     val usernameQuery =
                         username ?: sp.getString(getString(R.string.setting_username_key), "")!!
                     val user = HystimeClient.getInstance().getUserInfo(usernameQuery)

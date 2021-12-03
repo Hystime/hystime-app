@@ -18,6 +18,8 @@ import UserUpdateMutation
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
+import com.apollographql.apollo.api.Operation
+import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import okhttp3.OkHttpClient
@@ -71,137 +73,81 @@ class HystimeClient(endpoint: String, authCode: String) {
         instance = this
     }
 
-    suspend fun checkValid(): Boolean {
-        return try {
-            if (status == Status.CLIENT_ERROR) return false
-            val test = client.query(TestQuery()).await()
-            if (test.data?.test == true) {
-                status = Status.OK
-                true
-            } else {
-                status = Status.NETWORK_ERROR
-                false
-            }
-        } catch (e: ApolloNetworkException) {
-            Log.e("HystimeClient", e.errorString())
+
+    suspend fun refreshValid(): Result<Boolean> = wrap {
+        if (status == Status.CLIENT_ERROR) return@wrap false
+        val test = client.query(TestQuery()).await()
+        if (test.data?.test == true) {
+            status = Status.OK
+            true
+        } else {
+            status = Status.NETWORK_ERROR // Almost impossible to happen, not handle is still safe
             false
         }
     }
 
+
     private fun isValid() = status == Status.OK
 
-    suspend fun getUserInfo(username: String): UserInfoQuery.User? {
-        if (!isValid()) return null
-        try {
-            val resp = client.query(UserInfoQuery(username)).await()
-            resp.data?.let {
-                return it.user
-            }
-            Log.e("getUserInfo", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("getUserInfo", e.errorString())
-        }
-        return null
+    suspend fun getUserInfo(username: String) = wrap {
+        queryData(UserInfoQuery(username))?.user
     }
 
-    suspend fun getUserTargets(username: String): List<UserTargetsQuery.Target>? {
-        if (!isValid()) return null
-        try {
-            val resp = client.query(UserTargetsQuery(username)).await()
-            resp.data?.user?.let {
-                return it.targets
-            }
-            Log.e("getUserTargets", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("getUserTargets", e.errorString())
-        }
-        return null
+    suspend fun getUserTargets(username: String) = wrap {
+        queryData(UserTargetsQuery(username))?.user?.targets
     }
 
-    suspend fun getTarget(username: String): TargetQuery.Target? {
-        if (!isValid()) return null
-        try {
-            val resp = client.query(TargetQuery(username)).await()
-            resp.data?.let {
-                return it.target
-            }
-            Log.e("getTarget", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("getTarget", e.errorString())
-        }
-        return null
+    suspend fun getTarget(username: String) = wrap {
+        queryData(TargetQuery(username))?.target
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     suspend fun getTargetTimePieces(
         targetID: String,
         first: Int,
         after: Input<String>
-    ): TargetTimePiecesQuery.TimePieces? {
-        if (!isValid()) return null
-        try {
-            val resp = client.query(TargetTimePiecesQuery(targetID, first, after)).await()
-            resp.data?.target?.let {
-                return it.timePieces
-            }
-            Log.e("getTimePiece", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("getTimePiece", e.errorString())
-        }
-        return null
+    ) = wrap {
+        queryData(TargetTimePiecesQuery(targetID, first, after))?.target?.timePieces
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     suspend fun getUserTimePieces(
         userID: String,
         first: Int,
         after: Input<String>
-    ): UserTimePiecesQuery.Timepieces? {
-        if (!isValid()) return null
-        try {
-            val resp = client.query(UserTimePiecesQuery(userID, first, after)).await()
-            resp.data?.let {
-                return it.timepieces
-            }
-            Log.e("getUserTimePieces", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("getUserTimePieces", e.errorString())
-        }
-        return null
+    ) = wrap {
+        queryData(UserTimePiecesQuery(userID, first, after))?.timepieces
     }
 
-    suspend fun getLastWeekUserTimePieces(
-        userID: String
-    ): List<UserTimePiecesQuery.Node> {
-        if (!isValid()) return emptyList()
-        val pieces = mutableListOf<UserTimePiecesQuery.Node>()
-        var cursor: Input<String> = Input.absent()
-        while (true) {
-            getUserTimePieces(userID, 30, cursor)?.let { timePieces ->
-                if (timePieces.totalCount == 0) {
-                    return pieces.toList()
-                }
-                for (nd in timePieces.edges) {
-                    nd.node.let {
-                        if (it.start.inPastWeek()) {
-                            pieces.add(nd.node)
-                        } else {
-                            return pieces.toList()
-                        }
-                    }
-                    if (!timePieces.pageInfo.hasNextPage) {
-                        return pieces.toList()
-                    }
-                    cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
-                }
-            } ?: return pieces.toList()
-        }
-    }
+//    suspend fun getLastWeekUserTimePieces(
+//        userID: String
+//    )
+
+//    suspend fun getLastWeekUserTimePieces(
+//        userID: String
+//    ): List<UserTimePiecesQuery.Node> {
+//        if (!isValid()) return emptyList()
+//        val pieces = mutableListOf<UserTimePiecesQuery.Node>()
+//        var cursor: Input<String> = Input.absent()
+//        while (true) {
+//            getUserTimePieces(userID, 30, cursor)?.let { timePieces ->
+//                if (timePieces.totalCount == 0) {
+//                    return pieces.toList()
+//                }
+//                for (nd in timePieces.edges) {
+//                    nd.node.let {
+//                        if (it.start.inPastWeek()) {
+//                            pieces.add(nd.node)
+//                        } else {
+//                            return pieces.toList()
+//                        }
+//                    }
+//                    if (!timePieces.pageInfo.hasNextPage) {
+//                        return pieces.toList()
+//                    }
+//                    cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
+//                }
+//            } ?: return pieces.toList()
+//        }
+//    }
 
     suspend fun getLastWeekTargetTimePieces(
         targetID: String
@@ -412,7 +358,33 @@ class HystimeClient(endpoint: String, authCode: String) {
             return instance!!
         }
 
-        private fun getErrorClient():HystimeClient = HystimeClient("", "")
+        private fun getErrorClient(): HystimeClient = HystimeClient("", "")
+
+        private suspend fun <T> wrap(block: suspend () -> T): Result<T> {
+            if (instance == null) {
+                return Result.failure(Exception("HystimeClient is null"))
+            }
+            if (!instance!!.isValid()) {
+                return Result.failure(Exception("HystimeClient is invalid"))
+            }
+            val result = try {
+                Result.success(block.invoke())
+            } catch (e: ApolloNetworkException) {
+                Result.failure(e)
+            }
+            return result
+        }
+
+        private suspend fun <D : Operation.Data, T, V : Operation.Variables> queryData(query: Query<D, T, V>): T? {
+            val resp = instance!!.client.query(query).await()
+            if (resp.errors.isNullOrEmpty()) {
+                return resp.data
+            } else {
+                throw RuntimeException(resp.errors.toString())
+            }
+        }
+
+        class RuntimeException(s: String) : Exception(s)
     }
 }
 
