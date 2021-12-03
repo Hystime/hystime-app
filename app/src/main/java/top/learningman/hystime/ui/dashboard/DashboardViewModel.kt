@@ -3,8 +3,6 @@ package top.learningman.hystime.ui.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.sdk.HystimeClient
 
@@ -24,11 +22,6 @@ class DashboardViewModel : ViewModel() {
     val targetBeanList: LiveData<List<TargetBean>> = _targetBeanList
 
     fun refreshTarget(username: String) {
-        viewModelScope.launch {
-            val targetBeanList = client.getUserTargets(username)
-            _targetBeanList.value = targetBeanList?.map {
-                TargetBean.fromUserTargetQuery(it)
-            } ?: emptyList()
-        }
+
     }
 }

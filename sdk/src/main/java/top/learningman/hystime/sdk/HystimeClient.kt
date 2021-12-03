@@ -25,6 +25,9 @@ import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import type.*
 import java.util.*
@@ -35,6 +38,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         OK,
         CLIENT_ERROR,
         NETWORK_ERROR,
+        UNKNOWN_ERROR,
         PENDING
     }
 
@@ -70,37 +74,43 @@ class HystimeClient(endpoint: String, authCode: String) {
                 this.status = Status.CLIENT_ERROR
                 Log.e("ClientInit", e.errorString())
             }
-            status = Status.OK
+            CoroutineScope(Dispatchers.IO).launch {
+                refreshValid()
+            }
         }
-
         instance = this
     }
 
 
     suspend fun refreshValid(): Result<Boolean> = wrap {
-        if (status == Status.CLIENT_ERROR) return@wrap false
+        val err = Error("Network Error")
+        if (status == Status.CLIENT_ERROR) throw err
         val test = client.query(TestQuery()).await()
-        if (test.data?.test == true) {
+        if (test.data == null) {
+            status = Status.NETWORK_ERROR
+            throw err
+        } else if (test.data!!.test) {
             status = Status.OK
             true
         } else {
-            status = Status.NETWORK_ERROR // Almost impossible to happen, not handle is still safe
-            false
+            status = Status.UNKNOWN_ERROR
+            throw Error("WTF is this error?")
+            // Almost impossible to happen, but still handle it.
         }
     }
 
     private fun isValid() = status == Status.OK
 
     suspend fun getUserInfo(username: String) = wrap {
-        queryData(UserInfoQuery(username))?.user
+        queryData(UserInfoQuery(username)).user
     }
 
     suspend fun getUserTargets(username: String) = wrap {
-        queryData(UserTargetsQuery(username))?.user?.targets
+        queryData(UserTargetsQuery(username)).user?.targets
     }
 
     suspend fun getTarget(username: String) = wrap {
-        queryData(TargetQuery(username))?.target
+        queryData(TargetQuery(username)).target
     }
 
     suspend fun getTargetTimePieces(
@@ -108,7 +118,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(TargetTimePiecesQuery(targetID, first, after))?.target?.timePieces
+        queryData(TargetTimePiecesQuery(targetID, first, after)).target?.timePieces
     }
 
     suspend fun getUserTimePieces(
@@ -116,24 +126,24 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(UserTimePiecesQuery(userID, first, after))?.timepieces
+        queryData(UserTimePiecesQuery(userID, first, after)).timepieces
     }
 
     suspend fun getUserLastWeekTimePieces(
         username: String
     ) = wrap {
-        queryData(UserLastWeekTimePiecesQuery(username))?.user?.last_week_timePieces
+        queryData(UserLastWeekTimePiecesQuery(username)).user?.last_week_timePieces
     }
 
     suspend fun getTargetLastWeekTimePieces(
         targetID: String
     ) = wrap {
-        queryData(TargetLastWeekTimePiecesQuery(targetID))?.target?.last_week_timePieces
+        queryData(TargetLastWeekTimePiecesQuery(targetID)).target?.last_week_timePieces
     }
 
     suspend fun createUser(username: String) = wrap {
         val input = UserCreateInput(username)
-        mutateData(UserCreateMutation(input))?.userCreate
+        mutateData(UserCreateMutation(input)).userCreate
     }
 
     suspend fun updateUser(
@@ -141,7 +151,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         username: Input<String>
     ) = wrap {
         val input = UserUpdateInput(username)
-        mutateData(UserUpdateMutation(userID, input))
+        mutateData(UserUpdateMutation(userID, input)).userUpdate
     }
 
     suspend fun createTarget(
@@ -151,7 +161,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         type: Input<TargetType>
     ) = wrap {
         val input = TargetCreateInput(name, timeSpent, type)
-        mutateData(TargetCreateMutation(userID, input))
+        mutateData(TargetCreateMutation(userID, input)).targetCreate
     }
 
     suspend fun updateTarget(
@@ -161,13 +171,13 @@ class HystimeClient(endpoint: String, authCode: String) {
         type: Input<TargetType>
     ) = wrap {
         val input = TargetUpdateInput(name, timeSpent, type)
-        mutateData(TargetUpdateMutation(targetID, input))
+        mutateData(TargetUpdateMutation(targetID, input)).targetUpdate
     }
 
     suspend fun deleteTarget(
         targetID: String
     ) = wrap {
-        mutateData(TargetDeleteMutation(targetID))
+        mutateData(TargetDeleteMutation(targetID)).targetDelete
     }
 
     suspend fun createTimePiece(
@@ -177,7 +187,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         type: Input<TimePieceType>
     ) = wrap {
         val input = TimePieceCreateInput(start, duration, type)
-        mutateData(TimePieceCreateMutation(targetID, input))
+        mutateData(TimePieceCreateMutation(targetID, input)).timePieceCreate
     }
 
     suspend fun updateTimePiece(
@@ -187,20 +197,20 @@ class HystimeClient(endpoint: String, authCode: String) {
         type: Input<TimePieceType>
     ) = wrap {
         val input = TimePieceUpdateInput(start, duration, type)
-        mutateData(TimePieceUpdateMutation(timePieceID, input))
+        mutateData(TimePieceUpdateMutation(timePieceID, input)).timePieceUpdate
     }
 
     suspend fun deleteTimePiece(
         timePieceID: Int
     ) = wrap {
-        mutateData(TimePieceDeleteMutation(timePieceID))
+        mutateData(TimePieceDeleteMutation(timePieceID)).timePieceDelete
     }
 
     suspend fun createTimePiecesForTarget(
         targetID: String,
         inputs: List<TimePieceCreateInput>
     ) = wrap {
-        mutateData(TimePiecesCreateForTargetMutation(targetID, inputs))
+        mutateData(TimePiecesCreateForTargetMutation(targetID, inputs)).timePiecesCreateForTarget
     }
 
     companion object {
@@ -229,19 +239,25 @@ class HystimeClient(endpoint: String, authCode: String) {
             return result
         }
 
-        private suspend fun <D : Operation.Data, T, V : Operation.Variables> queryData(query: Query<D, T, V>): T? {
+        private suspend fun <D : Operation.Data, T, V : Operation.Variables> queryData(query: Query<D, T, V>): T {
             val resp = instance!!.client.query(query).await()
             if (resp.errors.isNullOrEmpty()) {
-                return resp.data
+                if (resp.data == null) {
+                    throw RuntimeException("No data collected.")
+                }
+                return resp.data!!
             } else {
                 throw RuntimeException(resp.errors.toString())
             }
         }
 
-        private suspend fun <D : Operation.Data, T, V : Operation.Variables> mutateData(mutate: Mutation<D, T, V>): T? {
+        private suspend fun <D : Operation.Data, T, V : Operation.Variables> mutateData(mutate: Mutation<D, T, V>): T {
             val resp = instance!!.client.mutate(mutate).await()
             if (resp.errors.isNullOrEmpty()) {
-                return resp.data
+                if (resp.data == null) {
+                    throw RuntimeException("No data collected.")
+                }
+                return resp.data!!
             } else {
                 throw RuntimeException(resp.errors.toString())
             }

@@ -150,7 +150,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         HystimeClient(endpoint, authCode)
 
         lifecycleScope.launch {
-            if (HystimeClient.getInstance().refreshValid()) {
+            if (HystimeClient.getInstance().refreshValid().isSuccess) {
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_valid)
             } else {
@@ -168,22 +168,21 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         val userTitle =
             preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
         lifecycleScope.launch {
-
-                userTitle.title = getString(R.string.setting_category_user_title_pending)
-                if (HystimeClient.getInstance().refreshValid()) {
-                    val usernameQuery =
-                        username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                    val user = HystimeClient.getInstance().getUserInfo(usernameQuery)
-                    if (user != null) {
-                        userTitle.title = getString(R.string.setting_category_user_title_valid)
-                    } else {
-                        userTitle.title =
-                            getString(R.string.setting_category_user_title_invalid)
-                    }
+            userTitle.title = getString(R.string.setting_category_user_title_pending)
+            if (HystimeClient.getInstance().refreshValid().isSuccess) {
+                val usernameQuery =
+                    username ?: sp.getString(getString(R.string.setting_username_key), "")!!
+                val user = HystimeClient.getInstance().getUserInfo(usernameQuery).isSuccess
+                if (user) {
+                    userTitle.title = getString(R.string.setting_category_user_title_valid)
                 } else {
                     userTitle.title =
-                        getString(R.string.setting_category_user_title_failed)
+                        getString(R.string.setting_category_user_title_invalid)
                 }
+            } else {
+                userTitle.title =
+                    getString(R.string.setting_category_user_title_failed)
+            }
 
         }
     }
