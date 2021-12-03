@@ -2,6 +2,7 @@ package top.learningman.hystime.sdk
 
 import TargetCreateMutation
 import TargetDeleteMutation
+import TargetLastWeekTimePiecesQuery
 import TargetQuery
 import TargetTimePiecesQuery
 import TargetUpdateMutation
@@ -12,12 +13,14 @@ import TimePieceUpdateMutation
 import TimePiecesCreateForTargetMutation
 import UserCreateMutation
 import UserInfoQuery
+import UserLastWeekTimePiecesQuery
 import UserTargetsQuery
 import UserTimePiecesQuery
 import UserUpdateMutation
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
+import com.apollographql.apollo.api.Mutation
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.coroutines.await
@@ -86,7 +89,6 @@ class HystimeClient(endpoint: String, authCode: String) {
         }
     }
 
-
     private fun isValid() = status == Status.OK
 
     suspend fun getUserInfo(username: String) = wrap {
@@ -117,100 +119,29 @@ class HystimeClient(endpoint: String, authCode: String) {
         queryData(UserTimePiecesQuery(userID, first, after))?.timepieces
     }
 
-//    suspend fun getLastWeekUserTimePieces(
-//        userID: String
-//    )
-
-//    suspend fun getLastWeekUserTimePieces(
-//        userID: String
-//    ): List<UserTimePiecesQuery.Node> {
-//        if (!isValid()) return emptyList()
-//        val pieces = mutableListOf<UserTimePiecesQuery.Node>()
-//        var cursor: Input<String> = Input.absent()
-//        while (true) {
-//            getUserTimePieces(userID, 30, cursor)?.let { timePieces ->
-//                if (timePieces.totalCount == 0) {
-//                    return pieces.toList()
-//                }
-//                for (nd in timePieces.edges) {
-//                    nd.node.let {
-//                        if (it.start.inPastWeek()) {
-//                            pieces.add(nd.node)
-//                        } else {
-//                            return pieces.toList()
-//                        }
-//                    }
-//                    if (!timePieces.pageInfo.hasNextPage) {
-//                        return pieces.toList()
-//                    }
-//                    cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
-//                }
-//            } ?: return pieces.toList()
-//        }
-//    }
-
-    suspend fun getLastWeekTargetTimePieces(
-        targetID: String
-    ): List<TargetTimePiecesQuery.Node> {
-        if (!isValid()) return emptyList()
-        val pieces = mutableListOf<TargetTimePiecesQuery.Node>()
-        var cursor: Input<String> = Input.absent()
-        while (true) {
-            getTargetTimePieces(targetID, 30, cursor)?.let { timePieces ->
-                if (timePieces.totalCount == 0) {
-                    return pieces.toList()
-                }
-                for (nd in timePieces.edges) {
-                    nd.node.let {
-                        if (it.start.inPastWeek()) {
-                            pieces.add(nd.node)
-                        } else {
-                            return pieces.toList()
-                        }
-                    }
-                }
-                if (!timePieces.pageInfo.hasNextPage) {
-                    return pieces.toList()
-                }
-                cursor = Input.fromNullable(timePieces.pageInfo.endCursor)
-            } ?: return pieces.toList()
-        }
+    suspend fun getUserLastWeekTimePieces(
+        username: String
+    ) = wrap {
+        queryData(UserLastWeekTimePiecesQuery(username))?.user?.last_week_timePieces
     }
 
-    suspend fun createUser(username: String): UserCreateMutation.UserCreate? {
-        if (!isValid()) return null
-        try {
-            val input = UserCreateInput(username)
-            val resp = client.mutate(UserCreateMutation(input)).await()
-            resp.data?.let {
-                return it.userCreate
-            }
-            Log.e("createUser", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("createUser", e.errorString())
-        }
+    suspend fun getTargetLastWeekTimePieces(
+        targetID: String
+    ) = wrap {
+        queryData(TargetLastWeekTimePiecesQuery(targetID))?.target?.last_week_timePieces
+    }
 
-        return null
+    suspend fun createUser(username: String) = wrap {
+        val input = UserCreateInput(username)
+        mutateData(UserCreateMutation(input))?.userCreate
     }
 
     suspend fun updateUser(
         userID: String,
         username: Input<String>
-    ): UserUpdateMutation.UserUpdate? {
-        if (!isValid()) return null
-        try {
-            val input = UserUpdateInput(username)
-            val resp = client.mutate(UserUpdateMutation(userID, input)).await()
-            resp.data?.let {
-                return it.userUpdate
-            }
-            Log.e("updateUser", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("updateUser", e.errorString())
-        }
-        return null
+    ) = wrap {
+        val input = UserUpdateInput(username)
+        mutateData(UserUpdateMutation(userID, input))
     }
 
     suspend fun createTarget(
@@ -218,20 +149,9 @@ class HystimeClient(endpoint: String, authCode: String) {
         name: String,
         timeSpent: Input<Int>,
         type: Input<TargetType>
-    ): TargetCreateMutation.TargetCreate? {
-        if (!isValid()) return null
-        try {
-            val input = TargetCreateInput(name, timeSpent, type)
-            val resp = client.mutate(TargetCreateMutation(userID, input)).await()
-            resp.data?.let {
-                return it.targetCreate
-            }
-            Log.e("createTarget", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("createTarget", e.errorString())
-        }
-        return null
+    ) = wrap {
+        val input = TargetCreateInput(name, timeSpent, type)
+        mutateData(TargetCreateMutation(userID, input))
     }
 
     suspend fun updateTarget(
@@ -239,37 +159,15 @@ class HystimeClient(endpoint: String, authCode: String) {
         name: Input<String>,
         timeSpent: Input<Int>,
         type: Input<TargetType>
-    ): TargetUpdateMutation.TargetUpdate? {
-        if (!isValid()) return null
-        try {
-            val input = TargetUpdateInput(name, timeSpent, type)
-            val resp = client.mutate(TargetUpdateMutation(targetID, input)).await()
-            resp.data?.let {
-                return it.targetUpdate
-            }
-            Log.e("updateTarget", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("updateTarget", e.errorString())
-        }
-        return null
+    ) = wrap {
+        val input = TargetUpdateInput(name, timeSpent, type)
+        mutateData(TargetUpdateMutation(targetID, input))
     }
 
     suspend fun deleteTarget(
         targetID: String
-    ): Boolean {
-        if (!isValid()) return false
-        try {
-            val resp = client.mutate(TargetDeleteMutation(targetID)).await()
-            resp.data?.let {
-                return it.targetDelete
-            }
-            Log.e("deleteTarget", resp.errors.toString())
-            return false
-        } catch (e: ApolloNetworkException) {
-            Log.e("deleteTarget", e.errorString())
-        }
-        return false
+    ) = wrap {
+        mutateData(TargetDeleteMutation(targetID))
     }
 
     suspend fun createTimePiece(
@@ -277,20 +175,9 @@ class HystimeClient(endpoint: String, authCode: String) {
         start: Date,
         duration: Int,
         type: Input<TimePieceType>
-    ): TimePieceCreateMutation.TimePieceCreate? {
-        if (!isValid()) return null
-        try {
-            val input = TimePieceCreateInput(start, duration, type)
-            val resp = client.mutate(TimePieceCreateMutation(targetID, input)).await()
-            resp.data?.let {
-                return it.timePieceCreate
-            }
-            Log.e("createTimePiece", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("createTimePiece", e.errorString())
-        }
-        return null
+    ) = wrap {
+        val input = TimePieceCreateInput(start, duration, type)
+        mutateData(TimePieceCreateMutation(targetID, input))
     }
 
     suspend fun updateTimePiece(
@@ -298,55 +185,22 @@ class HystimeClient(endpoint: String, authCode: String) {
         start: Input<Date>,
         duration: Input<Int>,
         type: Input<TimePieceType>
-    ): TimePieceUpdateMutation.TimePieceUpdate? {
-        if (!isValid()) return null
-        try {
-            val input = TimePieceUpdateInput(start, duration, type)
-            val resp = client.mutate(TimePieceUpdateMutation(timePieceID, input)).await()
-            resp.data?.let {
-                return it.timePieceUpdate
-            }
-            Log.e("updateTimePiece", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("updateTimePiece", e.errorString())
-        }
-        return null
+    ) = wrap {
+        val input = TimePieceUpdateInput(start, duration, type)
+        mutateData(TimePieceUpdateMutation(timePieceID, input))
     }
 
     suspend fun deleteTimePiece(
         timePieceID: Int
-    ): Boolean {
-        if (!isValid()) return false
-        try {
-            val resp = client.mutate(TimePieceDeleteMutation(timePieceID)).await()
-            resp.data?.let {
-                return it.timePieceDelete
-            }
-            Log.e("deleteTimePiece", resp.errors.toString())
-            return false
-        } catch (e: ApolloNetworkException) {
-            Log.e("deleteTimePiece", e.errorString())
-        }
-        return false
+    ) = wrap {
+        mutateData(TimePieceDeleteMutation(timePieceID))
     }
 
     suspend fun createTimePiecesForTarget(
         targetID: String,
         inputs: List<TimePieceCreateInput>
-    ): List<TimePiecesCreateForTargetMutation.TimePiecesCreateForTarget>? {
-        if (!isValid()) return null
-        try {
-            val resp = client.mutate(TimePiecesCreateForTargetMutation(targetID, inputs)).await()
-            resp.data?.let {
-                return it.timePiecesCreateForTarget
-            }
-            Log.e("createTimePiecesForTarget", resp.errors.toString())
-            return null
-        } catch (e: ApolloNetworkException) {
-            Log.e("createTimePiecesForTarget", e.errorString())
-        }
-        return null
+    ) = wrap {
+        mutateData(TimePiecesCreateForTargetMutation(targetID, inputs))
     }
 
     companion object {
@@ -377,6 +231,15 @@ class HystimeClient(endpoint: String, authCode: String) {
 
         private suspend fun <D : Operation.Data, T, V : Operation.Variables> queryData(query: Query<D, T, V>): T? {
             val resp = instance!!.client.query(query).await()
+            if (resp.errors.isNullOrEmpty()) {
+                return resp.data
+            } else {
+                throw RuntimeException(resp.errors.toString())
+            }
+        }
+
+        private suspend fun <D : Operation.Data, T, V : Operation.Variables> mutateData(mutate: Mutation<D, T, V>): T? {
+            val resp = instance!!.client.mutate(mutate).await()
             if (resp.errors.isNullOrEmpty()) {
                 return resp.data
             } else {

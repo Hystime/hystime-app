@@ -75,5 +75,25 @@ query UserTimePieces($userId: ID!, $first: Int!, $after: String) {
     }
 }
 
+query UserLastWeekTimePieces($username: String!) {
+    user(username: $username) {
+        last_week_timePieces {
+            id
+            start
+            duration
+            type
+        }
+    }
+}
 
+query TargetLastWeekTimePieces($target_Id: ID!) {
+    target(target_id: $target_Id) {
+        last_week_timePieces {
+            id
+            start
+            duration
+            type
+        }
+    }
+}
 
