@@ -10,16 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.launch
-import top.learningman.hystime.BuildConfig
-import top.learningman.hystime.Constant
-import top.learningman.hystime.MainActivity
-import top.learningman.hystime.R
+import top.learningman.hystime.*
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.sdk.errorString
 import top.learningman.hystime.utils.Interface
@@ -34,6 +32,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     }
 
     private lateinit var toolbar: Toolbar
+    private val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,14 +180,17 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
             if (HystimeClient.getInstance().isValid()) {
                 val usernameQuery =
                     username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                val result = HystimeClient.getInstance().getUserInfo(usernameQuery)
-                if (result.isSuccess) {
-                    userTitle.title = getString(R.string.setting_category_user_title_valid)
-                } else {
-                    Log.e("UserCheck", result.exceptionOrNull()?.errorString() ?: "Unknown error")
-                    userTitle.title =
-                        getString(R.string.setting_category_user_title_invalid)
-                }
+                val result = viewModel.refreshUser()
+                    if (result.isSuccess) {
+                        userTitle.title = getString(R.string.setting_category_user_title_valid)
+                    } else {
+                        Log.e(
+                            "UserCheck",
+                            result.exceptionOrNull()?.errorString() ?: "Unknown error"
+                        )
+                        userTitle.title =
+                            getString(R.string.setting_category_user_title_invalid)
+                    }
             } else {
                 // Apollo client is not valid.
                 userTitle.title =
