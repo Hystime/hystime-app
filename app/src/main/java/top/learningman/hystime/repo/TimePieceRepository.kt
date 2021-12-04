@@ -1,5 +1,6 @@
 package top.learningman.hystime.repo
 
+import top.learningman.hystime.data.TimePieceBean
 import top.learningman.hystime.sdk.HystimeClient
 
 object TimePieceRepository {
@@ -7,5 +8,17 @@ object TimePieceRepository {
         HystimeClient.getInstance()
     }
 
-    suspend fun getTimePiece
+    suspend fun getUserLastWeekTimePieces(username: String) =
+        client.getUserLastWeekTimePieces(username).map {
+            it!!.map { item ->
+                TimePieceBean.fromUserLastWeekTimePieces(item)
+            }
+        }
+
+    suspend fun getTargetLastWeekTimePieces(targetId: String) =
+        client.getTargetLastWeekTimePieces(targetId).map {
+            it!!.map { item ->
+                TimePieceBean.fromTargetLastWeekTimePieces(item)
+            }
+        }
 }
