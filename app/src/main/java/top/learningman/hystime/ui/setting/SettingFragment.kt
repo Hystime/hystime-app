@@ -32,7 +32,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     }
 
     private lateinit var toolbar: Toolbar
-    private val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +51,11 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         (requireActivity() as MainActivity).setSupportActionBar(toolbar)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.refresh -> {
@@ -64,7 +69,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
 
-        serverCheck(null, null)
+
 
         setOf(
             getString(R.string.setting_auth_key),
@@ -77,7 +82,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         getString(R.string.setting_username_key).let {
             preferenceScreen.findPreference<EditTextPreference>(it)
                 ?.setOnPreferenceChangeListener { _, newValue ->
-                    userCheck(newValue as String)
+
                     true
                 }
         }
@@ -89,15 +94,19 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
             }
         }
 
-        setOf(
-            getString(R.string.setting_backend_key),
-            getString(R.string.setting_auth_key)
-        ).forEach { key ->
-            preferenceScreen.findPreference<EditTextPreference>(key)?.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { pref, newValue ->
-                    serverCheck(pref, newValue)
-                }
-        }
+
+        preferenceScreen.findPreference<EditTextPreference>(getString(R.string.setting_backend_key))?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                viewModel.refreshServer(newValue as String, null)
+                true
+            }
+
+        preferenceScreen.findPreference<EditTextPreference>(getString(R.string.setting_auth_key))?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                viewModel.refreshServer(null, newValue as String)
+                true
+            }
+
 
 
         getString(R.string.setting_about_key).let { key ->
@@ -132,75 +141,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
 
     }
 
-    private fun serverCheck(pref: Preference?, newValue: Any?): Boolean {
-        val serverTitle =
-            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))!!
-        serverTitle.title = getString(R.string.setting_category_server_title_pending)
-
-        var endpoint = sp.getString(getString(R.string.setting_backend_key), "")!!
-        var authCode = sp.getString(getString(R.string.setting_auth_key), "")!!
-        pref?.let {
-            when (pref.key) {
-                getString(R.string.setting_backend_key) -> {
-                    endpoint = newValue as String
-                }
-                getString(R.string.setting_auth_key) -> {
-                    authCode = newValue as String
-                }
-            }
-        }
-        HystimeClient(endpoint, authCode)
-
-        lifecycleScope.launch {
-            val result = HystimeClient.getInstance().refreshValid()
-            if (result.isSuccess) {
-                serverTitle.title =
-                    getString(R.string.setting_category_server_title_valid)
-            } else {
-                Toast.makeText(
-                    context,
-                    result.exceptionOrNull()?.errorString() ?: "Unknown error",
-                    Toast.LENGTH_LONG
-                ).show()
-                serverTitle.title =
-                    getString(R.string.setting_category_server_title_invalid)
-            }
-            userCheck(getUser(requireContext()))
-        }
-
-
-        return true
-    }
-
-    private fun userCheck(username: String?) {
-        val userTitle =
-            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
-        lifecycleScope.launch {
-            userTitle.title = getString(R.string.setting_category_user_title_pending)
-            if (HystimeClient.getInstance().isValid()) {
-                val usernameQuery =
-                    username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                val result = viewModel.refreshUser()
-                    if (result.isSuccess) {
-                        userTitle.title = getString(R.string.setting_category_user_title_valid)
-                    } else {
-                        Log.e(
-                            "UserCheck",
-                            result.exceptionOrNull()?.errorString() ?: "Unknown error"
-                        )
-                        userTitle.title =
-                            getString(R.string.setting_category_user_title_invalid)
-                    }
-            } else {
-                // Apollo client is not valid.
-                userTitle.title =
-                    getString(R.string.setting_category_user_title_failed)
-            }
-
-        }
-    }
-
     override fun refresh() {
-        serverCheck(null, null)
+
     }
 }

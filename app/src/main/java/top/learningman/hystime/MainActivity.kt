@@ -1,8 +1,16 @@
 package top.learningman.hystime
 
+import android.app.AlertDialog
+import android.app.Application
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.TextUtils
+import android.text.method.ScrollingMovementMethod
 import android.view.MenuItem
 import android.view.View
+import android.widget.Scroller
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -13,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
+import top.learningman.hystime.sdk.errorString
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
@@ -132,6 +141,12 @@ class MainActivity : AppCompatActivity() {
 
         HystimeClient(getEndpoint(this), getAuthCode(this))
 
+        viewModel.error.observe(this) {
+            it?.let { it1 ->
+                showErrorDialog(it1)
+                viewModel.resetError()
+            }
+        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -139,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 //        return super.onCreateOptionsMenu(menu)
 //    }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        return when (item.itemId) {
 //            R.id.refresh -> {
 //                // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
@@ -153,7 +168,23 @@ class MainActivity : AppCompatActivity() {
 //            else -> super.onOptionsItemSelected(item)
 //        }
 //    }
-
+    private fun showErrorDialog(error: Throwable) {
+        AlertDialog.Builder(this)
+            .setTitle("Oooooops!")
+            .setMessage(error.errorString())
+            .setNegativeButton("Close") { _, _ -> }
+            .show()
+            .findViewById<TextView>(android.R.id.message).apply {
+                typeface = Typeface.MONOSPACE
+                ellipsize = TextUtils.TruncateAt.MARQUEE
+                setHorizontallyScrolling(true)
+                focusable = View.FOCUSABLE
+                movementMethod = ScrollingMovementMethod()
+                scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+                scrollBarDefaultDelayBeforeFade = 5000
+                scrollBarFadeDuration = 5000
+            }
+    }
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount() = NUM_PAGES

@@ -29,6 +29,8 @@ import okhttp3.OkHttpClient
 import type.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 class HystimeClient(endpoint: String, authCode: String) {
     enum class Status {
@@ -214,6 +216,12 @@ class HystimeClient(endpoint: String, authCode: String) {
                 instance = getErrorClient() // Error Client, prevent nullptr
             }
             return instance!!
+        }
+
+        class Client() : ReadOnlyProperty<Any?, HystimeClient> {
+            override fun getValue(thisRef: Any?, property: KProperty<*>): HystimeClient {
+                return getInstance()
+            }
         }
 
         private fun getErrorClient(): HystimeClient = HystimeClient("", "")
