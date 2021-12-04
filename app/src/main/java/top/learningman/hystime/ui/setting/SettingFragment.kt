@@ -3,10 +3,12 @@ package top.learningman.hystime.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
@@ -19,6 +21,7 @@ import top.learningman.hystime.Constant
 import top.learningman.hystime.MainActivity
 import top.learningman.hystime.R
 import top.learningman.hystime.sdk.HystimeClient
+import top.learningman.hystime.sdk.errorString
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.getUser
 
@@ -150,10 +153,16 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         HystimeClient(endpoint, authCode)
 
         lifecycleScope.launch {
-            if (HystimeClient.getInstance().refreshValid().isSuccess) {
+            val result = HystimeClient.getInstance().refreshValid()
+            if (result.isSuccess) {
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_valid)
             } else {
+                Toast.makeText(
+                    context,
+                    result.exceptionOrNull()?.errorString() ?: "Unknown error",
+                    Toast.LENGTH_LONG
+                ).show()
                 serverTitle.title =
                     getString(R.string.setting_category_server_title_invalid)
             }
@@ -169,17 +178,19 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
             preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))!!
         lifecycleScope.launch {
             userTitle.title = getString(R.string.setting_category_user_title_pending)
-            if (HystimeClient.getInstance().refreshValid().isSuccess) {
+            if (HystimeClient.getInstance().isValid()) {
                 val usernameQuery =
                     username ?: sp.getString(getString(R.string.setting_username_key), "")!!
-                val user = HystimeClient.getInstance().getUserInfo(usernameQuery).isSuccess
-                if (user) {
+                val result = HystimeClient.getInstance().getUserInfo(usernameQuery)
+                if (result.isSuccess) {
                     userTitle.title = getString(R.string.setting_category_user_title_valid)
                 } else {
+                    Log.e("UserCheck", result.exceptionOrNull()?.errorString() ?: "Unknown error")
                     userTitle.title =
                         getString(R.string.setting_category_user_title_invalid)
                 }
             } else {
+                // Apollo client is not valid.
                 userTitle.title =
                     getString(R.string.setting_category_user_title_failed)
             }
@@ -189,6 +200,5 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
 
     override fun refresh() {
         serverCheck(null, null)
-        userCheck(null)
     }
 }

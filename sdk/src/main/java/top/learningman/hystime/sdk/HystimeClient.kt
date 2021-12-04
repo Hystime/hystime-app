@@ -25,15 +25,12 @@ import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import type.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class HystimeClient(endpoint: String, authCode: String) {
+class HystimeClient(endpoint: String, authCode: String, ) {
     enum class Status {
         OK,
         CLIENT_ERROR,
@@ -74,9 +71,6 @@ class HystimeClient(endpoint: String, authCode: String) {
                 this.status = Status.CLIENT_ERROR
                 Log.e("ClientInit", e.errorString())
             }
-            CoroutineScope(Dispatchers.IO).launch {
-                refreshValid()
-            }
         }
         instance = this
     }
@@ -99,7 +93,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         }
     }
 
-    private fun isValid() = status == Status.OK
+    fun isValid() = status == Status.OK
 
     suspend fun getUserInfo(username: String) = wrap {
         queryData(UserInfoQuery(username)).user
@@ -286,7 +280,7 @@ fun Date.inPastWeek(): Boolean {
     return cal.time.after(Date())
 }
 
-fun Exception.errorString(): String {
+fun Throwable.errorString(): String {
     return if (BuildConfig.DEBUG) {
         this.stackTraceToString()
     } else {
