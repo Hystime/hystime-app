@@ -1,11 +1,9 @@
 package top.learningman.hystime.data
 
+import TargetQuery
+import UserTargetsQuery
 import java.util.*
 
-enum class TargetType(s: String) {
-    NORMAL("NORMAL"),
-    LONGTERM("LONGTERM"),
-}
 
 data class TargetBean(
     val id: String,
@@ -14,8 +12,21 @@ data class TargetBean(
     val type: TargetType,
     val timeSpent: Int
 ) {
+    enum class TargetType(s: String) {
+        NORMAL("NORMAL"),
+        LONGTERM("LONGTERM"),
+    }
+
     companion object {
         fun fromUserTargetQuery(value: UserTargetsQuery.Target) = TargetBean(
+            value.id,
+            value.name,
+            value.created_at,
+            TargetType.valueOf(value.type.toString()),
+            value.timeSpent
+        )
+
+        fun fromTargetQuery(value: TargetQuery.Target) = TargetBean(
             value.id,
             value.name,
             value.created_at,

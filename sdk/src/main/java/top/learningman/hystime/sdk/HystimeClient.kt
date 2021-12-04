@@ -30,7 +30,7 @@ import type.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class HystimeClient(endpoint: String, authCode: String, ) {
+class HystimeClient(endpoint: String, authCode: String) {
     enum class Status {
         OK,
         CLIENT_ERROR,
@@ -234,6 +234,8 @@ class HystimeClient(endpoint: String, authCode: String, ) {
         }
 
         private suspend fun <D : Operation.Data, T, V : Operation.Variables> queryData(query: Query<D, T, V>): T {
+            // FIXME: AS for now, there's no support for definitely non-null return type.
+            // T should be changed to T & Any after kotlin 1.7 released.
             val resp = instance!!.client.query(query).await()
             if (resp.errors.isNullOrEmpty()) {
                 if (resp.data == null) {
@@ -246,6 +248,8 @@ class HystimeClient(endpoint: String, authCode: String, ) {
         }
 
         private suspend fun <D : Operation.Data, T, V : Operation.Variables> mutateData(mutate: Mutation<D, T, V>): T {
+            // FIXME: AS for now, there's no support for definitely non-null return type.
+            // T should be changed to T & Any after kotlin 1.7 released.
             val resp = instance!!.client.mutate(mutate).await()
             if (resp.errors.isNullOrEmpty()) {
                 if (resp.data == null) {

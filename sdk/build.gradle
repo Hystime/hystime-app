@@ -33,7 +33,7 @@ android {
         generateKotlinModels = true
 
         customTypeMapping = [
-                "DateTime" : "java.util.Date"
+                "DateTime": "java.util.Date"
         ]
 
         graphqlSourceDirectorySet.srcDirs += 'src/main/java/top/learningman/hystime/sdk/graphql'
@@ -58,3 +58,4 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
+

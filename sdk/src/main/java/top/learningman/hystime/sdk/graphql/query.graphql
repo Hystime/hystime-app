@@ -5,6 +5,7 @@ query Test {
 query UserInfo($username: String!) {
     user(username: $username) {
         id
+        username
         created_at
     }
 }

@@ -1,6 +1,5 @@
 package top.learningman.hystime.ui.dashboard
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
@@ -44,7 +43,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         mRecyclerView = binding.targets
 
         dashboardViewModel.targetBeanList.observe(viewLifecycleOwner) {
-            mRecyclerView.adapter = TargetRecyclerAdapter(dashboardViewModel, it, requireActivity())
+            mRecyclerView.adapter = TargetRecyclerAdapter(it, requireActivity())
         }
 
         refresh()
@@ -78,7 +77,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
     // TODO: p630
     class TargetRecyclerAdapter(
-        val viewModel: DashboardViewModel,
         private val list: List<TargetBean>,
         val context: FragmentActivity
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
