@@ -42,12 +42,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
         mRecyclerView = binding.targets
 
-//        dashboardViewModel.targetBeanList.observe(viewLifecycleOwner) {
-//            mRecyclerView.adapter = TargetRecyclerAdapter(it, requireActivity())
-//        }
-
-        refresh()
-
         return root
     }
 
@@ -113,7 +107,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     }
 
     override fun refresh() {
-//        dashboardViewModel.refreshTarget(getUser(requireContext()))
     }
 }
 

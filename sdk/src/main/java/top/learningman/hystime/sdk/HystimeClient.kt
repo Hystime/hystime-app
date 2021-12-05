@@ -78,7 +78,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
 
-    suspend fun refreshValid(): Result<Boolean> = wrap {
+    suspend fun refreshValid(): Result<Boolean> = wrap(ignoreCheck = true) {
         val err = Error("Network Error")
         if (status == Status.CLIENT_ERROR) throw err
         val test = client.query(TestQuery()).await()
@@ -218,7 +218,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             return instance!!
         }
 
-        class Client() : ReadOnlyProperty<Any?, HystimeClient> {
+        class Client : ReadOnlyProperty<Any?, HystimeClient> {
             override fun getValue(thisRef: Any?, property: KProperty<*>): HystimeClient {
                 return getInstance()
             }
@@ -226,16 +226,23 @@ class HystimeClient(endpoint: String, authCode: String) {
 
         private fun getErrorClient(): HystimeClient = HystimeClient("", "")
 
-        private suspend fun <T> wrap(block: suspend () -> T): Result<T> {
-            if (instance == null) {
-                return Result.failure(Exception("HystimeClient is null"))
-            }
-            if (!instance!!.isValid()) {
-                return Result.failure(Exception("HystimeClient is invalid"))
+        private suspend fun <T> wrap(
+            ignoreCheck: Boolean = false,
+            block: suspend () -> T
+        ): Result<T> {
+            if (!ignoreCheck) {
+                if (instance == null) {
+                    return Result.failure(Exception("HystimeClient is null"))
+                }
+                if (!instance!!.isValid()) {
+                    return Result.failure(Exception("HystimeClient is invalid"))
+                }
             }
             val result = try {
                 Result.success(block.invoke())
             } catch (e: ApolloNetworkException) {
+                Result.failure(e)
+            } catch (e: ServerInternalException) {
                 Result.failure(e)
             }
             return result
@@ -247,11 +254,12 @@ class HystimeClient(endpoint: String, authCode: String) {
             val resp = instance!!.client.query(query).await()
             if (resp.errors.isNullOrEmpty()) {
                 if (resp.data == null) {
-                    throw RuntimeException("No data collected.")
+                    throw ServerInternalException("No data collected.")
                 }
                 return resp.data!!
             } else {
-                throw RuntimeException(resp.errors.toString())
+                val a = resp.errors
+                throw ServerInternalException(resp.errors!!)
             }
         }
 
@@ -261,15 +269,21 @@ class HystimeClient(endpoint: String, authCode: String) {
             val resp = instance!!.client.mutate(mutate).await()
             if (resp.errors.isNullOrEmpty()) {
                 if (resp.data == null) {
-                    throw RuntimeException("No data collected.")
+                    throw ServerInternalException("No data collected.")
                 }
                 return resp.data!!
             } else {
-                throw RuntimeException(resp.errors.toString())
+                throw ServerInternalException(resp.errors!!)
             }
         }
 
-        class RuntimeException(s: String) : Exception(s)
+        class ServerInternalException : Exception {
+            constructor(s: String) : super(s)
+
+            constructor(s: List<com.apollographql.apollo.api.Error>) : super(s.map {
+                it.message
+            }.joinToString("\n") { it })
+        }
     }
 }
 

@@ -1,9 +1,7 @@
 package top.learningman.hystime
 
-import android.app.AlertDialog
 import android.app.Application
 import android.content.Context
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,12 +12,12 @@ import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.data.UserBean
 import top.learningman.hystime.repo.UserRepository
 import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.sdk.errorString
+import top.learningman.hystime.utils.Status
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val client by HystimeClient.Companion.Client()
 
-    private val _user = MutableLiveData<UserBean?>()
+    private val _user = MutableLiveData<UserBean?>(null)
     val user: LiveData<UserBean?> = _user
 
     private val _targets = MutableLiveData<List<TargetBean>>()
@@ -29,11 +27,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val error: LiveData<Throwable?> = _error
 
     fun resetError() {
-        _error.value = null
+        _error.postValue(null)
     }
 
-    private val _serverConnection = MutableLiveData(false)
-    val serverConnection: LiveData<Boolean> = _serverConnection
+    private val _serverStatus = MutableLiveData(Status.PENDING)
+    val serverStatus: LiveData<Status> = _serverStatus
+    private val _userStatus = MutableLiveData(Status.PENDING)
+    val userStatus: LiveData<Status> = _userStatus
 
     fun refreshUser(newUser: String?) {
         val context = getApplication<Application>().applicationContext
@@ -43,15 +43,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         )
         val username = newUser ?: sp.getString(context.getString(R.string.setting_username_key), "")
         if (username.isNullOrEmpty()) {
-            _user.value = null
+            _user.postValue(null)
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 UserRepository.getUser(username).fold(
                     {
-                        _user.value = it
+                        _user.postValue(it)
+                        _userStatus.postValue(Status.SUCCESS)
                     }
                 ) {
-                    _user.value = null
+                    _user.postValue(null)
+                    _userStatus.postValue(Status.FAILED)
+                    _error.postValue(it)
                 }
             }
         }
@@ -69,9 +72,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         HystimeClient(uri, authCode)
         viewModelScope.launch(Dispatchers.IO) {
             client.refreshValid().fold({
-                _serverConnection.postValue(true)
+                _serverStatus.postValue(Status.SUCCESS)
+                refreshUser(null)
             }, {
-                _serverConnection.postValue(false)
+                _serverStatus.postValue(Status.FAILED)
                 _error.postValue(it)
             })
         }

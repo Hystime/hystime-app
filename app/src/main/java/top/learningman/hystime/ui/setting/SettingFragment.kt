@@ -3,25 +3,19 @@ package top.learningman.hystime.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import kotlinx.coroutines.launch
 import top.learningman.hystime.*
-import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.sdk.errorString
 import top.learningman.hystime.utils.Interface
-import top.learningman.hystime.utils.getUser
+import top.learningman.hystime.utils.Status
 
 class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
     private val sp by lazy {
@@ -69,8 +63,6 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
 
-
-
         setOf(
             getString(R.string.setting_auth_key),
             getString(R.string.setting_username_key)
@@ -82,7 +74,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         getString(R.string.setting_username_key).let {
             preferenceScreen.findPreference<EditTextPreference>(it)
                 ?.setOnPreferenceChangeListener { _, newValue ->
-
+                    viewModel.refreshUser(newValue as String)
                     true
                 }
         }
@@ -139,6 +131,41 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
                 }
         }
 
+        // ViewModel binding
+        viewModel.userStatus.observe(this) {
+            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_user_key))
+                ?.let { cg ->
+                    when (it!!) {
+                        Status.SUCCESS -> {
+                            cg.title = getString(R.string.setting_category_user_title_valid)
+                        }
+                        Status.FAILED -> {
+                            cg.title = getString(R.string.setting_category_user_title_invalid)
+                        }
+                        Status.PENDING -> {
+                            cg.title = getString(R.string.setting_category_user_title_pending)
+                        }
+                    }
+                }
+        }
+
+        viewModel.serverStatus.observe(this) {
+            preferenceScreen.findPreference<PreferenceCategory>(getString(R.string.setting_category_server_key))
+                ?.let { cg ->
+                    when (it!!) {
+                        Status.SUCCESS -> {
+                            cg.title = getString(R.string.setting_category_server_title_valid)
+                        }
+                        Status.FAILED -> {
+                            cg.title = getString(R.string.setting_category_server_title_invalid)
+                        }
+                        Status.PENDING -> {
+                            cg.title = getString(R.string.setting_category_server_title_pending)
+                            viewModel.refreshServer(null, null)
+                        }
+                    }
+                }
+        }
     }
 
     override fun refresh() {

@@ -171,18 +171,11 @@ class MainActivity : AppCompatActivity() {
     private fun showErrorDialog(error: Throwable) {
         AlertDialog.Builder(this)
             .setTitle("Oooooops!")
-            .setMessage(error.errorString())
+            .setMessage(error.localizedMessage)
             .setNegativeButton("Close") { _, _ -> }
             .show()
             .findViewById<TextView>(android.R.id.message).apply {
                 typeface = Typeface.MONOSPACE
-                ellipsize = TextUtils.TruncateAt.MARQUEE
-                setHorizontallyScrolling(true)
-                focusable = View.FOCUSABLE
-                movementMethod = ScrollingMovementMethod()
-                scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
-                scrollBarDefaultDelayBeforeFade = 5000
-                scrollBarFadeDuration = 5000
             }
     }
 

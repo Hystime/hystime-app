@@ -28,4 +28,9 @@ fun getAuthCode(context: Context): String = getSettingSharedPreferences(context)
     ""
 )!!
 
+enum class Status{
+    SUCCESS,
+    FAILED,
+    PENDING
+}
 
