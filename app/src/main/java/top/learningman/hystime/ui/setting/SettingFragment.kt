@@ -170,6 +170,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     }
 
     override fun refresh() {
-
+        viewModel.refreshServer(null, null)
+        viewModel.showSnackBarMessage("Refreshed Server Status")
     }
 }

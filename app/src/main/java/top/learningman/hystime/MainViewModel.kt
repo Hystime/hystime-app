@@ -35,6 +35,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _userStatus = MutableLiveData(Status.PENDING)
     val userStatus: LiveData<Status> = _userStatus
 
+    private val _snackBarMessage = MutableLiveData<String?>(null)
+    val snackBarMessage: LiveData<String?> = _snackBarMessage
+
+    fun showSnackBarMessage(message: String) {
+        _snackBarMessage.postValue(message)
+    }
+
+    fun resetSnackBarMessage() {
+        _snackBarMessage.postValue(null)
+    }
+
     fun refreshUser(newUser: String?) {
         val context = getApplication<Application>().applicationContext
         val sp = context.getSharedPreferences(

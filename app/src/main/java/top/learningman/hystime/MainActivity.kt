@@ -1,16 +1,11 @@
 package top.learningman.hystime
 
 import android.app.AlertDialog
-import android.app.Application
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.TextUtils
-import android.text.method.ScrollingMovementMethod
 import android.view.MenuItem
 import android.view.View
-import android.widget.Scroller
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -19,9 +14,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import de.mateware.snacky.Snacky
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.sdk.errorString
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
@@ -147,27 +142,18 @@ class MainActivity : AppCompatActivity() {
                 viewModel.resetError()
             }
         }
+
+        viewModel.snackBarMessage.observe(this) {
+            it?.let { it1 ->
+                Snacky.builder()
+                    .setView(binding.content)
+                    .setText(it1)
+                    .info().show()
+                viewModel.resetSnackBarMessage()
+            }
+        }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.toolbar_menu, menu)
-//        return super.onCreateOptionsMenu(menu)
-//    }
-
-    //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.refresh -> {
-//                // Associate with https://stackoverflow.com/questions/55728719/get-current-fragment-with-viewpager2
-//                currentFragment()?.let {
-//                    if (it is Interface.RefreshableFragment) {
-//                        it.refresh()
-//                    }
-//                }
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
     private fun showErrorDialog(error: Throwable) {
         AlertDialog.Builder(this)
             .setTitle("Oooooops!")

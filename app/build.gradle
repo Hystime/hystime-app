@@ -70,4 +70,5 @@ dependencies {
     implementation 'com.drakeet.multitype:multitype:4.3.0'
 
     implementation 'io.github.ShawnLin013:number-picker:2.4.13'
+    implementation 'com.github.matecode:Snacky:1.1.5'
 }
