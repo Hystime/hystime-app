@@ -44,6 +44,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val username = newUser ?: sp.getString(context.getString(R.string.setting_username_key), "")
         if (username.isNullOrEmpty()) {
             _user.postValue(null)
+            _userStatus.postValue(Status.FAILED)
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 UserRepository.getUser(username).fold(
@@ -73,14 +74,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             client.refreshValid().fold({
                 _serverStatus.postValue(Status.SUCCESS)
-                refreshUser(null)
             }, {
                 _serverStatus.postValue(Status.FAILED)
                 _error.postValue(it)
             })
+            refreshUser(null)
         }
     }
-//    private val _currentTarget = MutableLiveData<TargetBean>()
-//    val currentTarget: LiveData<TargetBean> = _currentTarget
 
 }

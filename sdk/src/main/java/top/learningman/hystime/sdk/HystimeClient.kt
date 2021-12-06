@@ -244,6 +244,8 @@ class HystimeClient(endpoint: String, authCode: String) {
                 Result.failure(e)
             } catch (e: ServerInternalException) {
                 Result.failure(e)
+            } catch (e: Error) {
+                Result.failure(e)
             }
             return result
         }
