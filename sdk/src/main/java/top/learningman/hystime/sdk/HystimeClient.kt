@@ -260,7 +260,6 @@ class HystimeClient(endpoint: String, authCode: String) {
                 }
                 return resp.data!!
             } else {
-                val a = resp.errors
                 throw ServerInternalException(resp.errors!!)
             }
         }

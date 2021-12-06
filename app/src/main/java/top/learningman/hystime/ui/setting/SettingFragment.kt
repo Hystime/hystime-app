@@ -3,10 +3,7 @@ package top.learningman.hystime.ui.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
@@ -58,6 +55,10 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.setting_toolbar_menu, menu)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
