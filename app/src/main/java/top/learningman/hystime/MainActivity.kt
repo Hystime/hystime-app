@@ -152,6 +152,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.resetSnackBarMessage()
             }
         }
+
+        viewModel.refreshServer(null,null)
     }
 
     private fun showErrorDialog(error: Throwable) {

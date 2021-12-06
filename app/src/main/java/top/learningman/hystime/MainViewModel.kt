@@ -10,17 +10,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.data.UserBean
+import top.learningman.hystime.repo.TargetRepository
 import top.learningman.hystime.repo.UserRepository
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.Status
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
+    private val context by lazy { getApplication<Application>().applicationContext }
     private val client by HystimeClient.Companion.Client()
 
     private val _user = MutableLiveData<UserBean?>(null)
     val user: LiveData<UserBean?> = _user
 
-    private val _targets = MutableLiveData<List<TargetBean>>()
+    private val _targets = MutableLiveData<List<TargetBean>>(emptyList())
     val targets: LiveData<List<TargetBean>> = _targets
 
     private val _error = MutableLiveData<Throwable?>()
@@ -46,8 +48,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _snackBarMessage.postValue(null)
     }
 
+    fun fetchTarget(newUser: UserBean?) {
+        if (user.value == null && newUser == null) {
+            _error.postValue(Error(context.getString(R.string.user_not_valid)))
+            return
+        }
+        val realUser = newUser ?: user.value!!
+        viewModelScope.launch(Dispatchers.IO) {
+            TargetRepository.getUserTargets(realUser.username).fold({
+                _targets.postValue(it)
+            }, {
+                _targets.postValue(emptyList())
+                _error.postValue(it)
+            })
+
+        }
+    }
+
+
     fun refreshUser(newUser: String?) {
-        val context = getApplication<Application>().applicationContext
         val sp = context.getSharedPreferences(
             context.getString(R.string.setting_filename),
             Context.MODE_PRIVATE
@@ -62,6 +81,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     {
                         _user.postValue(it)
                         _userStatus.postValue(Status.SUCCESS)
+                        fetchTarget(it)
                     }
                 ) {
                     _user.postValue(null)

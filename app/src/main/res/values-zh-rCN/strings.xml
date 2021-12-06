@@ -47,4 +47,5 @@
     <string name="setting_category_user_title_failed">用户（检查失败）</string>
     <string name="target_title_placeholder">Target Title</string>
     <string name="add_target">添加目标</string>
+    <string name="user_not_valid">用户不存在</string>
 </resources>

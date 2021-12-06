@@ -162,7 +162,6 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
                         }
                         Status.PENDING -> {
                             cg.title = getString(R.string.setting_category_server_title_pending)
-                            viewModel.refreshServer(null, null)
                         }
                     }
                 }

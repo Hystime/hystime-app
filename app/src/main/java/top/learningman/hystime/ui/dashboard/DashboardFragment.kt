@@ -1,5 +1,6 @@
 package top.learningman.hystime.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.MainActivity
+import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.FragmentDashboardBinding
@@ -17,7 +19,7 @@ import top.learningman.hystime.utils.getUser
 
 class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var viewModel: MainViewModel
     private var _binding: FragmentDashboardBinding? = null
 
     private lateinit var mRecyclerView: RecyclerView
@@ -30,8 +32,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
-
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
         val root = binding.root
@@ -41,8 +41,18 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         setHasOptionsMenu(true)
 
         mRecyclerView = binding.targets
+        mRecyclerView.setHasFixedSize(true)
+
+        viewModel.targets.observe(viewLifecycleOwner) {
+            mRecyclerView.swapAdapter(TargetRecyclerAdapter(it, requireContext()), false)
+        }
 
         return root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
 
     override fun onResume() {
@@ -69,10 +79,9 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         }
     }
 
-    // TODO: p630
     class TargetRecyclerAdapter(
         private val list: List<TargetBean>,
-        val context: FragmentActivity
+        val context: Context
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
         fun Int.toLocalTimeString(): String {
             val hour = this / 3600
@@ -107,6 +116,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     }
 
     override fun refresh() {
+        viewModel.fetchTarget(null)
     }
 }
 
