@@ -84,5 +84,6 @@
     <string name="add_target">Add Target</string>
     <string name="user_not_valid">User not Valid</string>
     <string name="no_target">No Target</string>
+    <string name="refresh_target_hint">Refreshing targets.</string>
 
 </resources>

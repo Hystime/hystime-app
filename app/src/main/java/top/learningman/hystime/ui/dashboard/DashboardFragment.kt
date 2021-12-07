@@ -127,6 +127,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
     override fun refresh() {
         viewModel.fetchTarget(null)
+        viewModel.showSnackBarMessage(getString(R.string.refresh_target_hint))
     }
 }
 

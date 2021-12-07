@@ -149,7 +149,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.snackBarMessage.observe(this) {
             it?.let { it1 ->
-//                Snackbar.make(binding.content, it1, Snackbar.LENGTH_SHORT).show()
                 Flashbar.Builder(this)
                     .gravity(Flashbar.Gravity.BOTTOM)
                     .message(it1)
