@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.MainActivity
@@ -15,7 +14,6 @@ import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.utils.Interface
-import top.learningman.hystime.utils.getUser
 
 class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
@@ -44,7 +42,13 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         mRecyclerView.setHasFixedSize(true)
 
         viewModel.targets.observe(viewLifecycleOwner) {
-            mRecyclerView.swapAdapter(TargetRecyclerAdapter(it, requireContext()), false)
+            mRecyclerView.swapAdapter(
+                TargetRecyclerAdapter(
+                    viewModel,
+                    it,
+                    requireActivity() as MainActivity
+                ), false
+            )
         }
 
         return root
@@ -80,8 +84,9 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     }
 
     class TargetRecyclerAdapter(
+        private val viewModel: MainViewModel,
         private val list: List<TargetBean>,
-        val context: Context
+        val context: MainActivity
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
         fun Int.toLocalTimeString(): String {
             val hour = this / 3600
@@ -94,6 +99,11 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             fun bind(targetBean: TargetBean) {
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
+                binding.startTimer.setOnContextClickListener {
+                    viewModel.setCurrentTarget(targetBean)
+                    context.getPager().currentItem = 1
+                    true
+                }
             }
         }
 

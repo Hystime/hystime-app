@@ -83,5 +83,6 @@
     <string name="target_title_placeholder">Target Title</string>
     <string name="add_target">Add Target</string>
     <string name="user_not_valid">User not Valid</string>
+    <string name="no_target">No Target</string>
 
 </resources>

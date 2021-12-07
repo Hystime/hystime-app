@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var viewPager: ViewPager2
+
+    fun getPager(): ViewPager2 = viewPager
 
     private val mOnSelectItemListener = object : NavigationBarView.OnItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -177,10 +180,5 @@ class MainActivity : AppCompatActivity() {
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
-    }
-
-    companion object {
-        private lateinit var viewPager: ViewPager2
-        fun getPager(): ViewPager2 = viewPager
     }
 }

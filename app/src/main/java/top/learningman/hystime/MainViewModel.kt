@@ -25,6 +25,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _targets = MutableLiveData<List<TargetBean>>(emptyList())
     val targets: LiveData<List<TargetBean>> = _targets
 
+    private val _currentTarget = MutableLiveData<TargetBean?>(null)
+    var currentTarget: LiveData<TargetBean?> = _currentTarget
+
+    fun setCurrentTarget(target: TargetBean) {
+        _currentTarget.postValue(target)
+    }
+
+    fun resetCurrentTarget() {
+        _currentTarget.postValue(null)
+    }
+
     private val _error = MutableLiveData<Throwable?>()
     val error: LiveData<Throwable?> = _error
 
@@ -65,7 +76,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-
+    // FIXME: extract sharedPreference to repo
     fun refreshUser(newUser: String?) {
         val sp = context.getSharedPreferences(
             context.getString(R.string.setting_filename),

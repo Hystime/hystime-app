@@ -48,4 +48,5 @@
     <string name="target_title_placeholder">Target Title</string>
     <string name="add_target">添加目标</string>
     <string name="user_not_valid">用户不存在</string>
+    <string name="no_target">无目标</string>
 </resources>
