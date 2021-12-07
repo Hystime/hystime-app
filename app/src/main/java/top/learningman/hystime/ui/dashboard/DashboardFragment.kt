@@ -99,10 +99,9 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             fun bind(targetBean: TargetBean) {
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
-                binding.startTimer.setOnContextClickListener {
+                binding.startTimer.setOnClickListener{
                     viewModel.setCurrentTarget(targetBean)
                     context.getPager().currentItem = 1
-                    true
                 }
             }
         }
