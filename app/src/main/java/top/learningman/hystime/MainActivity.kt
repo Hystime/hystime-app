@@ -12,9 +12,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.andrognito.flashbar.Flashbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import de.mateware.snacky.Snacky
+import com.google.android.material.snackbar.Snackbar
 import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
@@ -148,10 +149,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.snackBarMessage.observe(this) {
             it?.let { it1 ->
-                Snacky.builder()
-                    .setView(binding.content)
-                    .setText(it1)
-                    .info().show()
+//                Snackbar.make(binding.content, it1, Snackbar.LENGTH_SHORT).show()
+                Flashbar.Builder(this)
+                    .gravity(Flashbar.Gravity.BOTTOM)
+                    .message(it1)
+                    .backgroundColor(getColor(R.color.primaryLightColor))
+                    .duration(Flashbar.DURATION_LONG)
+                    .show()
                 viewModel.resetSnackBarMessage()
             }
         }

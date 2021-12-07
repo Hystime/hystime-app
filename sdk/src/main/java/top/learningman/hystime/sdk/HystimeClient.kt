@@ -49,9 +49,9 @@ class HystimeClient(endpoint: String, authCode: String) {
         if (!endpoint.isUrl()) {
             this.status = Status.CLIENT_ERROR
         }
-        if (authCode.length != 8) {
-            this.status = Status.CLIENT_ERROR
-        }
+//        if (authCode.length != 8) {
+//            this.status = Status.CLIENT_ERROR
+//        }
 
         if (this.status != Status.CLIENT_ERROR) {
             try {
@@ -79,12 +79,12 @@ class HystimeClient(endpoint: String, authCode: String) {
 
 
     suspend fun refreshValid(): Result<Boolean> = wrap(ignoreCheck = true) {
-        val err = Error("Network Error")
+        val err = Error("Client Error")
         if (status == Status.CLIENT_ERROR) throw err
         val test = client.query(TestQuery()).await()
         if (test.data == null) {
-            status = Status.NETWORK_ERROR
-            throw err
+            status = Status.UNKNOWN_ERROR
+            throw Error("WTF is this error?")
         } else if (test.data!!.test) {
             status = Status.OK
             true

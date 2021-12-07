@@ -63,12 +63,11 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
     // About Page
     implementation 'com.github.Zxilly:about-page:5e4d1ac9de'
     implementation 'com.drakeet.multitype:multitype:4.3.0'
 
     implementation 'io.github.ShawnLin013:number-picker:2.4.13'
-    implementation 'com.github.matecode:Snacky:1.1.5'
+
+    implementation 'com.github.aritraroy:Flashbar:1.0.2'
 }
