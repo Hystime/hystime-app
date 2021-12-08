@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -43,8 +44,6 @@ class TimerFragment : Fragment() {
                         translationX = pageWidth * -position
                     }
                 }
-            }
-            view.findViewById<TimerView>(R.id.timer).apply {
                 alpha = when {
                     position < -1 -> {
                         0f
