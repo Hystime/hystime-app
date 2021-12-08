@@ -42,6 +42,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         mRecyclerView.setHasFixedSize(true)
 
         viewModel.targets.observe(viewLifecycleOwner) {
+            viewModel.setCurrentTarget(null)
             mRecyclerView.swapAdapter(
                 TargetRecyclerAdapter(
                     viewModel,
@@ -99,7 +100,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
             fun bind(targetBean: TargetBean) {
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
-                binding.startTimer.setOnClickListener{
+                binding.startTimer.setOnClickListener {
                     viewModel.setCurrentTarget(targetBean)
                     context.getPager().currentItem = 1
                 }

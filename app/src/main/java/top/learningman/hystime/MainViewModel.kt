@@ -29,7 +29,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _currentTarget = MutableLiveData<TargetBean?>(null)
     var currentTarget: LiveData<TargetBean?> = _currentTarget
 
-    fun setCurrentTarget(target: TargetBean) {
+    fun setCurrentTarget(target: TargetBean?) {
         _currentTarget.postValue(target)
     }
 

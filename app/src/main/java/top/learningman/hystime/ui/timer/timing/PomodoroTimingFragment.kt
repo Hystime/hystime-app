@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import top.learningman.hystime.databinding.FragmentPomodoroTimingBinding
 
 class PomodoroTimingFragment : TimingFragment() {
 
     private lateinit var binding: FragmentPomodoroTimingBinding
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity())[PomodoroViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
