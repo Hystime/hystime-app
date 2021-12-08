@@ -75,7 +75,10 @@
 
     <string name="start">Start</string>
     <string name="pause">Pause</string>
-    <string name="terminate">Terminate</string>
+    <string name="stop">Stop</string>
+    <string name="exit">Exit</string>
+
+    <string name="break_start">Start break</string>
 
     <!-- Place Holder -->
     <string name="default_target" translatable="false">Timing</string>
