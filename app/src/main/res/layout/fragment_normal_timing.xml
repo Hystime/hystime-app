@@ -2,44 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/normal_timing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/normal_timing"
     tools:context=".ui.timer.timing.NormalTimingFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/target"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/timing_vertical_margin"
-            android:text="@string/default_target"
-            android:textSize="20sp" />
+            android:layout_marginBottom="30dp"
+            android:fontFamily="sans-serif"
+            android:textAllCaps="false"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="20sp"
+            app:icon="@drawable/ic_chevron_right_white_24dp"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconTint="@color/timing_circle" />
 
         <top.learningman.hystime.view.TimerView
             android:id="@+id/timer"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginHorizontal="60dp"
+            android:layout_marginHorizontal="40dp"
             app:type="normal" />
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
-            android:text="@string/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/timing_vertical_margin"
+            android:text="@string/start"
             android:textAllCaps="false"
             app:cornerRadius="5dp" />
 

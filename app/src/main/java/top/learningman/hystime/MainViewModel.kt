@@ -32,6 +32,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _currentTarget.postValue(target)
     }
 
+    fun setCurrentTarget(targetName: String){
+        _targets.value!!.find {
+            it.name == targetName
+        }?.let {
+            _currentTarget.postValue(it)
+        }
+    }
+
     fun resetCurrentTarget() {
         _currentTarget.postValue(null)
     }

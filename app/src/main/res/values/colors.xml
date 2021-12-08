@@ -8,6 +8,7 @@
     <color name="secondaryDarkColor">#002984</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
+    <color name="primaryLightTextColor">#000000</color>
 
     <color name="timing_circle_base">#ede7f6</color>
     <color name="timing_circle">#9575cd</color>

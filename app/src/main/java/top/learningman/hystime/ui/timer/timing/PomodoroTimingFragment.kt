@@ -11,14 +11,10 @@ import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentPomodoroTimingBinding
 import top.learningman.hystime.ui.timer.TimerViewModel
 
-class PomodoroTimingFragment : Fragment() {
+class PomodoroTimingFragment : TimingFragment() {
 
     private val viewModel: TimerViewModel by lazy {
         ViewModelProvider(requireActivity())[TimerViewModel::class.java]
-    }
-
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
 
     private lateinit var binding: FragmentPomodoroTimingBinding
