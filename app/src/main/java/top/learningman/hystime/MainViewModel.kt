@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.data.UserBean
+import top.learningman.hystime.repo.SharedPreferenceRepository
 import top.learningman.hystime.repo.TargetRepository
 import top.learningman.hystime.repo.UserRepository
 import top.learningman.hystime.sdk.HystimeClient
@@ -32,7 +33,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _currentTarget.postValue(target)
     }
 
-    fun setCurrentTarget(targetName: String){
+    fun setCurrentTarget(targetName: String) {
         _targets.value!!.find {
             it.name == targetName
         }?.let {
@@ -84,14 +85,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // FIXME: extract sharedPreference to repo
     fun refreshUser(newUser: String?) {
-        val sp = context.getSharedPreferences(
-            context.getString(R.string.setting_filename),
-            Context.MODE_PRIVATE
-        )
-        val username = newUser ?: sp.getString(context.getString(R.string.setting_username_key), "")
-        if (username.isNullOrEmpty()) {
+        val username = newUser ?: SharedPreferenceRepository.getUser()
+        if (username.isEmpty()) {
             _user.postValue(null)
             _userStatus.postValue(Status.FAILED)
         } else {
@@ -112,14 +108,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun refreshServer(newUri: String?, newAuthCode: String?) {
-        val context = getApplication<Application>().applicationContext
-        val sp = context.getSharedPreferences(
-            context.getString(R.string.setting_filename),
-            Context.MODE_PRIVATE
-        )
-        val uri = newUri ?: sp.getString(context.getString(R.string.setting_backend_key), "")!!
-        val authCode =
-            newAuthCode ?: sp.getString(context.getString(R.string.setting_auth_key), "")!!
+        val uri = newUri ?: SharedPreferenceRepository.getEndpoint()
+        val authCode = newAuthCode ?: SharedPreferenceRepository.getAuthCode()
         HystimeClient(uri, authCode)
         viewModelScope.launch(Dispatchers.IO) {
             client.refreshValid().fold({

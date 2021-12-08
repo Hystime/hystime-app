@@ -3,7 +3,6 @@
 package top.learningman.hystime.ui.setting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant
-import top.learningman.hystime.MainActivity
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ActivitySettingsBinding
 import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat

@@ -15,13 +15,6 @@ import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.Status
 
 class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
-    private val sp by lazy {
-        requireContext().getSharedPreferences(
-            getString(R.string.setting_filename),
-            Context.MODE_PRIVATE
-        )
-    }
-
     private lateinit var toolbar: Toolbar
     private lateinit var viewModel: MainViewModel
 

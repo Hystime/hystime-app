@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -17,12 +16,9 @@ import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
-import top.learningman.hystime.view.TimerView
 import kotlin.math.abs
 
 class TimerFragment : Fragment() {
-
-    private lateinit var timerViewModel: TimerViewModel
 
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(requireActivity())[MainViewModel::class.java]
@@ -63,7 +59,6 @@ class TimerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        timerViewModel = ViewModelProvider(requireActivity())[TimerViewModel::class.java]
         _binding = FragmentTimerBinding.inflate(inflater, container, false)
 
         viewPager = binding.pager

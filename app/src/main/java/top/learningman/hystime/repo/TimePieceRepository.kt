@@ -1,7 +1,6 @@
 package top.learningman.hystime.repo
 
 import top.learningman.hystime.data.TimePieceBean
-import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.sdk.HystimeClient.Companion.Client
 
 object TimePieceRepository {

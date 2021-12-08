@@ -15,14 +15,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.snackbar.Snackbar
 import top.learningman.hystime.databinding.ActivityMainBinding
+import top.learningman.hystime.repo.SharedPreferenceRepository
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
-import top.learningman.hystime.utils.getAuthCode
-import top.learningman.hystime.utils.getEndpoint
 import kotlin.math.abs
 
 private const val NUM_PAGES = 3
@@ -126,8 +124,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val toolbar = binding.toolbar
-//        setSupportActionBar(toolbar)
+        // init
+        SharedPreferenceRepository.init(applicationContext)
 
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)
@@ -138,7 +136,10 @@ class MainActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
         viewPager.setPageTransformer(mTransformer)
 
-        HystimeClient(getEndpoint(this), getAuthCode(this))
+        HystimeClient(
+            SharedPreferenceRepository.getEndpoint(),
+            SharedPreferenceRepository.getAuthCode()
+        )
 
         viewModel.error.observe(this) {
             it?.let { it1 ->
@@ -159,7 +160,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.refreshServer(null,null)
+        viewModel.refreshServer(null, null)
     }
 
     private fun showErrorDialog(error: Throwable) {
