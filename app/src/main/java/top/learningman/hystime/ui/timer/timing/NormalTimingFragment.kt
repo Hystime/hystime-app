@@ -28,9 +28,6 @@ class NormalTimingFragment : TimingFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel.currentTarget.observe(viewLifecycleOwner){
-            binding.target.text = it?.name?:getString(R.string.no_target)
-        }
     }
 
 }

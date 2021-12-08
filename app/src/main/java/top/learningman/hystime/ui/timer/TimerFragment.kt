@@ -1,5 +1,6 @@
 package top.learningman.hystime.ui.timer
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +11,22 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import top.learningman.hystime.view.TimerView
-import top.learningman.hystime.data.TargetBean
 import kotlin.math.abs
 
 class TimerFragment : Fragment() {
 
     private lateinit var timerViewModel: TimerViewModel
+
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(requireActivity())[MainViewModel::class.java]
+    }
+
     private var _binding: FragmentTimerBinding? = null
 
     private lateinit var viewPager: ViewPager2
@@ -70,6 +76,21 @@ class TimerFragment : Fragment() {
             TabLayoutMediator(it, viewPager) { tab, position ->
                 tab.text = getFragmentName(position)
             }.attach()
+        }
+
+        binding.target.setOnClickListener {
+            val targets = mainViewModel.targets.value!!.map {
+                it.name
+            }.toTypedArray()
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.select_target_title))
+                .setItems(targets) { _, which ->
+                    mainViewModel.setCurrentTarget(targets[which])
+                }.show()
+        }
+
+        mainViewModel.currentTarget.observe(viewLifecycleOwner) {
+            binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
         return binding.root

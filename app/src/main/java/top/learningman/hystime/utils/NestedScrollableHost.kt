@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import kotlin.math.absoluteValue
@@ -20,7 +20,7 @@ import kotlin.math.sign
  * (e.g. a horizontal RecyclerView in a vertical RecyclerView in a horizontal ViewPager2).
  */
 
-class NestedScrollableHost : FrameLayout {
+class NestedScrollableHost : ConstraintLayout {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -29,16 +29,29 @@ class NestedScrollableHost : FrameLayout {
     private var initialX = 0f
     private var initialY = 0f
 
+    private var parentPagerCache: ViewPager2? = null
+    private var childPagerCache: View? = null
+
     private val parentViewPager: ViewPager2?
         get() {
-            var v: View? = parent as? View
-            while (v != null && v !is ViewPager2) {
-                v = v.parent as? View
+            if (parentPagerCache == null) {
+                var v: View? = parent as? View
+                while (v != null && v !is ViewPager2) {
+                    v = v.parent as? View
+                }
+                parentPagerCache = v as? ViewPager2
             }
-            return v as? ViewPager2
+            return parentPagerCache
+
         }
 
-    private val child: View? get() = if (childCount > 0) getChildAt(0) else null
+    private val child: View?
+        get() {
+            if (childCount > 0) {
+                childPagerCache = getChildAt(0)
+            }
+            return childPagerCache
+        }
 
     init {
         touchSlop = ViewConfiguration.get(context).scaledTouchSlop

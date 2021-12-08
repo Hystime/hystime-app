@@ -18,39 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.497">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/target"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
-            android:fontFamily="sans-serif"
-            android:textAllCaps="false"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            app:icon="@drawable/ic_chevron_right_white_24dp"
-            app:iconGravity="end"
-            app:iconPadding="0dp"
-            app:iconTint="@color/timing_circle" />
-
         <top.learningman.hystime.view.TimerView
             android:id="@+id/timer"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginHorizontal="40dp"
             app:type="pomodoro" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/timing_vertical_margin"
-            android:text="@string/start"
-            android:textAllCaps="false"
-            app:cornerRadius="5dp" />
-
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
