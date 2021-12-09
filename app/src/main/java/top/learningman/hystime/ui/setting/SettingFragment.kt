@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
@@ -16,7 +17,7 @@ import top.learningman.hystime.utils.Status
 
 class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
     private lateinit var toolbar: Toolbar
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,11 +34,6 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     override fun onResume() {
         super.onResume()
         (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

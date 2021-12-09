@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.MainActivity
@@ -17,7 +18,7 @@ import top.learningman.hystime.utils.Interface
 
 class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by activityViewModels()
     private var _binding: FragmentDashboardBinding? = null
 
     private lateinit var mRecyclerView: RecyclerView
@@ -53,11 +54,6 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         }
 
         return root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
 
     override fun onResume() {
