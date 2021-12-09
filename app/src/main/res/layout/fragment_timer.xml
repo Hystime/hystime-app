@@ -47,7 +47,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/timer_vertical_margin"
             android:textAllCaps="false"
             android:textColor="?android:textColorPrimary"
             android:textSize="20sp"
@@ -55,98 +55,106 @@
             app:iconGravity="end"
             app:iconPadding="0dp"
             app:iconTint="@color/timing_circle"
+            app:layout_constraintBottom_toTopOf="@id/ref"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/ref"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/timer_horizontal_margin"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.15" />
+            app:layout_constraintVertical_bias="@dimen/timer_dias" />
 
+        <!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+        <!--            android:id="@+id/start_group"-->
+        <!--            android:layout_width="176dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.80">-->
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/start_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.80">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/start"
-                android:textAllCaps="false"
-                app:cornerRadius="5dp" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <!--            <com.google.android.material.button.MaterialButton-->
+        <!--                android:id="@+id/start"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:text="@string/start"-->
+        <!--                android:textAllCaps="false"-->
+        <!--                app:cornerRadius="20dp" />-->
+        <!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/pause_group"
-            android:layout_width="wrap_content"
+            android:layout_width="176dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/timer_vertical_margin"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.80">
+            app:layout_constraintTop_toBottomOf="@id/ref">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pause"
-                android:layout_width="wrap_content"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/pause"
                 android:textAllCaps="false"
-                style="?attr/materialButtonOutlinedStyle"
-                app:cornerRadius="5dp" />
+                app:cornerRadius="20dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/stop"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/stop"
                 android:textAllCaps="false"
-                app:cornerRadius="5dp" />
+                app:cornerRadius="20dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/break_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.80">
+        <!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+        <!--            android:id="@+id/break_group"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:visibility="invisible"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.80">-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/break_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/break_start"
-                android:textAllCaps="false"
-                style="?attr/materialButtonOutlinedStyle"
-                app:cornerRadius="5dp" />
+        <!--            <com.google.android.material.button.MaterialButton-->
+        <!--                android:id="@+id/break_start"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:text="@string/break_start"-->
+        <!--                android:textAllCaps="false"-->
+        <!--                style="?attr/materialButtonOutlinedStyle"-->
+        <!--                app:cornerRadius="5dp" />-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/exit"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/stop"
-                android:textAllCaps="false"
-                app:cornerRadius="5dp" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <!--            <com.google.android.material.button.MaterialButton-->
+        <!--                android:id="@+id/exit"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:layout_marginStart="16dp"-->
+        <!--                android:text="@string/stop"-->
+        <!--                android:textAllCaps="false"-->
+        <!--                app:cornerRadius="5dp" />-->
+        <!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 
     </top.learningman.hystime.utils.NestedScrollableHost>

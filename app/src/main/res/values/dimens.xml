@@ -3,5 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="timing_vertical_margin">30dp</dimen>
+    <dimen name="timer_vertical_margin">48dp</dimen>
+    <dimen name="timer_horizontal_margin">48dp</dimen>
+
+    <item name="timer_dias" type="dimen" format="float">0.4</item>
 </resources>
