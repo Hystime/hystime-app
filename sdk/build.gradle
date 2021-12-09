@@ -40,6 +40,7 @@ android {
         graphqlSourceDirectorySet.exclude("**/*.graphqlconfig")
         graphqlSourceDirectorySet.exclude("**/*.json")
     }
+    namespace 'top.learningman.hystime.sdk'
 }
 
 dependencies {
