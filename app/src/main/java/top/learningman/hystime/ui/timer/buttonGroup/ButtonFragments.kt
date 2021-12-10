@@ -2,16 +2,13 @@ package top.learningman.hystime.ui.timer.buttonGroup
 
 import android.content.Context
 import android.view.View
+import com.airbnb.paris.R2.id.text
 import com.airbnb.paris.extensions.style
 import top.learningman.hystime.R
 
 object ButtonFragments {
-    enum class BreakLength{
-        SHORT,
-        LONG
-    }
 
-    val WAIT_START = object : ButtonFragment() {
+    class WaitStartFragment : ButtonFragment() {
         override fun bind(context: Context) {
             binding.button1.visibility = View.GONE
 
@@ -22,7 +19,7 @@ object ButtonFragments {
         }
     }
 
-    val WORK_RUNNING = object : ButtonFragment() {
+    class WorkRunningFragment : ButtonFragment() {
         override fun bind(context: Context) {
             binding.button1.visibility = View.GONE
 
@@ -32,28 +29,57 @@ object ButtonFragments {
         }
     }
 
-    val WORK_PAUSE = object : ButtonFragment() {
+    class WorkPauseFragment : ButtonFragment() {
         override fun bind(context: Context) {
             binding.button0.apply {
                 text = context.getString(R.string.resume)
             }
 
             binding.button1.apply {
+                visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
-                style(R.style.Widget_MaterialComponents_Button_OutlinedButton)
             }
         }
     }
 
-    val WORK_FINISH = object : ButtonFragment() {
+    class WorkFinishFragment : ButtonFragment() {
         override fun bind(context: Context) {
+            isBreak()
             binding.button0.apply {
-                text = context.getString(R.string.)
+                text = context.getString(R.string.break_start)
             }
 
             binding.button1.apply {
+                visibility = View.VISIBLE
+                text = context.getString(R.string.break_skip)
+            }
+
+            binding.button2.apply {
+                visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
-                style(R.style.Widget_MaterialComponents_Button_OutlinedButton)
+            }
+        }
+    }
+
+    class BreakRunningFragment : ButtonFragment() {
+        override fun bind(context: Context) {
+            isBreak()
+            binding.button0.apply {
+                text = context.getString(R.string.skip)
+            }
+
+            binding.button1.apply {
+                visibility = View.VISIBLE
+                text = context.getString(R.string.exit)
+            }
+        }
+    }
+
+    class BreakFinishFragment : ButtonFragment() {
+        override fun bind(context: Context) {
+            isBreak()
+            binding.button0.apply {
+                text = context.getString(R.string.work_continue)
             }
         }
     }

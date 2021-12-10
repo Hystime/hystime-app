@@ -77,8 +77,11 @@
     <string name="pause">Pause</string>
     <string name="resume">Continue</string>
     <string name="exit">Exit</string>
+    <string name="skip">Skip</string>
 
     <string name="break_start">Start break</string>
+    <string name="break_skip">Skip break</string>
+    <string name="work_continue">Continue focus</string>
 
     <!-- Place Holder -->
     <string name="default_target" translatable="false">Timing</string>

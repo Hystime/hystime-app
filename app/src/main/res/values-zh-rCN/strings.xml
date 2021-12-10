@@ -53,4 +53,7 @@
     <string name="break_start">开始休息</string>
     <string name="exit">结束</string>
     <string name="resume">继续</string>
+    <string name="break_skip">跳过休息</string>
+    <string name="skip">跳过</string>
+    <string name="work_continue">继续专注</string>
 </resources>

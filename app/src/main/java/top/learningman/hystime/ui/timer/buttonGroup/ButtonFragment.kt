@@ -25,4 +25,10 @@ abstract class ButtonFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         bind(requireContext())
     }
+
+    fun isBreak() {
+        listOf(binding.button0, binding.button1, binding.button2).forEach {
+
+        }
+    }
 }

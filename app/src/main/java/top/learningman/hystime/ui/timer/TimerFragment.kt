@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
+import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import kotlin.math.abs
@@ -83,11 +84,17 @@ class TimerFragment : Fragment() {
                 }.show()
         }
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         mainViewModel.currentTarget.observe(viewLifecycleOwner) {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
-        return binding.root
+        setButtonFragment(ButtonFragments.WaitStartFragment())
     }
 
     class TimingAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -114,5 +121,11 @@ class TimerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun setButtonFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.buttonGroup, fragment)
+            .commit()
     }
 }

@@ -21,6 +21,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button1"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,6 +31,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button2"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
