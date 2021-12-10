@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".ui.timer.buttonGroup.PauseFragment">
+    tools:context=".ui.timer.buttonGroup.ButtonFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="176dp"
@@ -12,13 +12,29 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/pause"
-            style="?attr/materialButtonOutlinedStyle"
+            android:id="@+id/button0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/pause"
             android:textAllCaps="false"
+            app:cornerRadius="20dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:visibility="invisible"
+            app:cornerRadius="20dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:visibility="invisible"
             app:cornerRadius="20dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>
