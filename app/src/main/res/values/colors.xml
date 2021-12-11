@@ -12,4 +12,7 @@
 
     <color name="timing_circle_base">#ede7f6</color>
     <color name="timing_circle">#9575cd</color>
+
+    <color name="relax_color">#8BC34A</color>
+    <color name="relax_color_base">#DCEDC8</color>
 </resources>

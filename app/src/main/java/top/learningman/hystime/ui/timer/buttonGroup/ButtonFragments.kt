@@ -3,7 +3,6 @@ package top.learningman.hystime.ui.timer.buttonGroup
 import android.content.Context
 import android.view.View
 import com.airbnb.paris.R2.id.text
-import com.airbnb.paris.extensions.style
 import top.learningman.hystime.R
 
 object ButtonFragments {
