@@ -2,7 +2,6 @@ package top.learningman.hystime.ui.timer.buttonGroup
 
 import android.content.Context
 import android.view.View
-import com.airbnb.paris.R2.id.text
 import top.learningman.hystime.R
 
 object ButtonFragments {
@@ -13,7 +12,6 @@ object ButtonFragments {
 
             binding.button0.apply {
                 text = context.getString(R.string.start)
-                // TODO: onClick
             }
         }
     }

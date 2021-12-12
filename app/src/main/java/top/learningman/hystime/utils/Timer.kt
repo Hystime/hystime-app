@@ -15,12 +15,12 @@ import java.util.concurrent.TimeUnit
 class Timer constructor(
     private val interval: Long = 1000,
     private val duration: Long = -1,
-    onTick: (() -> Unit)? = null,
-    onFinish: (() -> Unit)? = null
+    onTick: (() -> Unit),
+    onFinish: (() -> Unit)
 ) {
 
-    var onTick: (() -> Unit)? = null
-    var onFinish: (() -> Unit)? = null
+    var onTick: (() -> Unit)
+    var onFinish: (() -> Unit)
 
     init {
         this.onTick = onTick
@@ -51,11 +51,11 @@ class Timer constructor(
         if (isRunning) return
         isRunning = true
         future = execService.scheduleWithFixedDelay({
-            onTick?.invoke()
+            onTick.invoke()
             elapsedTime += interval
             if (duration > 0) {
                 if (elapsedTime >= duration) {
-                    onFinish?.invoke()
+                    onFinish.invoke()
                     future!!.cancel(false)
                 }
             }

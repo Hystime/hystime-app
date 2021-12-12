@@ -1,5 +1,7 @@
 package top.learningman.hystime.ui.timer
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TimerViewModel : ViewModel() {
@@ -13,4 +15,8 @@ class TimerViewModel : ViewModel() {
         BREAK_FINISH_LONG, // break_finish(long)
         BREAK_FINISH_SHORT // break_finish(short)
     }
+
+    private val _status = MutableLiveData(TimerStatus.WAIT_START)
+    val status: LiveData<TimerStatus> = _status
+
 }
