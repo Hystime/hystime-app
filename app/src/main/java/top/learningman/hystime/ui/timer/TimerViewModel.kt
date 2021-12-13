@@ -12,9 +12,7 @@ class TimerViewModel : ViewModel() {
         WORK_PAUSE, // work_pause
         WORK_FINISH, // work_finish
         BREAK_RUNNING, // break_running
-        BREAK_FINISH, // break_finish with normal timer
-        BREAK_FINISH_LONG, // break_finish(long)
-        BREAK_FINISH_SHORT // break_finish(short)
+        BREAK_FINISH, // break_finish
     }
 
     private val timer: Timer? = null

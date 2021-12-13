@@ -63,7 +63,7 @@ object ButtonFragments {
             binding.button1.apply {
                 text = context.getString(R.string.break_skip)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WAIT_START)
+                    viewModel.setStatus(TimerStatus.BREAK_FINISH)
                 }
             }
 
@@ -82,11 +82,12 @@ object ButtonFragments {
             isBreak()
             binding.button0.apply {
                 text = context.getString(R.string.skip)
+                viewModel.setStatus(TimerStatus.BREAK_FINISH)
             }
 
             binding.button1.apply {
-                visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
+                viewModel.setStatus(TimerStatus.WAIT_START) // If pomodoro
             }
         }
     }

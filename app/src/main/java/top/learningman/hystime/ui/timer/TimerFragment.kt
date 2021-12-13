@@ -94,9 +94,6 @@ class TimerFragment : Fragment() {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
-
-
-
         setButtonFragment(ButtonFragments.WaitStartFragment())
     }
 
