@@ -16,15 +16,18 @@ class Timer constructor(
     private val interval: Long = 1000,
     private val duration: Long = -1,
     onTick: (() -> Unit),
+    onPause: (() -> Unit),
     onFinish: (() -> Unit)
 ) {
 
-    var onTick: (() -> Unit)
-    var onFinish: (() -> Unit)
+    val onTick: (() -> Unit)
+    val onFinish: (() -> Unit)
+    val onPause: (() -> Unit)
 
     init {
         this.onTick = onTick
         this.onFinish = onFinish
+        this.onPause = onPause
     }
 
 
@@ -65,9 +68,10 @@ class Timer constructor(
     /**
      * Paused the timer. If the timer is not running, this call is ignored.
      */
-    fun pause() {
+    fun pause(invoke: Boolean = true) {
         if (!isRunning) return
-        future!!.cancel(false)
+        if (invoke)
+            future!!.cancel(false)
         isRunning = false
     }
 
