@@ -3,7 +3,7 @@ package top.learningman.hystime.ui.timer.buttonGroup
 import android.content.Context
 import android.view.View
 import top.learningman.hystime.R
-
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus
 object ButtonFragments {
 
     class WaitStartFragment : ButtonFragment() {
@@ -12,6 +12,9 @@ object ButtonFragments {
 
             binding.button0.apply {
                 text = context.getString(R.string.start)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WORK_RUNNING)
+                }
             }
         }
     }
@@ -22,6 +25,9 @@ object ButtonFragments {
 
             binding.button0.apply {
                 text = context.getString(R.string.pause)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WORK_PAUSE)
+                }
             }
         }
     }
@@ -30,11 +36,16 @@ object ButtonFragments {
         override fun bind(context: Context) {
             binding.button0.apply {
                 text = context.getString(R.string.resume)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WORK_RUNNING)
+                }
             }
 
             binding.button1.apply {
-                visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WAIT_START)
+                }
             }
         }
     }
@@ -44,16 +55,24 @@ object ButtonFragments {
             isBreak()
             binding.button0.apply {
                 text = context.getString(R.string.break_start)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.BREAK_RUNNING)
+                }
             }
 
             binding.button1.apply {
-                visibility = View.VISIBLE
                 text = context.getString(R.string.break_skip)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WAIT_START)
+                }
             }
 
             binding.button2.apply {
                 visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
+                setOnClickListener {
+                    viewModel.setStatus(TimerStatus.WAIT_START) // If pomodoro, reset counter
+                }
             }
         }
     }

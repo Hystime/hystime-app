@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import top.learningman.hystime.databinding.ButtonFragmentBinding
+import top.learningman.hystime.ui.timer.TimerViewModel
 
 abstract class ButtonFragment : Fragment() {
     lateinit var binding: ButtonFragmentBinding
+    lateinit var viewModel: TimerViewModel
 
     abstract fun bind(context: Context)
 
@@ -23,6 +26,7 @@ abstract class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[TimerViewModel::class.java]
         bind(requireContext())
     }
 
