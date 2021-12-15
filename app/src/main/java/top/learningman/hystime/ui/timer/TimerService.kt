@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -15,7 +16,23 @@ import top.learningman.hystime.utils.Timer
 
 
 class TimerService : Service() {
-    var timer: Timer? = null
+    private var timer: Timer? = null
+    private val binder = TimerBinder()
+
+    inner class TimerBinder : Binder() {
+        fun pause() {
+            timer?.pause()
+        }
+
+        fun cancel() {
+            timer?.cancel()
+        }
+
+        fun start() {
+            timer?.start()
+        }
+    }
+
 
     private fun createNotificationChannel() {
         val name = getString(R.string.timer_service_name)
@@ -55,13 +72,14 @@ class TimerService : Service() {
         FINISH
     }
 
-    private fun sendBroadcast(type: BroadcastType, time: Long? = null) {
+    private fun sendBroadcast(type: BroadcastType) {
         val intent = when (type) {
             BroadcastType.TIME -> Intent(Constant.TIMER_BROADCAST_TIME_ACTION)
             BroadcastType.FINISH -> Intent(Constant.TIMER_BROADCAST_FINISH_ACTION)
         }.apply {
-            time?.let {
-                putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it)
+            timer?.let {
+                putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it.elapsedTime)
+                putExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, it.remainingTime)
             }
         }
         sendBroadcast(intent)
@@ -81,7 +99,7 @@ class TimerService : Service() {
                 with(NotificationManagerCompat.from(this)) {
                     notify(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, time))
                 }
-                sendBroadcast(BroadcastType.TIME, time)
+                sendBroadcast(BroadcastType.TIME)
             }, {
                 sendBroadcast(BroadcastType.FINISH)
                 stopSelf()
@@ -93,6 +111,6 @@ class TimerService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
+        return binder
     }
 }

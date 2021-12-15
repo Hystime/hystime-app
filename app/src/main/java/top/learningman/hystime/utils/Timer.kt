@@ -84,6 +84,7 @@ class Timer constructor(
     fun cancel() {
         pause()
         elapsedTime = 0
+        onFinish.invoke()
     }
 
     /**

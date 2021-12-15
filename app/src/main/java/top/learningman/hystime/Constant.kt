@@ -9,6 +9,7 @@ object Constant {
     const val TIMER_BROADCAST_TIME_ACTION = "timer_broadcast_action"
     const val TIMER_BROADCAST_FINISH_ACTION = "timer_broadcast_finish_action"
     const val TIMER_BROADCAST_TIME_EXTRA = "timer_broadcast_time_extra"
+    const val TIMER_BROADCAST_REMAIN_TIME_EXTRA = "timer_broadcast_remain_time_extra"
 
     const val TIMER_NOTIFICATION_CHANNEL_ID = "timer_notification_channel_id"
 
