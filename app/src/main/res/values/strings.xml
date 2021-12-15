@@ -5,6 +5,10 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_setting">Setting</string>
 
+    <string name="timer">Timer</string>
+    <string name="timer_service_name">Timer Service</string>
+    <string name="timer_service_notification">Timer service notification</string>
+
     <!-- Unit -->
     <string name="second">Second</string>
     <string name="minute">Minute</string>

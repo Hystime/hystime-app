@@ -56,4 +56,7 @@
     <string name="break_skip">跳过休息</string>
     <string name="skip">跳过</string>
     <string name="work_continue">继续专注</string>
+    <string name="timer">计时器</string>
+    <string name="timer_service_notification">计时器服务通知</string>
+    <string name="timer_service_name">计时器服务</string>
 </resources>

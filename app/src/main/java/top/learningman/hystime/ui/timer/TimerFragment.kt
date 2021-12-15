@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -21,9 +22,8 @@ import kotlin.math.abs
 
 class TimerFragment : Fragment() {
 
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity())[MainViewModel::class.java]
-    }
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val timerViewModel: TimerViewModel by activityViewModels()
 
     private var _binding: FragmentTimerBinding? = null
 
@@ -93,6 +93,8 @@ class TimerFragment : Fragment() {
         mainViewModel.currentTarget.observe(viewLifecycleOwner) {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
+
+
 
         setButtonFragment(ButtonFragments.WaitStartFragment())
     }

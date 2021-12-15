@@ -1,4 +1,4 @@
-// From https://github.com/c05mic/pause-resume-timer with modify
+// From https://github.com/c05mic/pause-resume-timer with modification
 package top.learningman.hystime.utils
 
 import java.util.concurrent.Executors
@@ -13,21 +13,17 @@ import java.util.concurrent.TimeUnit
  *
  */
 class Timer constructor(
-    private val interval: Long = 1000,
     private val duration: Long = -1,
-    onTick: (() -> Unit),
-    onPause: (() -> Unit),
+    onTick: ((Long) -> Unit),
     onFinish: (() -> Unit)
 ) {
-
-    val onTick: (() -> Unit)
-    val onFinish: (() -> Unit)
-    val onPause: (() -> Unit)
+    private val interval = 1000L
+    private val onTick: ((Long) -> Unit)
+    private val onFinish: (() -> Unit)
 
     init {
         this.onTick = onTick
         this.onFinish = onFinish
-        this.onPause = onPause
     }
 
 
@@ -54,8 +50,8 @@ class Timer constructor(
         if (isRunning) return
         isRunning = true
         future = execService.scheduleWithFixedDelay({
-            onTick.invoke()
             elapsedTime += interval
+            onTick.invoke(elapsedTime)
             if (duration > 0) {
                 if (elapsedTime >= duration) {
                     onFinish.invoke()
@@ -68,10 +64,9 @@ class Timer constructor(
     /**
      * Paused the timer. If the timer is not running, this call is ignored.
      */
-    fun pause(invoke: Boolean = true) {
+    fun pause() {
         if (!isRunning) return
-        if (invoke)
-            future!!.cancel(false)
+        future?.cancel(false)
         isRunning = false
     }
 
@@ -87,7 +82,6 @@ class Timer constructor(
      * Stops the timer. If the timer is not running, then this call does nothing.
      */
     fun cancel() {
-        pause()
         elapsedTime = 0
     }
 
