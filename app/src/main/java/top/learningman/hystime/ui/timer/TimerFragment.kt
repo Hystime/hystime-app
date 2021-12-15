@@ -129,8 +129,20 @@ class TimerFragment : Fragment() {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
+        timerViewModel.status.observe(viewLifecycleOwner) {
+            setButtonFragment(
+                when (it) {
+                    WAIT_START -> ButtonFragments.WaitStartFragment()
+                    WORK_RUNNING -> ButtonFragments.WorkRunningFragment()
+                    WORK_PAUSE -> ButtonFragments.WorkPauseFragment()
+                    WORK_FINISH -> ButtonFragments.WorkFinishFragment()
+                    BREAK_RUNNING -> ButtonFragments.BreakRunningFragment()
+                    BREAK_FINISH -> ButtonFragments.BreakFinishFragment()
+                    else -> throw Error("Unexpected status")
+                }
+            )
 
-        setButtonFragment(ButtonFragments.WaitStartFragment())
+        }
     }
 
     override fun onDestroyView() {
