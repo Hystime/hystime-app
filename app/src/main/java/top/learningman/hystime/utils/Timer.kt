@@ -82,6 +82,7 @@ class Timer constructor(
      * Stops the timer. If the timer is not running, then this call does nothing.
      */
     fun cancel() {
+        pause()
         elapsedTime = 0
     }
 

@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -51,6 +50,23 @@ class TimerService : Service() {
             .build()
     }
 
+    enum class BroadcastType {
+        TIME,
+        FINISH
+    }
+
+    private fun sendBroadcast(type: BroadcastType, time: Long? = null) {
+        val intent = when (type) {
+            BroadcastType.TIME -> Intent(Constant.TIMER_BROADCAST_TIME_ACTION)
+            BroadcastType.FINISH -> Intent(Constant.TIMER_BROADCAST_FINISH_ACTION)
+        }.apply {
+            time?.let {
+                putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it)
+            }
+        }
+        sendBroadcast(intent)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             val duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
@@ -61,13 +77,15 @@ class TimerService : Service() {
             createNotificationChannel()
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, 0))
-            timer = Timer(duration, {
+            timer = Timer(duration, { time ->
                 with(NotificationManagerCompat.from(this)) {
-                    notify(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, it))
+                    notify(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, time))
                 }
-            }, { stopSelf() })
-
-
+                sendBroadcast(BroadcastType.TIME, time)
+            }, {
+                sendBroadcast(BroadcastType.FINISH)
+                stopSelf()
+            })
         } ?: run {
             throw Error("TimerService intent is null")
         }
