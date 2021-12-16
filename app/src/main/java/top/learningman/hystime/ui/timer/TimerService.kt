@@ -67,26 +67,27 @@ class TimerService : Service() {
             .build()
     }
 
-    enum class BroadcastType {
-        TIME,
-        FINISH
-    }
 
-    private fun sendBroadcast(type: BroadcastType) {
-        val intent = when (type) {
-            BroadcastType.TIME -> Intent(Constant.TIMER_BROADCAST_TIME_ACTION)
-            BroadcastType.FINISH -> Intent(Constant.TIMER_BROADCAST_FINISH_ACTION)
-        }.apply {
+
+    private fun sendBroadcast() {
+        Intent(Constant.TIMER_BROADCAST_TIME_ACTION).apply {
             timer?.let {
                 putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it.elapsedTime)
                 putExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, it.remainingTime)
             }
+        }.also {
+            sendBroadcast(it)
         }
-        sendBroadcast(intent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.let {
+
+        return START_STICKY_COMPATIBILITY
+    }
+
+
+    override fun onBind(intent: Intent): IBinder {
+        intent.let {
             val duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
             val name =
                 it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: applicationContext.getString(
@@ -99,18 +100,11 @@ class TimerService : Service() {
                 with(NotificationManagerCompat.from(this)) {
                     notify(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, time))
                 }
-                sendBroadcast(BroadcastType.TIME)
+                sendBroadcast()
             }, {
-                sendBroadcast(BroadcastType.FINISH)
-                stopSelf()
-            })
-        } ?: run {
-            throw Error("TimerService intent is null")
-        }
-        return START_STICKY_COMPATIBILITY
-    }
 
-    override fun onBind(intent: Intent): IBinder {
+            })
+        }
         return binder
     }
 }

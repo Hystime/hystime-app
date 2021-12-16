@@ -7,7 +7,6 @@ object Constant {
     const val TIMER_NAME_INTENT_KEY = "timer_name_intent_key"
 
     const val TIMER_BROADCAST_TIME_ACTION = "timer_broadcast_action"
-    const val TIMER_BROADCAST_FINISH_ACTION = "timer_broadcast_finish_action"
     const val TIMER_BROADCAST_TIME_EXTRA = "timer_broadcast_time_extra"
     const val TIMER_BROADCAST_REMAIN_TIME_EXTRA = "timer_broadcast_remain_time_extra"
 

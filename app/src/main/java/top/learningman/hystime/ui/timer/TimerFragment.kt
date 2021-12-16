@@ -39,20 +39,6 @@ class TimerFragment : Fragment() {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, 0)
                     timerViewModel.setTime(time)
                 }
-                Constant.TIMER_BROADCAST_FINISH_ACTION -> {
-                    timerViewModel.setTime(0L)
-                    when (timerViewModel.status.value) {
-                        WORK_RUNNING -> {
-                            timerViewModel.setStatus(WORK_FINISH)
-                        }
-                        BREAK_RUNNING -> {
-                            timerViewModel.setStatus(BREAK_FINISH)
-                        }
-                        else -> {
-                            throw Error("Unexpected status")
-                        }
-                    }
-                }
             }
         }
     }
@@ -67,7 +53,7 @@ class TimerFragment : Fragment() {
             view.apply {
                 val pageWidth = width
                 when {
-                    -1 <= position && position <= 1 -> { // [-1,1]
+                    -1 <= position && position <= 1 -> {
                         translationX = pageWidth * -position
                     }
                 }
@@ -95,6 +81,18 @@ class TimerFragment : Fragment() {
         viewPager = binding.pager
         viewPager.adapter = TimingAdapter(this)
         viewPager.setPageTransformer(mTransformer)
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                timerViewModel.setType(
+                    when (position) {
+                        0 -> TimerViewModel.TimerType.NORMAL
+                        1 -> TimerViewModel.TimerType.POMODORO
+                        else -> throw Error("Unexpected position")
+                    }
+                )
+            }
+        })
 
         tabLayout = binding.tabLayout
         tabLayout.let {

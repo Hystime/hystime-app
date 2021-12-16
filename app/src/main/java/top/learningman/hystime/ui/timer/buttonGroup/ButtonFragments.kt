@@ -14,6 +14,7 @@ object ButtonFragments {
                 text = context.getString(R.string.start)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.WORK_RUNNING)
+
                 }
             }
         }

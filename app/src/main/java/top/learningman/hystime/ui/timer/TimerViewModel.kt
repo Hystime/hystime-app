@@ -14,8 +14,20 @@ class TimerViewModel : ViewModel() {
         BREAK_FINISH, // break_finish
     }
 
+    enum class TimerType {
+        NORMAL,
+        POMODORO
+    }
+
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
     val status: LiveData<TimerStatus> = _status
+
+    private val _type = MutableLiveData(TimerType.NORMAL)
+    val type: LiveData<TimerType> = _type
+
+    fun setType(type: TimerType){
+        _type.value = type
+    }
 
     fun setStatus(status: TimerStatus) {
         _status.postValue(status)
