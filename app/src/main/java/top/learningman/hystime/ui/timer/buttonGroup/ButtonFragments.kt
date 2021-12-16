@@ -3,7 +3,10 @@ package top.learningman.hystime.ui.timer.buttonGroup
 import android.content.Context
 import android.view.View
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.SharedPreferenceRepository
+import top.learningman.hystime.ui.timer.TimerViewModel
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus
+
 object ButtonFragments {
 
     class WaitStartFragment : ButtonFragment() {
@@ -14,7 +17,24 @@ object ButtonFragments {
                 text = context.getString(R.string.start)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.WORK_RUNNING)
-
+                    val duration: Long
+                    val name: String
+                    when (viewModel.type.value) {
+                        TimerViewModel.TimerType.NORMAL -> {
+                            duration = SharedPreferenceRepository.getNormalFocusLength().toLong()
+                            name = getString(R.string.tab_normal_timing)
+                        }
+                        TimerViewModel.TimerType.POMODORO -> {
+                            duration = SharedPreferenceRepository.getPomodoroFocusLength().toLong()
+                            name = getString(R.string.tab_pomodoro_timing)
+                        }
+                        else -> throw Error("Unknown type")
+                    }
+                    startService(
+                        requireContext(),
+                        duration,
+                        name
+                    )
                 }
             }
         }
@@ -28,6 +48,7 @@ object ButtonFragments {
                 text = context.getString(R.string.pause)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.WORK_PAUSE)
+                    binder?.pause()
                 }
             }
         }
@@ -39,6 +60,7 @@ object ButtonFragments {
                 text = context.getString(R.string.resume)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.WORK_RUNNING)
+                    binder?.start()
                 }
             }
 
@@ -46,6 +68,8 @@ object ButtonFragments {
                 text = context.getString(R.string.exit)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.WAIT_START)
+                    binder?.cancel()
+                    stopService(requireContext())
                 }
             }
         }
@@ -58,6 +82,9 @@ object ButtonFragments {
                 text = context.getString(R.string.break_start)
                 setOnClickListener {
                     viewModel.setStatus(TimerStatus.BREAK_RUNNING)
+                    val duration: Long
+                    val name: String
+
                 }
             }
 

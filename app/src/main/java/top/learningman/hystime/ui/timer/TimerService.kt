@@ -102,7 +102,7 @@ class TimerService : Service() {
                 }
                 sendBroadcast()
             }, {
-
+                stopSelf()
             })
         }
         return binder
