@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import top.learningman.hystime.R
 
 @SuppressLint("StaticFieldLeak")
-object SharedPreferenceRepository {
+object SharedPrefRepo {
     private lateinit var context: Context
     private var sp: SharedPreferences? = null
 

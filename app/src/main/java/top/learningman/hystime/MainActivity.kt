@@ -10,14 +10,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.andrognito.flashbar.Flashbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import top.learningman.hystime.databinding.ActivityMainBinding
-import top.learningman.hystime.repo.SharedPreferenceRepository
+import top.learningman.hystime.repo.SharedPrefRepo
+import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.setting.SettingFragment
@@ -120,7 +120,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // init
-        SharedPreferenceRepository.init(applicationContext)
+        SharedPrefRepo.init(applicationContext)
+        StringRepo.init(applicationContext)
 
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)
@@ -132,8 +133,8 @@ class MainActivity : AppCompatActivity() {
         viewPager.setPageTransformer(mTransformer)
 
         HystimeClient(
-            SharedPreferenceRepository.getEndpoint(),
-            SharedPreferenceRepository.getAuthCode()
+            SharedPrefRepo.getEndpoint(),
+            SharedPrefRepo.getAuthCode()
         )
 
         viewModel.error.observe(this) {

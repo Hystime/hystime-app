@@ -1,8 +1,18 @@
 package top.learningman.hystime.ui.timer
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import top.learningman.hystime.Constant
+import top.learningman.hystime.R
+import top.learningman.hystime.repo.StringRepo
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
 
 class TimerViewModel : ViewModel() {
     enum class TimerStatus {
@@ -19,13 +29,19 @@ class TimerViewModel : ViewModel() {
         POMODORO
     }
 
+    enum class BreakType {
+        NORMAL,
+        POMODORO_SHORT,
+        POMODORO_LONG
+    }
+
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
     val status: LiveData<TimerStatus> = _status
 
-    private val _type = MutableLiveData(TimerType.NORMAL)
+    private val _type = MutableLiveData(NORMAL)
     val type: LiveData<TimerType> = _type
 
-    fun setType(type: TimerType){
+    fun setType(type: TimerType) {
         _type.value = type
     }
 
@@ -38,5 +54,82 @@ class TimerViewModel : ViewModel() {
 
     fun setTime(time: Long) {
         _time.postValue(time)
+    }
+
+    fun getServiceName() = when (type.value) {
+        NORMAL -> {
+            StringRepo.getString(R.string.tab_normal_timing)
+        }
+        POMODORO -> {
+            StringRepo.getString(R.string.tab_pomodoro_timing)
+        }
+        else -> throw Error("Unexpected type")
+    }
+
+
+    // Timer Actions
+    fun startFocus() {
+
+    }
+
+    fun pauseFocus() {
+
+    }
+
+    fun resumeFocus() {
+
+    }
+
+    fun cancelFocus() {
+
+    }
+
+    fun startBreak() {
+
+    }
+
+    fun skipBreak() {
+
+    }
+
+    var binder: TimerService.TimerBinder? = null
+    private val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            binder = null
+            setTime(0L)
+            when (status.value) {
+                TimerStatus.WORK_RUNNING, TimerStatus.WORK_PAUSE -> {
+                    setStatus(TimerStatus.WORK_FINISH)
+                }
+                TimerStatus.BREAK_RUNNING -> {
+                    setStatus(TimerStatus.BREAK_FINISH)
+                }
+                else -> {
+                    throw Error("Service died unexpected.")
+                }
+            }
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            binder = service as TimerService.TimerBinder
+            binder!!.start()
+        }
+    }
+
+    fun startService(context: Context, duration: Long, name: String? = null) {
+        val intent = Intent(context, TimerService::class.java)
+        intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration)
+        name?.let {
+            intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
+        }
+        context.bindService(
+            intent,
+            connection,
+            Context.BIND_AUTO_CREATE
+        )
+    }
+
+    fun stopService(context: Context) {
+        context.unbindService(connection)
     }
 }

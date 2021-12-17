@@ -1,7 +1,6 @@
 package top.learningman.hystime
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,9 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.data.UserBean
-import top.learningman.hystime.repo.SharedPreferenceRepository
-import top.learningman.hystime.repo.TargetRepository
-import top.learningman.hystime.repo.UserRepository
+import top.learningman.hystime.repo.SharedPrefRepo
+import top.learningman.hystime.repo.TargetRepo
+import top.learningman.hystime.repo.UserRepo
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.Status
 
@@ -75,7 +74,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
         val realUser = newUser ?: user.value!!
         viewModelScope.launch(Dispatchers.IO) {
-            TargetRepository.getUserTargets(realUser.username).fold({
+            TargetRepo.getUserTargets(realUser.username).fold({
                 _targets.postValue(it)
             }, {
                 _targets.postValue(emptyList())
@@ -86,13 +85,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun refreshUser(newUser: String?) {
-        val username = newUser ?: SharedPreferenceRepository.getUser()
+        val username = newUser ?: SharedPrefRepo.getUser()
         if (username.isEmpty()) {
             _user.postValue(null)
             _userStatus.postValue(Status.FAILED)
         } else {
             viewModelScope.launch(Dispatchers.IO) {
-                UserRepository.getUser(username).fold(
+                UserRepo.getUser(username).fold(
                     {
                         _user.postValue(it)
                         _userStatus.postValue(Status.SUCCESS)
@@ -108,8 +107,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun refreshServer(newUri: String?, newAuthCode: String?) {
-        val uri = newUri ?: SharedPreferenceRepository.getEndpoint()
-        val authCode = newAuthCode ?: SharedPreferenceRepository.getAuthCode()
+        val uri = newUri ?: SharedPrefRepo.getEndpoint()
+        val authCode = newAuthCode ?: SharedPrefRepo.getAuthCode()
         HystimeClient(uri, authCode)
         viewModelScope.launch(Dispatchers.IO) {
             client.refreshValid().fold({

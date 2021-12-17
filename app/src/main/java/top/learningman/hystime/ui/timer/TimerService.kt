@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
 
 
@@ -81,7 +82,6 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         return START_STICKY_COMPATIBILITY
     }
 
@@ -90,7 +90,7 @@ class TimerService : Service() {
         intent.let {
             val duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
             val name =
-                it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: applicationContext.getString(
+                it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: StringRepo.getString(
                     R.string.timer
                 )
             createNotificationChannel()
