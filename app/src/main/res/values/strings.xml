@@ -9,6 +9,8 @@
     <string name="timer_service_name">Timer Service</string>
     <string name="timer_service_notification">Timer service notification</string>
 
+    <string name="timer_break">Break</string>
+
     <!-- Unit -->
     <string name="second">Second</string>
     <string name="minute">Minute</string>

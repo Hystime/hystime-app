@@ -3,7 +3,6 @@ package top.learningman.hystime.ui.timer.buttonGroup
 import android.content.Context
 import android.view.View
 import top.learningman.hystime.R
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus
 
 object ButtonFragments {
 
@@ -14,7 +13,7 @@ object ButtonFragments {
             binding.button0.apply {
                 text = context.getString(R.string.start)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WORK_RUNNING)
+                    viewModel.startFocus()
                 }
             }
         }
@@ -27,7 +26,7 @@ object ButtonFragments {
             binding.button0.apply {
                 text = context.getString(R.string.pause)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WORK_PAUSE)
+                    viewModel.pauseFocus()
                 }
             }
         }
@@ -38,14 +37,14 @@ object ButtonFragments {
             binding.button0.apply {
                 text = context.getString(R.string.resume)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WORK_RUNNING)
+                    viewModel.resumeFocus()
                 }
             }
 
             binding.button1.apply {
                 text = context.getString(R.string.exit)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WAIT_START)
+                    viewModel.cancelFocus()
                 }
             }
         }
@@ -57,14 +56,14 @@ object ButtonFragments {
             binding.button0.apply {
                 text = context.getString(R.string.break_start)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.BREAK_RUNNING)
+                    viewModel.startBreak()
                 }
             }
 
             binding.button1.apply {
                 text = context.getString(R.string.break_skip)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.BREAK_FINISH)
+                    viewModel.skipBreak()
                 }
             }
 
@@ -72,7 +71,7 @@ object ButtonFragments {
                 visibility = View.VISIBLE
                 text = context.getString(R.string.exit)
                 setOnClickListener {
-                    viewModel.setStatus(TimerStatus.WAIT_START) // If pomodoro, reset counter
+                    viewModel.exitAll()
                 }
             }
         }
@@ -83,12 +82,16 @@ object ButtonFragments {
             isBreak()
             binding.button0.apply {
                 text = context.getString(R.string.skip)
-                viewModel.setStatus(TimerStatus.BREAK_FINISH)
+                setOnClickListener {
+                    viewModel.skipBreak()
+                }
             }
 
             binding.button1.apply {
                 text = context.getString(R.string.exit)
-                viewModel.setStatus(TimerStatus.WAIT_START) // If pomodoro
+                setOnClickListener {
+                    viewModel.exitAll()
+                }
             }
         }
     }
@@ -98,6 +101,9 @@ object ButtonFragments {
             isBreak()
             binding.button0.apply {
                 text = context.getString(R.string.work_continue)
+                setOnClickListener {
+                    viewModel.startFocus()
+                }
             }
         }
     }

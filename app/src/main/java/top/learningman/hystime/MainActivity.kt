@@ -16,8 +16,8 @@ import com.andrognito.flashbar.Flashbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import top.learningman.hystime.databinding.ActivityMainBinding
+import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.SharedPrefRepo
-import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardFragment
 import top.learningman.hystime.ui.setting.SettingFragment
@@ -120,8 +120,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // init
-        SharedPrefRepo.init(applicationContext)
-        StringRepo.init(applicationContext)
+        AppRepo.init(applicationContext)
 
         val navView: BottomNavigationView = binding.navView
         navView.setOnItemSelectedListener(mOnSelectItemListener)

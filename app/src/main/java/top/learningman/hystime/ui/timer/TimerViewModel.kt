@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.AppRepo
+import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
@@ -27,12 +29,6 @@ class TimerViewModel : ViewModel() {
     enum class TimerType {
         NORMAL,
         POMODORO
-    }
-
-    enum class BreakType {
-        NORMAL,
-        POMODORO_SHORT,
-        POMODORO_LONG
     }
 
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
@@ -56,7 +52,7 @@ class TimerViewModel : ViewModel() {
         _time.postValue(time)
     }
 
-    fun getServiceName() = when (type.value) {
+    private fun getServiceName(isBreak: Boolean = false) = when (type.value) {
         NORMAL -> {
             StringRepo.getString(R.string.tab_normal_timing)
         }
@@ -64,32 +60,68 @@ class TimerViewModel : ViewModel() {
             StringRepo.getString(R.string.tab_pomodoro_timing)
         }
         else -> throw Error("Unexpected type")
+    } + if (isBreak) " ${StringRepo.getString(R.string.timer_break)}" else ""
+
+    private fun getFocusTime() = when (type.value) {
+        NORMAL -> SharedPrefRepo.getNormalFocusLength()
+        POMODORO -> SharedPrefRepo.getPomodoroFocusLength()
+        else -> throw Error("Unexpected type")
+    }.toLong()
+
+    private var breakCount = 0 // TODO: persistent store
+    private fun getBreakTime(): Long {
+        return when (type.value) {
+            NORMAL -> SharedPrefRepo.getNormalBreakLength()
+            POMODORO -> if (breakCount <= 3) {
+                breakCount++;
+                SharedPrefRepo.getPomodoroShortBreakLength()
+            } else {
+                SharedPrefRepo.getPomodoroLongBreakLength()
+            }
+            else -> throw Error("Unexpected type")
+        }.toLong()
     }
 
-
     // Timer Actions
-    fun startFocus() {
 
+    fun exitAll() {
+        setStatus(TimerStatus.WAIT_START)
+        if (binder != null) {
+            AppRepo.context.unbindService(connection)
+            binder = null
+        }
+    }
+
+    fun startFocus() {
+        setStatus(TimerStatus.WORK_RUNNING)
+        startService(getFocusTime(), getServiceName())
     }
 
     fun pauseFocus() {
-
+        setStatus(TimerStatus.WORK_PAUSE)
+        binder?.pause()
     }
 
     fun resumeFocus() {
-
+        status.value?.let {
+            if (it == TimerStatus.WORK_PAUSE) {
+                setStatus(TimerStatus.WORK_RUNNING)
+                binder?.start()
+            }
+        }
     }
 
     fun cancelFocus() {
-
+        binder?.cancel()
     }
 
     fun startBreak() {
-
+        setStatus(TimerStatus.BREAK_RUNNING)
+        startService(getBreakTime(), getServiceName())
     }
 
     fun skipBreak() {
-
+        setStatus(TimerStatus.BREAK_FINISH)
     }
 
     var binder: TimerService.TimerBinder? = null
@@ -98,8 +130,11 @@ class TimerViewModel : ViewModel() {
             binder = null
             setTime(0L)
             when (status.value) {
-                TimerStatus.WORK_RUNNING, TimerStatus.WORK_PAUSE -> {
+                TimerStatus.WORK_RUNNING -> {
                     setStatus(TimerStatus.WORK_FINISH)
+                }
+                TimerStatus.WORK_PAUSE -> {
+                    setStatus(TimerStatus.WAIT_START)
                 }
                 TimerStatus.BREAK_RUNNING -> {
                     setStatus(TimerStatus.BREAK_FINISH)
@@ -116,20 +151,20 @@ class TimerViewModel : ViewModel() {
         }
     }
 
-    fun startService(context: Context, duration: Long, name: String? = null) {
-        val intent = Intent(context, TimerService::class.java)
+    fun startService(duration: Long, name: String? = null) {
+        val intent = Intent(AppRepo.context, TimerService::class.java)
         intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration)
         name?.let {
             intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
         }
-        context.bindService(
+        AppRepo.context.bindService(
             intent,
             connection,
             Context.BIND_AUTO_CREATE
         )
     }
 
-    fun stopService(context: Context) {
-        context.unbindService(connection)
+    fun stopService() {
+        AppRepo.context.unbindService(connection)
     }
 }

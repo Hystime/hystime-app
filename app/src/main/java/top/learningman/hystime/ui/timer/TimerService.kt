@@ -104,6 +104,7 @@ class TimerService : Service() {
             }, {
                 stopSelf()
             })
+            timer?.start()
         }
         return binder
     }

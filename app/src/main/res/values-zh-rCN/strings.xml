@@ -59,4 +59,5 @@
     <string name="timer">计时器</string>
     <string name="timer_service_notification">计时器服务通知</string>
     <string name="timer_service_name">计时器服务</string>
+    <string name="timer_break">休息</string>
 </resources>
