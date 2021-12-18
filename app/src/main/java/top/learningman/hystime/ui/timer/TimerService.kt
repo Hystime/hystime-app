@@ -8,12 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
-import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
 
@@ -52,27 +50,28 @@ class TimerService : Service() {
 
     private fun getNotification(name: String, time: Long): Notification {
         fun Long.format(): String {
-            val secs = this / 1000
+            val secs = (this / 1000).toInt()
             val sec = secs % 60
             val min = secs / 60
-            return "$min:$sec"
+            return "%.2d:%.2d".format(min, sec)
         }
 
         return NotificationCompat.Builder(
             applicationContext,
             Constant.TIMER_NOTIFICATION_CHANNEL_ID
         )
+            .setOngoing(true)
             .setContentTitle(name)
             .setContentText(time.format())
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
             .apply {
                 flags = Notification.FLAG_FOREGROUND_SERVICE
             }
     }
-
 
 
     private fun sendBroadcast() {
