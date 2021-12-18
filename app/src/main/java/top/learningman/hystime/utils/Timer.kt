@@ -1,6 +1,7 @@
 // From https://github.com/c05mic/pause-resume-timer with modification
 package top.learningman.hystime.utils
 
+import android.util.Log
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -50,15 +51,20 @@ class Timer constructor(
         if (isRunning) return
         isRunning = true
         future = execService.scheduleWithFixedDelay({
-            elapsedTime += interval
-            onTick.invoke(elapsedTime)
-            if (duration > 0) {
-                if (elapsedTime >= duration) {
-                    onFinish.invoke()
-                    future!!.cancel(false)
+            try {
+                elapsedTime += interval
+                Log.d("Timer", "onTick $elapsedTime")
+                onTick.invoke(elapsedTime)
+                if (duration > 0) {
+                    if (elapsedTime >= duration) {
+                        onFinish.invoke()
+                        future!!.cancel(false)
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e("Timer", "onTick error", e)
             }
-        }, 0, interval, TimeUnit.MILLISECONDS)
+        }, 1, interval, TimeUnit.MILLISECONDS)
     }
 
     /**

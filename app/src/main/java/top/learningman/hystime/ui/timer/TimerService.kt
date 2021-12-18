@@ -8,10 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
 
@@ -63,9 +65,12 @@ class TimerService : Service() {
             .setContentTitle(name)
             .setContentText(time.format())
             .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
             .build()
+            .apply {
+                flags = Notification.FLAG_FOREGROUND_SERVICE
+            }
     }
 
 
@@ -81,10 +86,6 @@ class TimerService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_STICKY_COMPATIBILITY
-    }
-
 
     override fun onBind(intent: Intent): IBinder {
         intent.let {
@@ -97,9 +98,13 @@ class TimerService : Service() {
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, 0))
             timer = Timer(duration, { time ->
-                with(NotificationManagerCompat.from(this)) {
-                    notify(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, time))
-                }
+                val notification = getNotification(name, time)
+                NotificationManagerCompat.from(applicationContext).notify(
+                    Constant.FOREGROUND_NOTIFICATION_ID,
+                    notification
+                )
+//                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//                nm.notify(Constant.FOREGROUND_NOTIFICATION_ID, notification)
                 sendBroadcast()
             }, {
                 stopSelf()
