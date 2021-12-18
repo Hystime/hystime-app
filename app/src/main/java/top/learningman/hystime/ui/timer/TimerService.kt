@@ -48,7 +48,7 @@ class TimerService : Service() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun getNotification(name: String, time: Long): Notification {
+    private fun getNotification(): (String, Long) -> Notification {
         fun Long.format(): String {
             val secs = (this / 1000).toInt()
             val sec = secs % 60
@@ -56,21 +56,48 @@ class TimerService : Service() {
             return "%.2d:%.2d".format(min, sec)
         }
 
-        return NotificationCompat.Builder(
-            applicationContext,
-            Constant.TIMER_NOTIFICATION_CHANNEL_ID
-        )
-            .setOngoing(true)
-            .setContentTitle(name)
-            .setContentText(time.format())
-            .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setOnlyAlertOnce(true)
-            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .build()
-            .apply {
-                flags = Notification.FLAG_FOREGROUND_SERVICE
+        var notification: Notification? = null
+        fun createNotification(name: String): Notification {
+            return NotificationCompat.Builder(
+                applicationContext,
+                Constant.TIMER_NOTIFICATION_CHANNEL_ID
+            )
+                .setOngoing(true)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOnlyAlertOnce(true)
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+                .build()
+                .apply {
+                    flags = Notification.FLAG_FOREGROUND_SERVICE
+                }
+        }
+
+        fun Notification.update(time: Long) {
+            fun limitCharSequenceLength(cs: CharSequence?): CharSequence? {
+                if (cs == null) return cs
+                if (cs.length > 5 * 1024) {
+                    return cs.subSequence(0, 5 * 1024)
+                }
+                return cs
             }
+
+            val mContentText = this.javaClass.getDeclaredField("mContentText")
+            mContentText.isAccessible = true
+            mContentText.set(
+                notification,
+                limitCharSequenceLength(time.format())
+            )
+        }
+
+        return { name: String, time: Long ->
+            if (notification == null) {
+                notification = createNotification(name)
+            }
+            notification!!.apply {
+                update(time)
+            }
+        }
     }
 
 
@@ -95,15 +122,13 @@ class TimerService : Service() {
                 )
             createNotificationChannel()
 
-            startForeground(Constant.FOREGROUND_NOTIFICATION_ID, getNotification(name, 0))
+            startForeground(Constant.FOREGROUND_NOTIFICATION_ID, getNotification()(name, 0))
             timer = Timer(duration, { time ->
-                val notification = getNotification(name, time)
+                val notification = getNotification()(name, time)
                 NotificationManagerCompat.from(applicationContext).notify(
                     Constant.FOREGROUND_NOTIFICATION_ID,
                     notification
                 )
-//                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//                nm.notify(Constant.FOREGROUND_NOTIFICATION_ID, notification)
                 sendBroadcast()
             }, {
                 stopSelf()
