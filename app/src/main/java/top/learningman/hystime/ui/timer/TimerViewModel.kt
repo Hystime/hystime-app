@@ -106,7 +106,7 @@ class TimerViewModel : ViewModel() {
         status.value?.let {
             if (it == TimerStatus.WORK_PAUSE) {
                 setStatus(TimerStatus.WORK_RUNNING)
-                binder?.start()
+                binder?.resume()
             }
         }
     }

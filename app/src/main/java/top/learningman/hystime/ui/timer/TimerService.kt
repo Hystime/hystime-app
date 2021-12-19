@@ -32,6 +32,10 @@ class TimerService : Service() {
         fun start() {
             timer?.start()
         }
+
+        fun resume() {
+            timer?.resume()
+        }
     }
 
 
@@ -50,53 +54,34 @@ class TimerService : Service() {
 
     private fun getNotification(): (String, Long) -> Notification {
         fun Long.format(): String {
-            val secs = (this / 1000).toInt()
+            val secs = this / 1000
             val sec = secs % 60
             val min = secs / 60
-            return "%.2d:%.2d".format(min, sec)
+            return "%02d:%02d".format(min, sec)
         }
 
-        var notification: Notification? = null
-        fun createNotification(name: String): Notification {
+        var builder: NotificationCompat.Builder? = null
+        var builderName: String? = null
+        fun createNotificationBuilder(name: String): NotificationCompat.Builder {
             return NotificationCompat.Builder(
                 applicationContext,
                 Constant.TIMER_NOTIFICATION_CHANNEL_ID
             )
+                .setContentTitle(name)
                 .setOngoing(true)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-                .build()
-                .apply {
-                    flags = Notification.FLAG_FOREGROUND_SERVICE
-                }
-        }
 
-        fun Notification.update(time: Long) {
-            fun limitCharSequenceLength(cs: CharSequence?): CharSequence? {
-                if (cs == null) return cs
-                if (cs.length > 5 * 1024) {
-                    return cs.subSequence(0, 5 * 1024)
-                }
-                return cs
-            }
-
-            val mContentText = this.javaClass.getDeclaredField("mContentText")
-            mContentText.isAccessible = true
-            mContentText.set(
-                notification,
-                limitCharSequenceLength(time.format())
-            )
         }
 
         return { name: String, time: Long ->
-            if (notification == null) {
-                notification = createNotification(name)
+            if ((builder == null) or (name != builderName)) {
+                builder = createNotificationBuilder(name)
+                builderName = name // maybe unnecessary
             }
-            notification!!.apply {
-                update(time)
-            }
+            builder!!.setContentText(time.format()).build()
         }
     }
 

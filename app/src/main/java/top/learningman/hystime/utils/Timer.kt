@@ -64,7 +64,7 @@ class Timer constructor(
             } catch (e: Exception) {
                 Log.e("Timer", "onTick error", e)
             }
-        }, 1, interval, TimeUnit.MILLISECONDS)
+        }, 0, interval, TimeUnit.MILLISECONDS)
     }
 
     /**
