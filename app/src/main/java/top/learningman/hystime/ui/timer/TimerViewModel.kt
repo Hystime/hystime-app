@@ -66,7 +66,7 @@ class TimerViewModel : ViewModel() {
         NORMAL -> SharedPrefRepo.getNormalFocusLength()
         POMODORO -> SharedPrefRepo.getPomodoroFocusLength()
         else -> throw Error("Unexpected type")
-    }.toLong()
+    } * 60L
 
     private var breakCount = 0 // TODO: persistent store
     private fun getBreakTime(): Long {
@@ -79,7 +79,7 @@ class TimerViewModel : ViewModel() {
                 SharedPrefRepo.getPomodoroLongBreakLength()
             }
             else -> throw Error("Unexpected type")
-        }.toLong()
+        } * 60L
     }
 
     // Timer Actions
