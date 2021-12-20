@@ -39,6 +39,9 @@ class TimerFragment : Fragment() {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, 0)
                     timerViewModel.setTime(time)
                 }
+                Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
+                    timerViewModel.resetTimer()
+                }
             }
         }
     }
@@ -120,6 +123,7 @@ class TimerFragment : Fragment() {
 
         val filter = IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
+            addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
         }
         requireActivity().registerReceiver(timerReceiver, filter)
 
@@ -170,7 +174,7 @@ class TimerFragment : Fragment() {
         }
     }
 
-    fun setButtonFragment(fragment: Fragment) {
+    private fun setButtonFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
             .replace(R.id.buttonGroup, fragment)
             .commit()

@@ -52,7 +52,7 @@ class TimerService : Service() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun getNotification(): (String, Long) -> Notification {
+    private fun getNotificationBuilder(): (String, Long) -> Notification {
         fun Long.format(): String {
             val secs = this / 1000
             val sec = secs % 60
@@ -69,7 +69,7 @@ class TimerService : Service() {
             )
                 .setContentTitle(name)
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_clock_outline_24dp)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
@@ -86,13 +86,19 @@ class TimerService : Service() {
     }
 
 
-    private fun sendBroadcast() {
+    private fun sendTimeBroadcast() {
         Intent(Constant.TIMER_BROADCAST_TIME_ACTION).apply {
             timer?.let {
                 putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it.elapsedTime)
                 putExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, it.remainingTime)
             }
         }.also {
+            sendBroadcast(it)
+        }
+    }
+
+    private fun sendCleanBroadcast() {
+        Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).also {
             sendBroadcast(it)
         }
     }
@@ -107,15 +113,19 @@ class TimerService : Service() {
                 )
             createNotificationChannel()
 
-            startForeground(Constant.FOREGROUND_NOTIFICATION_ID, getNotification()(name, 0))
+            val notificationBuilder = getNotificationBuilder()
+
+            startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
             timer = Timer(duration, { time ->
-                val notification = getNotification()(name, time)
+                val notification = notificationBuilder(name, time)
                 NotificationManagerCompat.from(applicationContext).notify(
                     Constant.FOREGROUND_NOTIFICATION_ID,
                     notification
                 )
-                sendBroadcast()
+                sendTimeBroadcast()
             }, {
+                sendCleanBroadcast()
+                stopForeground(true)
                 stopSelf()
             })
             timer?.start()

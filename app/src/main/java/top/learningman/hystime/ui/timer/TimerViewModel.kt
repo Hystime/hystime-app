@@ -124,34 +124,39 @@ class TimerViewModel : ViewModel() {
         setStatus(TimerStatus.BREAK_FINISH)
     }
 
-    var binder: TimerService.TimerBinder? = null
-    private val connection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName?) {
-            binder = null
-            setTime(0L)
-            when (status.value) {
-                TimerStatus.WORK_RUNNING -> {
-                    setStatus(TimerStatus.WORK_FINISH)
-                }
-                TimerStatus.WORK_PAUSE -> {
-                    setStatus(TimerStatus.WAIT_START)
-                }
-                TimerStatus.BREAK_RUNNING -> {
-                    setStatus(TimerStatus.BREAK_FINISH)
-                }
-                else -> {
-                    throw Error("Service died unexpected.")
-                }
+    fun resetTimer() {
+        stopService()
+        binder = null
+        setTime(0L)
+        when (status.value) {
+            TimerStatus.WORK_RUNNING -> {
+                setStatus(TimerStatus.WORK_FINISH)
+            }
+            TimerStatus.WORK_PAUSE -> {
+                setStatus(TimerStatus.WAIT_START)
+            }
+            TimerStatus.BREAK_RUNNING -> {
+                setStatus(TimerStatus.BREAK_FINISH)
+            }
+            else -> {
+                throw Error("Service died unexpected.")
             }
         }
+    }
 
+    var binder: TimerService.TimerBinder? = null
+    private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             binder = service as TimerService.TimerBinder
             binder!!.start()
         }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            resetTimer()
+        }
     }
 
-    fun startService(duration: Long, name: String? = null) {
+    private fun startService(duration: Long, name: String? = null) {
         val intent = Intent(AppRepo.context, TimerService::class.java)
         intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration)
         name?.let {
