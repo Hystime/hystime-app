@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="@string/default_time"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="56sp"
+            android:textSize="40sp"
             android:typeface="monospace"
             app:layout_constraintBottom_toBottomOf="@id/ref"
             app:layout_constraintEnd_toEndOf="@id/ref"

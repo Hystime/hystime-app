@@ -64,8 +64,8 @@ class TimerViewModel : ViewModel() {
 
     fun getTime() =
         when (status.value) {
-            TimerStatus.WORK_RUNNING -> getFocusTime() * 1000L
-            TimerStatus.BREAK_RUNNING -> getBreakTime() * 1000L
+            TimerStatus.WORK_RUNNING -> getFocusTime()
+            TimerStatus.BREAK_RUNNING -> getBreakTime()
             else -> 0L
         }
 

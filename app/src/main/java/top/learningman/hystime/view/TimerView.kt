@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -22,11 +23,13 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         private var diffAngle: Float
 
         init {
-            diffAngle = newAngle - view.angle
+            diffAngle = newAngle - view.lastAngle
+            view.lastAngle = newAngle
+            Log.d("TimerView", "diffAngle: $diffAngle, newAngle $newAngle, angle ${view.angle}")
         }
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-            view.angle = diffAngle * interpolatedTime + view.angle
+            view.angle += diffAngle * interpolatedTime
         }
     }
 
@@ -36,6 +39,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private var mType: TimerViewType
     private var mArcRectF: RectF = RectF()
+    var lastAngle = 0f
     var angle = 0f
         set(value) {
             field = value
@@ -127,10 +131,11 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     // FIXME: correct animation
     fun setAngleWithAnimation(angle: Float) {
+        Log.d("Animation", "setAngleWithAnimation angle $angle")
         val progressAnimation = ProgressAnimation(this, angle)
         progressAnimation.duration = 1000
         progressAnimation.interpolator = LinearInterpolator()
-        progressAnimation.fillAfter = true
+        progressAnimation.fillAfter = false
         progressAnimation.fillBefore = false
         startAnimation(progressAnimation)
     }
