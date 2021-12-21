@@ -1,36 +1,25 @@
 package top.learningman.hystime.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
-import android.view.animation.Transformation
 import top.learningman.hystime.R
+import top.learningman.hystime.ui.timer.TimerViewModel
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+    lateinit var viewModel: TimerViewModel
+
     enum class TimerViewType {
         NORMAL,
         POMODORO
-    }
-
-    class ProgressAnimation(val view: TimerView, newAngle: Float) : Animation() {
-        private var diffAngle: Float
-
-        init {
-            diffAngle = newAngle - view.lastAngle
-            view.lastAngle = newAngle
-            Log.d("TimerView", "diffAngle: $diffAngle, newAngle $newAngle, angle ${view.angle}")
-        }
-
-        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-            view.angle += diffAngle * interpolatedTime
-        }
     }
 
     private var cx: Float = 0f
@@ -39,12 +28,8 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private var mType: TimerViewType
     private var mArcRectF: RectF = RectF()
-    var lastAngle = 0f
+
     var angle = 0f
-        set(value) {
-            field = value
-            postInvalidate()
-        }
 
     private var mCurrentPaint: Paint
     private var mCurrentBasePaint: Paint
@@ -122,21 +107,70 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         canvas.drawCircle(cx, cy, radius, mCurrentBasePaint)
         if (angle != 0f) {
             canvas.drawArc(mArcRectF, -90f, angle, false, mCurrentPaint)
         }
     }
 
-    // FIXME: correct animation
-    fun setAngleWithAnimation(angle: Float) {
-        Log.d("Animation", "setAngleWithAnimation angle $angle")
-        val progressAnimation = ProgressAnimation(this, angle)
-        progressAnimation.duration = 1000
-        progressAnimation.interpolator = LinearInterpolator()
-        progressAnimation.fillAfter = false
-        progressAnimation.fillBefore = false
-        startAnimation(progressAnimation)
+    var animation: ObjectAnimator? = null
+
+    fun start(time: Long) {
+        animation = ObjectAnimator().apply {
+            setObjectValues(0f, 360f)
+            duration = time * 1000L
+            interpolator = LinearInterpolator()
+            addUpdateListener {
+                angle = it.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                private fun reset() {
+                    angle = 0f
+                    invalidate()
+                    animation = null
+                }
+
+                override fun onAnimationEnd(animator: Animator?) {
+                    super.onAnimationEnd(animator)
+                    reset()
+                }
+
+                override fun onAnimationCancel(animator: Animator?) {
+                    super.onAnimationCancel(animator)
+                    reset()
+                }
+            })
+            start()
+        }
     }
+
+    fun pause() {
+        animation?.pause()
+    }
+
+    fun resume() {
+        animation?.resume()
+    }
+
+    fun cancel() {
+        animation?.cancel()
+    }
+
+    fun isRunning(): Boolean {
+        return animation?.isRunning ?: false
+    }
+
+    fun isStarted(): Boolean {
+        return animation?.isStarted ?: false
+    }
+
+    fun isPause(): Boolean {
+        return animation?.isPaused ?: false
+    }
+
+    fun isCancel(): Boolean {
+        return !(animation?.isStarted ?: false)
+    }
+
 }

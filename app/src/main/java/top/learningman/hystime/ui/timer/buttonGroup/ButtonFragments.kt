@@ -5,7 +5,6 @@ import android.view.View
 import top.learningman.hystime.R
 
 object ButtonFragments {
-
     class WaitStartFragment : ButtonFragment() {
         override fun bind(context: Context) {
             binding.button1.visibility = View.GONE

@@ -1,12 +1,12 @@
 package top.learningman.hystime.ui.timer.timing
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import top.learningman.hystime.R
 import top.learningman.hystime.ui.timer.TimerViewModel
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.view.TimerView
 
 
@@ -15,12 +15,37 @@ open class TimingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.time.observe(viewLifecycleOwner) {
-            val allTime = viewModel.getTime() * 1000L
-            if (it != 0L) {
-                val angle = it.toFloat() / allTime * 360
-                Log.d("TimingFragment", "time $it/allTime $allTime to angle $angle")
-                view.findViewById<TimerView>(R.id.timer).setAngleWithAnimation(angle)
+
+        val timer = view.findViewById<TimerView>(R.id.timer)
+        timer.viewModel = viewModel
+
+        viewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                WORK_RUNNING -> {
+                    if (timer.isPause()) {
+                        timer.resume()
+                    } else {
+                        timer.start(viewModel.getTime())
+                    }
+                }
+                BREAK_RUNNING -> {
+                    timer.start(viewModel.getTime())
+                }
+                WORK_PAUSE -> {
+                    timer.pause()
+                }
+                WORK_FINISH -> {
+                    timer.cancel()
+                }
+                BREAK_FINISH -> {
+                    timer.cancel()
+                }
+                WAIT_START -> {
+                    if (timer.isStarted()) {
+                        timer.cancel()
+                    }
+                }
+                null -> throw Error("TimerViewModel.status is null")
             }
         }
     }
