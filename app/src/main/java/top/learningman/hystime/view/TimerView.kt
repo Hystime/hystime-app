@@ -19,7 +19,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     }
 
     class ProgressAnimation(val view: TimerView, newAngle: Float) : Animation() {
-        private var diffAngle: Float = 0f
+        private var diffAngle: Float
 
         init {
             diffAngle = newAngle - view.angle
@@ -39,7 +39,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     var angle = 0f
         set(value) {
             field = value
-            invalidate()
+            postInvalidate()
         }
 
     private var mCurrentPaint: Paint
@@ -109,11 +109,10 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        mArcRectF.set(cx - radius, cy - radius, cx + radius, cy + radius)
         cx = width / 2f
         cy = height / 2f
         radius = cx.coerceAtMost(cy) - 20
-
+        mArcRectF.set(cx - radius, cy - radius, cx + radius, cy + radius)
     }
 
 
@@ -121,9 +120,12 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         super.onDraw(canvas)
 
         canvas.drawCircle(cx, cy, radius, mCurrentBasePaint)
-        canvas.drawArc(mArcRectF, -90f, angle, false, mCurrentPaint)
+        if (angle != 0f) {
+            canvas.drawArc(mArcRectF, -90f, angle, false, mCurrentPaint)
+        }
     }
 
+    // FIXME: correct animation
     fun setAngleWithAnimation(angle: Float) {
         val progressAnimation = ProgressAnimation(this, angle)
         progressAnimation.duration = 1000

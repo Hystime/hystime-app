@@ -10,7 +10,6 @@ import top.learningman.hystime.ui.timer.TimerViewModel
 
 class NormalTimingFragment : TimingFragment() {
     private lateinit var binding: FragmentNormalTimingBinding
-    private val viewModel: TimerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -19,9 +18,4 @@ class NormalTimingFragment : TimingFragment() {
         binding = FragmentNormalTimingBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
 }

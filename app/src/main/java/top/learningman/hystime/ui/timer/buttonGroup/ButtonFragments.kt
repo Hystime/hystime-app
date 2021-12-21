@@ -105,6 +105,13 @@ object ButtonFragments {
                     viewModel.startFocus()
                 }
             }
+
+            binding.button1.apply {
+                text = context.getString(R.string.exit)
+                setOnClickListener {
+                    viewModel.exitAll()
+                }
+            }
         }
     }
 }

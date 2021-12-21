@@ -11,7 +11,6 @@ import top.learningman.hystime.ui.timer.TimerViewModel
 class PomodoroTimingFragment : TimingFragment() {
 
     private lateinit var binding: FragmentPomodoroTimingBinding
-    private val viewModel: TimerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,11 +19,4 @@ class PomodoroTimingFragment : TimingFragment() {
         binding = FragmentPomodoroTimingBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-
 }

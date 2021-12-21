@@ -23,6 +23,7 @@ import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
+import top.learningman.hystime.utils.format
 import kotlin.math.abs
 
 class TimerFragment : Fragment() {
@@ -143,7 +144,10 @@ class TimerFragment : Fragment() {
                     else -> throw Error("Unexpected status")
                 }
             )
+        }
 
+        timerViewModel.time.observe(viewLifecycleOwner) {
+            binding.time.text = it.format()
         }
     }
 

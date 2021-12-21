@@ -14,6 +14,7 @@ import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
+import top.learningman.hystime.utils.format
 
 
 class TimerService : Service() {
@@ -53,13 +54,6 @@ class TimerService : Service() {
     }
 
     private fun getNotificationBuilder(): (String, Long) -> Notification {
-        fun Long.format(): String {
-            val secs = this / 1000
-            val sec = secs % 60
-            val min = secs / 60
-            return "%02d:%02d".format(min, sec)
-        }
-
         var builder: NotificationCompat.Builder? = null
         var builderName: String? = null
         fun createNotificationBuilder(name: String): NotificationCompat.Builder {

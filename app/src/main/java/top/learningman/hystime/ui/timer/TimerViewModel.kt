@@ -41,7 +41,7 @@ class TimerViewModel : ViewModel() {
         _type.value = type
     }
 
-    fun setStatus(status: TimerStatus) {
+    private fun setStatus(status: TimerStatus) {
         _status.postValue(status)
     }
 
@@ -62,6 +62,14 @@ class TimerViewModel : ViewModel() {
         else -> throw Error("Unexpected type")
     } + if (isBreak) " ${StringRepo.getString(R.string.timer_break)}" else ""
 
+    fun getTime() =
+        when (status.value) {
+            TimerStatus.WORK_RUNNING -> getFocusTime() * 1000L
+            TimerStatus.BREAK_RUNNING -> getBreakTime() * 1000L
+            else -> 0L
+        }
+
+
     private fun getFocusTime() = when (type.value) {
         NORMAL -> SharedPrefRepo.getNormalFocusLength()
         POMODORO -> SharedPrefRepo.getPomodoroFocusLength()
@@ -69,6 +77,7 @@ class TimerViewModel : ViewModel() {
     } * 60L
 
     private var breakCount = 0 // TODO: persistent store
+
     private fun getBreakTime(): Long {
         return when (type.value) {
             NORMAL -> SharedPrefRepo.getNormalBreakLength()
@@ -169,7 +178,7 @@ class TimerViewModel : ViewModel() {
         )
     }
 
-    fun stopService() {
+    private fun stopService() {
         AppRepo.context.unbindService(connection)
     }
 }
