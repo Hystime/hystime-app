@@ -91,11 +91,6 @@ class NestedScrollableHost : ConstraintLayout {
 
     private fun handleInterceptTouchEvent(e: MotionEvent) {
         val orientation = parentViewPager?.orientation ?: return
-//        Early return if child can't scroll in same direction as parent
-//        Not used in this place
-//        if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
-//            return
-//        }
 
         if (e.action == MotionEvent.ACTION_DOWN) {
             initialX = e.x
