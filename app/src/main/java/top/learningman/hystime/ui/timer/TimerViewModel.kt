@@ -130,7 +130,11 @@ class TimerViewModel : ViewModel() {
     }
 
     fun skipBreak() {
-        setStatus(TimerStatus.BREAK_FINISH)
+        if (binder != null) {
+            resetTimer()
+        } else {
+            setStatus(TimerStatus.BREAK_FINISH)
+        }
     }
 
     fun resetTimer() {

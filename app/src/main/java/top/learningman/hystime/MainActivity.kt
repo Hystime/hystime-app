@@ -169,6 +169,23 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    // TODO: add custom animation
+    fun showNav() {
+        binding.navView.apply {
+            if (!isShown) {
+                visibility = View.VISIBLE
+            }
+        }
+    }
+
+    fun hideNav() {
+        binding.navView.apply {
+            if (isShown) {
+                visibility = View.INVISIBLE
+            }
+        }
+    }
+
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount() = NUM_PAGES
 

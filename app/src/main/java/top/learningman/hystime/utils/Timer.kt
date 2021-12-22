@@ -2,6 +2,7 @@
 package top.learningman.hystime.utils
 
 import android.util.Log
+import top.learningman.hystime.BuildConfig
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -18,7 +19,7 @@ class Timer constructor(
     onTick: ((Long) -> Unit),
     onFinish: (() -> Unit)
 ) {
-    private val interval = 1000L
+    private var interval = 1000L // 1 second
     private val onTick: ((Long) -> Unit)
     private val onFinish: (() -> Unit)
 
@@ -52,7 +53,11 @@ class Timer constructor(
         isRunning = true
         future = execService.scheduleWithFixedDelay({
             try {
-                elapsedTime += interval
+                elapsedTime += if (BuildConfig.DEBUG) {
+                    interval * 100
+                } else {
+                    interval
+                }
                 Log.d("Timer", "onTick $elapsedTime")
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {

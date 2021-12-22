@@ -30,7 +30,7 @@ class NestedScrollableHost : ConstraintLayout {
     private var initialY = 0f
 
     private var parentPagerCache: ViewPager2? = null
-    private var childPagerCache: View? = null
+    private var childPagerCache: ViewPager2? = null
 
     private val parentViewPager: ViewPager2?
         get() {
@@ -45,10 +45,10 @@ class NestedScrollableHost : ConstraintLayout {
 
         }
 
-    private val child: View?
+    private val childViewPager: ViewPager2?
         get() {
             if (childCount > 0) {
-                childPagerCache = getChildAt(0)
+                childPagerCache = getChildAt(0) as ViewPager2
             }
             return childPagerCache
         }
@@ -57,11 +57,29 @@ class NestedScrollableHost : ConstraintLayout {
         touchSlop = ViewConfiguration.get(context).scaledTouchSlop
     }
 
+    fun allowScroll() {
+        parentViewPager?.let {
+            it.isUserInputEnabled = true
+        }
+        childViewPager?.let {
+            it.isUserInputEnabled = true
+        }
+    }
+
+    fun forbidScroll() {
+        parentViewPager?.let {
+            it.isUserInputEnabled = false
+        }
+        childViewPager?.let {
+            it.isUserInputEnabled = false
+        }
+    }
+
     private fun canChildScroll(orientation: Int, delta: Float): Boolean {
         val direction = -delta.sign.toInt()
         return when (orientation) {
-            0 -> child?.canScrollHorizontally(direction) ?: false
-            1 -> child?.canScrollVertically(direction) ?: false
+            0 -> childViewPager?.canScrollHorizontally(direction) ?: false
+            1 -> childViewPager?.canScrollVertically(direction) ?: false
             else -> throw IllegalArgumentException()
         }
     }
@@ -73,10 +91,11 @@ class NestedScrollableHost : ConstraintLayout {
 
     private fun handleInterceptTouchEvent(e: MotionEvent) {
         val orientation = parentViewPager?.orientation ?: return
-        // Early return if child can't scroll in same direction as parent
-        if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
-            return
-        }
+//        Early return if child can't scroll in same direction as parent
+//        Not used in this place
+//        if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
+//            return
+//        }
 
         if (e.action == MotionEvent.ACTION_DOWN) {
             initialX = e.x

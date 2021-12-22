@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import top.learningman.hystime.Constant
+import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
@@ -149,6 +150,14 @@ class TimerFragment : Fragment() {
         timerViewModel.time.observe(viewLifecycleOwner) {
             binding.time.text = it.format()
         }
+
+        timerViewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                WORK_RUNNING -> enterEnv()
+                WAIT_START -> leaveEnv()
+                else -> {}
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -182,5 +191,25 @@ class TimerFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.buttonGroup, fragment)
             .commit()
+    }
+
+    private fun enterEnv() {
+        (requireActivity() as MainActivity).hideNav()
+        binding.tabLayout.apply {
+            if (isShown) {
+                visibility = View.INVISIBLE
+            }
+        }
+        binding.timerHost.forbidScroll()
+    }
+
+    private fun leaveEnv() {
+        (requireActivity() as MainActivity).showNav()
+        binding.tabLayout.apply {
+            if (!isShown) {
+                visibility = View.VISIBLE
+            }
+        }
+        binding.timerHost.allowScroll()
     }
 }

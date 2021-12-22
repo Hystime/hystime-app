@@ -97,7 +97,6 @@ object ButtonFragments {
 
     class BreakFinishFragment : ButtonFragment() {
         override fun bind(context: Context) {
-            isBreak()
             binding.button0.apply {
                 text = context.getString(R.string.work_continue)
                 setOnClickListener {

@@ -39,11 +39,13 @@ open class TimingFragment : Fragment() {
                 }
                 BREAK_FINISH -> {
                     timer.cancel()
+                    timer.isFocus()
                 }
                 WAIT_START -> {
                     if (timer.isStarted()) {
                         timer.cancel()
                     }
+                    timer.isFocus()
                 }
                 null -> throw Error("TimerViewModel.status is null")
             }

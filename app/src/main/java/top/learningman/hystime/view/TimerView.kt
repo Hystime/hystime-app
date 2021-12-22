@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.ui.timer.TimerViewModel
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -34,30 +35,68 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var mCurrentPaint: Paint
     private var mCurrentBasePaint: Paint
 
-    private val mPomodoroBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var isBreak = false
+
+    fun isBreak() {
+        isBreak = true
+        updatePaintColor()
+    }
+
+    fun isFocus() {
+        isBreak = false
+        updatePaintColor()
+    }
+
+    private fun getColor(): Int {
+        return if (isBreak) {
+            AppRepo.context.getColor(R.color.relax_color)
+        } else {
+            AppRepo.context.getColor(R.color.timing_circle)
+        }
+    }
+
+    private fun getBaseColor(): Int {
+        return if (isBreak) {
+            AppRepo.context.getColor(R.color.relax_color_base)
+        } else {
+            AppRepo.context.getColor(R.color.timing_circle_base)
+        }
+    }
+
+    private fun updatePaintColor() {
+        listOf(mPomodoroCirclePaint, mNormalCirclePaint).forEach {
+            it.color = getColor()
+        }
+        listOf(mPomodoroBaseCirclePaint, mNormalBaseCirclePaint).forEach {
+            it.color = getBaseColor()
+        }
+        postInvalidate()
+    }
+
+    private var mPomodoroBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = context.getColor(R.color.timing_circle_base)
         strokeWidth = 40F
-        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 1f)
+        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 0f)
     }
 
-    private val mPomodoroCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var mPomodoroCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = context.getColor(R.color.timing_circle)
         strokeWidth = 40F
-        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 1f)
+        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 0f)
     }
 
-    private val mNormalBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var mNormalBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = context.getColor(R.color.timing_circle_base)
         strokeWidth = 20F
     }
 
-    private val mNormalCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var mNormalCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = context.getColor(R.color.timing_circle)
@@ -116,6 +155,9 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     var animation: ObjectAnimator? = null
 
     fun start(time: Long) {
+        if (animation != null) {
+            animation?.cancel()
+        }
         animation = ObjectAnimator().apply {
             setObjectValues(0f, 360f)
             duration = time * 1000L
@@ -125,15 +167,22 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                 invalidate()
             }
             addListener(object : AnimatorListenerAdapter() {
-                private fun reset() {
+                private fun reset(update: Boolean = false) {
                     angle = 0f
+                    if (update) {
+                        if (isBreak) {
+                            isFocus()
+                        } else {
+                            isBreak()
+                        }
+                    }
                     invalidate()
                     animation = null
                 }
 
                 override fun onAnimationEnd(animator: Animator?) {
                     super.onAnimationEnd(animator)
-                    reset()
+                    reset(true)
                 }
 
                 override fun onAnimationCancel(animator: Animator?) {
@@ -157,20 +206,12 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         animation?.cancel()
     }
 
-    fun isRunning(): Boolean {
-        return animation?.isRunning ?: false
-    }
-
     fun isStarted(): Boolean {
         return animation?.isStarted ?: false
     }
 
     fun isPause(): Boolean {
         return animation?.isPaused ?: false
-    }
-
-    fun isCancel(): Boolean {
-        return !(animation?.isStarted ?: false)
     }
 
 }
