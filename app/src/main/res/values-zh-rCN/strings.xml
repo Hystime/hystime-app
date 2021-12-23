@@ -60,4 +60,5 @@
     <string name="timer_service_notification">计时器服务通知</string>
     <string name="timer_service_name">计时器服务</string>
     <string name="timer_break">休息</string>
+    <string name="no_target_hint">请选择一个目标</string>
 </resources>

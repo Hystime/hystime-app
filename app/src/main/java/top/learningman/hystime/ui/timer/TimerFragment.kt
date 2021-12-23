@@ -26,6 +26,7 @@ import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
 import top.learningman.hystime.utils.format
+import java.util.*
 import kotlin.math.abs
 
 class TimerFragment : Fragment() {
@@ -39,11 +40,16 @@ class TimerFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 Constant.TIMER_BROADCAST_TIME_ACTION -> {
-                    val time = intent.getLongExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, 0)
+                    val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
                     timerViewModel.setTime(time)
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
                     timerViewModel.resetTimer()
+                    val duration =
+                        intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
+                    val startedAt =
+                        intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA)!! as Date
+
                 }
             }
         }

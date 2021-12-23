@@ -12,6 +12,10 @@ object ButtonFragments {
             binding.button0.apply {
                 text = context.getString(R.string.start)
                 setOnClickListener {
+                    if (mainViewModel.currentTarget.value == null) {
+                        mainViewModel.showSnackBarMessage(context.getString(R.string.no_target_hint))
+                        return@setOnClickListener
+                    }
                     viewModel.startFocus()
                 }
             }

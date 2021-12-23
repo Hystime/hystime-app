@@ -15,11 +15,15 @@ import top.learningman.hystime.R
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
 import top.learningman.hystime.utils.format
+import java.util.*
 
 
 class TimerService : Service() {
     private var timer: Timer? = null
     private val binder = TimerBinder()
+
+    private var duration: Long = 0
+    private var startedAt: Date? = null
 
     inner class TimerBinder : Binder() {
         fun pause() {
@@ -83,7 +87,7 @@ class TimerService : Service() {
     private fun sendTimeBroadcast() {
         Intent(Constant.TIMER_BROADCAST_TIME_ACTION).apply {
             timer?.let {
-                putExtra(Constant.TIMER_BROADCAST_TIME_EXTRA, it.elapsedTime)
+                putExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, it.elapsedTime)
                 putExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, it.remainingTime)
             }
         }.also {
@@ -92,7 +96,11 @@ class TimerService : Service() {
     }
 
     private fun sendCleanBroadcast() {
-        Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).also {
+        Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).apply {
+            val dur = (Date().time - startedAt!!.time) / 1000
+            putExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, dur)
+            putExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA, startedAt)
+        }.also {
             sendBroadcast(it)
         }
     }
@@ -100,7 +108,8 @@ class TimerService : Service() {
 
     override fun onBind(intent: Intent): IBinder {
         intent.let {
-            val duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
+            duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
+            startedAt = Date()
             val name =
                 it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: StringRepo.getString(
                     R.string.timer

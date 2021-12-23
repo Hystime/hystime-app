@@ -17,4 +17,5 @@
     <color name="relax_color">#4CAF50</color>
 
     <color name="warm_grey">#A9A9A9</color>
+    <color name="transparent">#00000000</color>
 </resources>

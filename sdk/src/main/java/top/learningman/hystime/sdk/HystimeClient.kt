@@ -24,7 +24,6 @@ import com.apollographql.apollo.api.Mutation
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloNetworkException
 import okhttp3.OkHttpClient
 import type.*
 import java.util.*
@@ -240,11 +239,7 @@ class HystimeClient(endpoint: String, authCode: String) {
             }
             val result = try {
                 Result.success(block.invoke())
-            } catch (e: ApolloNetworkException) {
-                Result.failure(e)
-            } catch (e: ServerInternalException) {
-                Result.failure(e)
-            } catch (e: Error) {
+            } catch (e: Throwable) {
                 Result.failure(e)
             }
             return result

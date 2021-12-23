@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ButtonFragmentBinding
 import top.learningman.hystime.ui.timer.TimerViewModel
 
 abstract class ButtonFragment : Fragment() {
     lateinit var binding: ButtonFragmentBinding
+    val mainViewModel: MainViewModel by activityViewModels()
     val viewModel: TimerViewModel by activityViewModels()
 
     abstract fun bind(context: Context)

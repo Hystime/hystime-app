@@ -96,8 +96,9 @@ class TimerViewModel : ViewModel() {
     fun exitAll() {
         setStatus(TimerStatus.WAIT_START)
         if (binder != null) {
-            AppRepo.context.unbindService(connection)
+            binder?.cancel()
             binder = null
+            stopService()
         }
     }
 
