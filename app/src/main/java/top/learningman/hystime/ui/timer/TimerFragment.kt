@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -107,6 +108,9 @@ class TimerFragment : Fragment() {
         }
 
         binding.target.setOnClickListener {
+            if (timerViewModel.status.value != WAIT_START) {
+                return@setOnClickListener
+            }
             val targets = mainViewModel.targets.value!!.map {
                 it.name
             }.toTypedArray()
@@ -201,6 +205,8 @@ class TimerFragment : Fragment() {
             }
         }
         binding.timerHost.forbidScroll()
+        binding.target.icon = ContextCompat.getDrawable(requireContext(), R.drawable.null_)
+        binding.target.isClickable = false
     }
 
     private fun leaveEnv() {
@@ -211,5 +217,8 @@ class TimerFragment : Fragment() {
             }
         }
         binding.timerHost.allowScroll()
+        binding.target.icon =
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_chevron_right_white_24dp)
+        binding.target.isClickable = true
     }
 }
