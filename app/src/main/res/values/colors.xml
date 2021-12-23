@@ -15,4 +15,6 @@
 
     <color name="relax_color_base">#C8E6C9</color>
     <color name="relax_color">#4CAF50</color>
+
+    <color name="warm_grey">#A9A9A9</color>
 </resources>

@@ -1,12 +1,10 @@
 package top.learningman.hystime.ui.dashboard
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
@@ -44,13 +42,22 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
         viewModel.targets.observe(viewLifecycleOwner) {
             viewModel.setCurrentTarget(null)
-            mRecyclerView.swapAdapter(
-                TargetRecyclerAdapter(
-                    viewModel,
-                    it,
-                    requireActivity() as MainActivity
-                ), false
-            )
+            if (it.isEmpty()) {
+                binding.emptyView.visibility = View.VISIBLE
+                binding.targets.visibility = View.GONE
+            } else {
+                binding.emptyView.visibility = View.GONE
+                binding.targets.visibility = View.VISIBLE
+                mRecyclerView.swapAdapter(
+                    TargetRecyclerAdapter(
+                        viewModel,
+                        it,
+                        requireActivity() as MainActivity
+                    ), false
+                )
+            }
+            // TODO: design a diff algorithm
+
         }
 
         return root

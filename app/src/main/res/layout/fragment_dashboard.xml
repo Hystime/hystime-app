@@ -29,4 +29,17 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:text="@string/no_target"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/warm_grey"
+        android:textSize="40sp"
+        android:visibility="gone" />
 </FrameLayout>
