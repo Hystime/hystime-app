@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.timer.timing.PomodoroTimingFragment">
+    tools:context=".ui.timer.timing.PomodoroTimerViewFragment">
 
 
     <top.learningman.hystime.view.TimerView

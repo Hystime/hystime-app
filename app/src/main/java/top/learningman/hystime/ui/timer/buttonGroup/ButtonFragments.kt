@@ -47,7 +47,7 @@ object ButtonFragments {
             binding.button1.apply {
                 text = context.getString(R.string.exit)
                 setOnClickListener {
-                    viewModel.cancelFocus()
+                    viewModel.exitAll()
                 }
             }
         }

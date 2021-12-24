@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,7 +42,7 @@ class TimerViewModel : ViewModel() {
         _type.value = type
     }
 
-    private fun setStatus(status: TimerStatus) {
+    fun setStatus(status: TimerStatus) {
         _status.postValue(status)
     }
 
@@ -100,12 +101,9 @@ class TimerViewModel : ViewModel() {
     // Timer Actions
 
     fun exitAll() {
+        Log.d("exitAll", "call resetTimer")
         setStatus(TimerStatus.WAIT_START)
-        if (binder != null) {
-            binder?.cancel()
-            binder = null
-            stopService()
-        }
+        resetTimer()
     }
 
     fun startFocus() {
@@ -127,51 +125,35 @@ class TimerViewModel : ViewModel() {
         }
     }
 
-    fun cancelFocus() {
-        binder?.cancel()
-    }
-
     fun startBreak() {
         setStatus(TimerStatus.BREAK_RUNNING)
         startService(getBreakTime(), getServiceName(true))
     }
 
     fun skipBreak() {
-        if (binder != null) {
-            resetTimer()
-        } else {
-            setStatus(TimerStatus.BREAK_FINISH)
-        }
+        setStatus(TimerStatus.BREAK_FINISH)
+        resetTimer()
     }
 
-    fun resetTimer() {
+    private fun resetTimer() {
+        Log.d("TimerViewModel", "resetTimer")
         stopService()
-        binder = null
         setTime(0L)
-        when (status.value) {
-            TimerStatus.WORK_RUNNING -> {
-                setStatus(TimerStatus.WORK_FINISH)
-            }
-            TimerStatus.WORK_PAUSE -> {
-                setStatus(TimerStatus.WAIT_START)
-            }
-            TimerStatus.BREAK_RUNNING -> {
-                setStatus(TimerStatus.BREAK_FINISH)
-            }
-            else -> {
-                throw Error("Service died unexpected.")
-            }
-        }
+        setRemainTime(0L)
+        // Only used for success end.
+
     }
 
     var binder: TimerService.TimerBinder? = null
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.d("onServiceConnected", "Connected $name")
             binder = service as TimerService.TimerBinder
             binder!!.start()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.d("onServiceDisconnected", "Disconnected")
             binder = null
         }
     }
@@ -182,14 +164,22 @@ class TimerViewModel : ViewModel() {
         name?.let {
             intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
         }
-        AppRepo.context.bindService(
+        Log.d("startService", "bindService")
+        val ret = AppRepo.context.bindService(
             intent,
             connection,
             Context.BIND_AUTO_CREATE
         )
+        Log.d("startService", "Bind ret = $ret")
     }
 
     private fun stopService() {
+        Log.d("stopService", "unbindService")
+        binder?.cancel()
+        binder = null
+    }
+
+    fun unbind(){
         AppRepo.context.unbindService(connection)
     }
 }

@@ -5,7 +5,7 @@
     android:id="@+id/normal_timing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.timer.timing.NormalTimingFragment">
+    tools:context=".ui.timer.timing.NormalTimerViewFragment">
 
 
     <top.learningman.hystime.view.TimerView

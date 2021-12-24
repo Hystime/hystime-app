@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import top.learningman.hystime.Constant
@@ -31,7 +32,7 @@ class TimerService : Service() {
         }
 
         fun cancel() {
-            timer?.cancel()
+            timer?.cancel() // stopTimer and invoke onFinish
         }
 
         fun start() {
@@ -94,7 +95,11 @@ class TimerService : Service() {
         }
     }
 
+    private var cleanTrigger = false
     private fun sendCleanBroadcast() {
+        if (cleanTrigger) return
+        cleanTrigger = true
+        Log.d("broadcast", "sendCleanBroadcast")
         Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).apply {
             val dur = (Date().time - startedAt!!.time) / 1000
             putExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, dur)
@@ -135,7 +140,7 @@ class TimerService : Service() {
             }, {
                 sendCleanBroadcast()
                 stopForeground(true)
-                stopSelf()
+//                stopSelf()
             }, duration)
             timer?.start()
         }

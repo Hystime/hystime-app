@@ -10,42 +10,42 @@ import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.view.TimerView
 
 
-open class TimingFragment : Fragment() {
+open class TimerViewFragment : Fragment() {
     private val viewModel: TimerViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val timer = view.findViewById<TimerView>(R.id.timer)
-        timer.viewModel = viewModel
+        val timerView = view.findViewById<TimerView>(R.id.timer)
+        timerView.viewModel = viewModel
 
         viewModel.status.observe(viewLifecycleOwner) {
             when (it) {
                 WORK_RUNNING -> {
-                    if (timer.isPause()) {
-                        timer.resume()
+                    if (timerView.isPause()) {
+                        timerView.resume()
                     } else {
-                        timer.start(viewModel.getTime())
+                        timerView.start(viewModel.getTime())
                     }
                 }
                 BREAK_RUNNING -> {
-                    timer.start(viewModel.getTime())
+                    timerView.start(viewModel.getTime())
                 }
                 WORK_PAUSE -> {
-                    timer.pause()
+                    timerView.pause()
                 }
                 WORK_FINISH -> {
-                    timer.cancel()
+                    timerView.cancel()
                 }
                 BREAK_FINISH -> {
-                    timer.cancel()
-                    timer.isFocus()
+                    timerView.cancel()
+                    timerView.isFocus()
                 }
                 WAIT_START -> {
-                    if (timer.isStarted()) {
-                        timer.cancel()
+                    if (timerView.isStarted()) {
+                        timerView.cancel()
                     }
-                    timer.isFocus()
+                    timerView.isFocus()
                 }
                 null -> throw Error("TimerViewModel.status is null")
             }

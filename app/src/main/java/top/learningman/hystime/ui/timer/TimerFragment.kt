@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +22,11 @@ import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
+import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
-import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
-import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
+import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
+import top.learningman.hystime.ui.timer.timing.PomodoroTimerViewFragment
 import top.learningman.hystime.utils.toTimeString
 import java.util.*
 import kotlin.math.abs
@@ -46,7 +48,25 @@ class TimerFragment : Fragment() {
                     timerViewModel.setRemainTime(remain)
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
-                    timerViewModel.resetTimer()
+                    when (timerViewModel.status.value) {
+                        WORK_RUNNING -> {
+                            timerViewModel.setStatus(WORK_FINISH)
+                        }
+                        WORK_PAUSE -> {
+                            timerViewModel.setStatus(WAIT_START)
+                        }
+                        BREAK_RUNNING -> {
+                            timerViewModel.setStatus(BREAK_FINISH)
+                        }
+                        WAIT_START -> {
+                            // For exitAll
+                            Log.d("exitAll","Called in CLEAN receiver")
+                        }
+                        else -> {
+                            throw Error("Service died unexpected. status: ${timerViewModel.status.value!!.name}")
+                        }
+                    }
+                    timerViewModel.unbind()
                     val duration =
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
                     val startedAt =
@@ -129,6 +149,27 @@ class TimerFragment : Fragment() {
                 }.show()
         }
 
+        binding.container.setOnClickListener {
+            if (timerViewModel.status.value != WORK_RUNNING) {
+                return@setOnClickListener
+            }
+            Intent(requireContext(), TimerFullScreenActivity::class.java).apply {
+                action = Constant.TIMER_FULLSCREEN_ACTION
+                if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
+                    putExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY, timerViewModel.time.value)
+                } else {
+                    putExtra(
+                        Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY,
+                        timerViewModel.remainTime.value
+                    )
+                }
+                putExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY, timerViewModel.type.value)
+            }.also {
+                startActivity(it)
+                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            }
+        }
+
         return binding.root
     }
 
@@ -192,8 +233,8 @@ class TimerFragment : Fragment() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> NormalTimingFragment()
-                1 -> PomodoroTimingFragment()
+                0 -> NormalTimerViewFragment()
+                1 -> PomodoroTimerViewFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
         }

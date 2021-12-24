@@ -17,7 +17,8 @@
         android:theme="@style/Theme.Hystime">
         <activity
             android:name=".ui.timer.TimerFullScreenActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance" />
 
         <service
             android:name=".ui.timer.TimerService"
@@ -33,6 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
