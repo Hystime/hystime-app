@@ -70,5 +70,5 @@ dependencies {
 
     implementation 'io.github.ShawnLin013:number-picker:2.4.13'
 
-    implementation 'com.airbnb.android:paris:2.0.1'
+//    implementation 'com.airbnb.android:paris:2.0.1'
 }
