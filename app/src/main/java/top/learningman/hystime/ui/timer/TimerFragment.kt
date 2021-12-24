@@ -25,7 +25,7 @@ import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimingFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimingFragment
-import top.learningman.hystime.utils.format
+import top.learningman.hystime.utils.toTimeString
 import java.util.*
 import kotlin.math.abs
 
@@ -41,7 +41,9 @@ class TimerFragment : Fragment() {
             when (intent?.action) {
                 Constant.TIMER_BROADCAST_TIME_ACTION -> {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
+                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
                     timerViewModel.setTime(time)
+                    timerViewModel.setRemainTime(remain)
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
                     timerViewModel.resetTimer()
@@ -158,7 +160,15 @@ class TimerFragment : Fragment() {
         }
 
         timerViewModel.time.observe(viewLifecycleOwner) {
-            binding.time.text = it.format()
+            if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
+                binding.time.text = it.toTimeString()
+            }
+        }
+
+        timerViewModel.remainTime.observe(viewLifecycleOwner) {
+            if (timerViewModel.type.value == TimerViewModel.TimerType.POMODORO) {
+                binding.time.text = it.toTimeString()
+            }
         }
 
         timerViewModel.status.observe(viewLifecycleOwner) {

@@ -13,20 +13,14 @@ import java.util.concurrent.TimeUnit
  * Can be used either as a normal timer or a countdown timer.
  *
  */
+
 class Timer constructor(
+    private val onTick: ((Long) -> Unit),
+    private val onFinish: (() -> Unit),
     private val duration: Long = -1,
-    onTick: ((Long) -> Unit),
-    onFinish: (() -> Unit)
 ) {
+
     private var interval = 1000L // 1 second
-    private val onTick: ((Long) -> Unit)
-    private val onFinish: (() -> Unit)
-
-    init {
-        this.onTick = onTick
-        this.onFinish = onFinish
-    }
-
 
     /**
      * @return true if the timer is currently running, and false otherwise.

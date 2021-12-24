@@ -6,7 +6,8 @@ import android.util.Log
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
-fun Long.format(): String {
+// Applied to milliseconds
+fun Long.toTimeString(): String {
     val secs = this / 1000
     val sec = secs % 60
     val min = secs / 60

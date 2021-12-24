@@ -104,5 +104,6 @@
     <string name="select_target_title">Select Target</string>
     <string name="no_target_hint">Please select a target.</string>
     <string name="vibration_hint">Use of vibration as operational feedback</string>
+    <string name="focusing">Focusing</string>
 
 </resources>

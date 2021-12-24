@@ -86,7 +86,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         style = Paint.Style.STROKE
         color = context.getColor(R.color.timing_circle)
         strokeWidth = 40F
-        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 0f)
+        pathEffect = DashPathEffect(floatArrayOf(5f, 15f), -10f)
     }
 
     private var mNormalBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

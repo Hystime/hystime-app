@@ -14,7 +14,7 @@ import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.utils.Timer
-import top.learningman.hystime.utils.format
+import top.learningman.hystime.utils.toTimeString
 import java.util.*
 
 
@@ -71,7 +71,6 @@ class TimerService : Service() {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-
         }
 
         return { name: String, time: Long ->
@@ -79,7 +78,7 @@ class TimerService : Service() {
                 builder = createNotificationBuilder(name)
                 builderName = name // maybe unnecessary
             }
-            builder!!.setContentText(time.format()).build()
+            builder!!.setContentText(time.toTimeString()).build()
         }
     }
 
@@ -119,8 +118,15 @@ class TimerService : Service() {
             val notificationBuilder = getNotificationBuilder()
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
-            timer = Timer(duration, { time ->
-                val notification = notificationBuilder(name, time)
+            timer = Timer({ time ->
+                // FIXME: buggy implement
+                val notifyTime =
+                    if (name.startsWith(StringRepo.getString(R.string.tab_pomodoro_timing))) {
+                        duration - time
+                    } else {
+                        time
+                    }
+                val notification = notificationBuilder(name, notifyTime)
                 NotificationManagerCompat.from(applicationContext).notify(
                     Constant.FOREGROUND_NOTIFICATION_ID,
                     notification
@@ -130,7 +136,7 @@ class TimerService : Service() {
                 sendCleanBroadcast()
                 stopForeground(true)
                 stopSelf()
-            })
+            }, duration)
             timer?.start()
         }
         return binder

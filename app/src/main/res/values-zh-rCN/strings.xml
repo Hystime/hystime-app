@@ -63,4 +63,5 @@
     <string name="no_target_hint">请选择一个目标</string>
     <string name="setting_vibration_title">振动</string>
     <string name="vibration_hint">使用振动作为操作反馈</string>
+    <string name="focusing">专注中</string>
 </resources>

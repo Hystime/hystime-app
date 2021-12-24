@@ -47,6 +47,12 @@ class TimerViewModel : ViewModel() {
 
     private val _time = MutableLiveData(0L)
     val time: LiveData<Long> = _time
+    private val _remainTime = MutableLiveData(0L)
+    val remainTime: LiveData<Long> = _remainTime
+
+    fun setRemainTime(remainTime: Long) {
+        _remainTime.postValue(remainTime)
+    }
 
     fun setTime(time: Long) {
         _time.postValue(time)
@@ -127,7 +133,7 @@ class TimerViewModel : ViewModel() {
 
     fun startBreak() {
         setStatus(TimerStatus.BREAK_RUNNING)
-        startService(getBreakTime(), getServiceName())
+        startService(getBreakTime(), getServiceName(true))
     }
 
     fun skipBreak() {

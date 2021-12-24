@@ -15,6 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hystime">
+        <activity
+            android:name=".ui.timer.TimerFullScreenActivity"
+            android:exported="false" />
+
         <service
             android:name=".ui.timer.TimerService"
             android:enabled="true"

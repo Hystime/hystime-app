@@ -17,5 +17,9 @@ object Constant {
 
     const val TIMER_NOTIFICATION_CHANNEL_ID = "timer_notification_channel_id"
 
+    const val TIMER_FULLSCREEN_ACTION = "timer_fullscreen_action"
+    const val TIMER_FULLSCREEN_INTENT_TIME_KEY = "timer_fullscreen_intent_time_key"
+    const val TIMER_FULLSCREEN_INTENT_TYPE_KEY = "timer_fullscreen_intent_type_key"
+
     const val FOREGROUND_NOTIFICATION_ID = 114114
 }
