@@ -32,7 +32,7 @@ android {
                 throw new Exception("Signing password not found.")
             }
             storeFile file('../sign.jks')
-            keyAlias 'key'
+            keyAlias 'key0'
             storePassword password
             keyPassword password
         }
