@@ -16,10 +16,37 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            def password
+            def CI = System.getenv("CI")
+            if (CI != null) {
+                password = System.getenv("PASSWORD")
+            } else {
+                Properties properties = new Properties()
+                properties.load(file('../local.properties').newDataInputStream())
+                password = properties.getProperty('PASSWORD')
+            }
+
+            if (password == null || password.isEmpty()) {
+                throw new Exception("Signing password not found.")
+            }
+            storeFile file('../sign.jks')
+            keyAlias 'key'
+            storePassword password
+            keyPassword password
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.debug
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
