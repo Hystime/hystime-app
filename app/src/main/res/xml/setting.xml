@@ -37,6 +37,12 @@
             app:summaryOn="@string/setting_fetch_policy_summary_on"
             app:title="@string/setting_fetch_policy_title" />
         <!-- TODO:Support native mode -->
+        <SwitchPreference
+            app:defaultValue="false"
+            app:icon="@drawable/ic_vibration_white_24dp"
+            app:summary="@string/vibration_hint"
+            app:key="@string/setting_vibration_key"
+            app:title="@string/setting_vibration_title" />
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/setting_category_timer">
         <Preference

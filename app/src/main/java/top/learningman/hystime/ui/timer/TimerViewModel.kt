@@ -166,7 +166,7 @@ class TimerViewModel : ViewModel() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            resetTimer()
+            binder = null
         }
     }
 

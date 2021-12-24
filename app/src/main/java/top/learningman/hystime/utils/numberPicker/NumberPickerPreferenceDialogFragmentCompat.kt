@@ -15,12 +15,18 @@
  */
 package top.learningman.hystime.utils.numberPicker
 
+import android.annotation.SuppressLint
+import android.app.Service
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.widget.TextView
 import androidx.preference.PreferenceDialogFragmentCompat
 import com.shawnlin.numberpicker.NumberPicker
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.SharedPrefRepo
+
 
 class NumberPickerPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
     private var mNumberPicker: NumberPicker? = null
@@ -36,6 +42,8 @@ class NumberPickerPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompa
         outState.putInt(SAVE_STATE_VALUE, mValue)
     }
 
+    @SuppressLint("MissingPermission") // Android Studio cannot recognize permission.
+    @Suppress("DEPRECATION")
     override fun onBindDialogView(view: View) {
         super.onBindDialogView(view)
         mNumberPicker = view.findViewById(R.id.number_picker)
@@ -44,6 +52,8 @@ class NumberPickerPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompa
             "Dialog view must contain an NumberPicker with id" +
                     " @id/number_picker"
         }
+        val vib = requireActivity().getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
+        val vibEft = VibrationEffect.createOneShot(20, 125)
         mNumberPicker?.apply {
             minValue = numberPickerPreference.minValue
             maxValue = numberPickerPreference.maxValue
@@ -52,7 +62,16 @@ class NumberPickerPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompa
             numberPickerPreference.entries?.let {
                 displayedValues = mapToStringArray(it)
             }
-            setOnValueChangedListener { _, _, newVal -> mValue = newVal }
+            if (SharedPrefRepo.getVibrationStatus()){
+                setOnValueChangedListener { _, _, newVal ->
+                    mValue = newVal
+                    vib.vibrate(vibEft)
+                }
+            } else {
+                setOnValueChangedListener { _, _, newVal ->
+                    mValue = newVal
+                }
+            }
         }
 
         val unitText = numberPickerPreference.unitText

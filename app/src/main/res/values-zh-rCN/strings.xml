@@ -61,4 +61,6 @@
     <string name="timer_service_name">计时器服务</string>
     <string name="timer_break">休息</string>
     <string name="no_target_hint">请选择一个目标</string>
+    <string name="setting_vibration_title">振动</string>
+    <string name="vibration_hint">使用振动作为操作反馈</string>
 </resources>

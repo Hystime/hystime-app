@@ -211,7 +211,7 @@ class TimerFragment : Fragment() {
             }
         }
         binding.timerHost.forbidScroll()
-        binding.target.icon = ContextCompat.getDrawable(requireContext(), R.drawable.null_)
+        binding.target.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_null)
         binding.target.isClickable = false
     }
 

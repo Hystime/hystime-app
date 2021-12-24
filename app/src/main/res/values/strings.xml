@@ -48,6 +48,8 @@
     <string name="setting_fetch_policy_key" translatable="false">fetch_policy</string>
     <string name="setting_fetch_policy_summary_on">Always fetch data from backend.</string>
     <string name="setting_fetch_policy_summary_off">Sync data only when first opened.</string>
+    <string name="setting_vibration_title">Vibration</string>
+    <string name="setting_vibration_key" translatable="false">vibration</string>
 
     <string name="setting_category_timer">Timer</string>
     <string name="setting_category_timer_setting_title">Timer Setting</string>
@@ -101,5 +103,6 @@
     <string name="refresh_target_hint">Refreshing targets.</string>
     <string name="select_target_title">Select Target</string>
     <string name="no_target_hint">Please select a target.</string>
+    <string name="vibration_hint">Use of vibration as operational feedback</string>
 
 </resources>

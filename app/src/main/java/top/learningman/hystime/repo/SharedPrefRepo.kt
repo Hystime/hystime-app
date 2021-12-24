@@ -59,4 +59,9 @@ object SharedPrefRepo {
         15
     )
 
+    fun getVibrationStatus() = getSettingSharedPreferences().getBoolean(
+        StringRepo.getString(R.string.setting_vibration_key),
+        false
+    )
+
 }

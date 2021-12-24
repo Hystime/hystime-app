@@ -1,6 +1,7 @@
 package top.learningman.hystime.utils
 
 import android.content.res.Resources
+import android.util.Log
 
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -12,7 +13,12 @@ fun Long.format(): String {
     return "%02d:%02d".format(min, sec)
 }
 
-enum class Status{
+fun LGD(log: String) {
+    val info = log.split(";")
+    Log.d(info[0], info[1]);
+}
+
+enum class Status {
     SUCCESS,
     FAILED,
     PENDING
