@@ -48,9 +48,6 @@ class HystimeClient(endpoint: String, authCode: String) {
         if (!endpoint.isUrl()) {
             this.status = Status.CLIENT_ERROR
         }
-//        if (authCode.length != 8) {
-//            this.status = Status.CLIENT_ERROR
-//        }
 
         if (this.status != Status.CLIENT_ERROR) {
             try {
@@ -58,6 +55,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                     .serverUrl(endpoint)
                     .okHttpClient(
                         OkHttpClient.Builder()
+                            .retryOnConnectionFailure(true)
                             .addInterceptor { chain ->
                                 val request = chain.request().newBuilder()
                                     .addHeader("Auth", authCode)
@@ -209,6 +207,10 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     companion object {
+        fun <T> getInput(value: T?): Input<T> {
+            return Input.fromNullable(value)
+        }
+
         private var instance: HystimeClient? = null
         fun getInstance(): HystimeClient {
             if (instance == null) {

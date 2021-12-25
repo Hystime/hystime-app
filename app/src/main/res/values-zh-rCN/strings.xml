@@ -64,4 +64,6 @@
     <string name="setting_vibration_title">振动</string>
     <string name="vibration_hint">使用振动作为操作反馈</string>
     <string name="focusing">专注中</string>
+    <string name="fail_to_create_timepiece_toast">无法创建时间片</string>
+    <string name="too_short_time_piece_toast">短于 1 分钟的时间片不会被记录</string>
 </resources>

@@ -1,5 +1,6 @@
 package top.learningman.hystime.data
 
+import TargetCreateMutation
 import TargetQuery
 import UserTargetsQuery
 import java.util.*
@@ -27,6 +28,14 @@ data class TargetBean(
         )
 
         fun fromTargetQuery(value: TargetQuery.Target) = TargetBean(
+            value.id,
+            value.name,
+            value.created_at,
+            TargetType.valueOf(value.type.toString()),
+            value.timeSpent
+        )
+
+        fun fromTargetCreateMutation(value: TargetCreateMutation.TargetCreate) = TargetBean(
             value.id,
             value.name,
             value.created_at,

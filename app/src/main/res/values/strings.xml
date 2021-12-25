@@ -105,5 +105,7 @@
     <string name="no_target_hint">Please select a target.</string>
     <string name="vibration_hint">Use of vibration as operational feedback</string>
     <string name="focusing">Focusing</string>
+    <string name="fail_to_create_timepiece_toast">Failed to create time piece.</string>
+    <string name="too_short_time_piece_toast">Time piece shorted than 1 minute will not be recorded.</string>
 
 </resources>

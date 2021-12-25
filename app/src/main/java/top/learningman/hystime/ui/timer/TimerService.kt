@@ -124,7 +124,7 @@ class TimerService : Service() {
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
             timer = Timer({ time ->
-                // FIXME: buggy implement
+                // FIXME: buggy implement, depends on string resource.
                 val notifyTime =
                     if (name.startsWith(StringRepo.getString(R.string.tab_pomodoro_timing))) {
                         duration - time

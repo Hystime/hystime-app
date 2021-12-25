@@ -10,24 +10,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import top.learningman.hystime.Constant
 import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
-import top.learningman.hystime.repo.AppRepo
+import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimerViewFragment
 import top.learningman.hystime.utils.toTimeString
+import type.TimePieceType
 import java.util.*
 import kotlin.math.abs
 
@@ -58,12 +63,11 @@ class TimerFragment : Fragment() {
                         BREAK_RUNNING -> {
                             timerViewModel.setStatus(BREAK_FINISH)
                         }
-                        WAIT_START -> {
-                            // For exitAll
-                            Log.d("exitAll","Called in CLEAN receiver")
-                        }
                         else -> {
-                            throw Error("Service died unexpected. status: ${timerViewModel.status.value!!.name}")
+                            Log.d(
+                                "Clean Broadcast",
+                                "No need to set with status ${timerViewModel.status.value!!.name}"
+                            )
                         }
                     }
                     timerViewModel.unbind()
@@ -71,6 +75,35 @@ class TimerFragment : Fragment() {
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
                     val startedAt =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA)!! as Date
+                    if (duration < 60) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.too_short_time_piece_toast),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return
+                    }
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        TimePieceRepo.addTimePiece(
+                            mainViewModel.currentTarget.value!!.id,
+                            startedAt,
+                            duration.toInt(),
+                            if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
+                                TimePieceType.NORMAL
+                            } else {
+                                TimePieceType.POMODORO
+                            }
+                        ).fold({
+                            Log.d("TimerFragment", "Add time piece success")
+                        }, {
+                            Log.e("TimerFragment", "Add time piece failed", it)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.fail_to_create_timepiece_toast),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        })
+                    }
 
                 }
             }
