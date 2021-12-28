@@ -42,10 +42,16 @@ android {
         release {
             signingConfig signingConfigs.debug
             minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            resValue "string", "app_name", "Hystime"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix '-DEBUG'
+            resValue "string", "app_name", "Hystime Debug"
             signingConfig signingConfigs.debug
         }
     }
