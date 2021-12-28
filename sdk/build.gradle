@@ -13,14 +13,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-
-        resConfigs "zh", "en"
     }
 
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
             zipAlignEnabled true
             debuggable false
             jniDebuggable false
