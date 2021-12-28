@@ -83,6 +83,10 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
                 refresh()
                 true
             }
+            R.id.add -> {
+                add()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -131,6 +135,10 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     override fun refresh() {
         viewModel.fetchTarget(null)
         viewModel.showSnackBarMessage(getString(R.string.refresh_target_hint))
+    }
+
+    private fun add() {
+
     }
 }
 

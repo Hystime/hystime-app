@@ -1,7 +1,7 @@
 package top.learningman.hystime.repo
 
-import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import top.learningman.hystime.R
 
 object SharedPrefRepo {
@@ -10,10 +10,7 @@ object SharedPrefRepo {
     private fun getSettingSharedPreferences(): SharedPreferences {
         if (sp == null) {
             val context = AppRepo.context
-            sp = context.getSharedPreferences(
-                context.getString(R.string.setting_filename),
-                Context.MODE_PRIVATE
-            )!!
+            sp = PreferenceManager.getDefaultSharedPreferences(context)
         }
         return sp!!
     }

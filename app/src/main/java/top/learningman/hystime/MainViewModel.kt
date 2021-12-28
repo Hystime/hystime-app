@@ -1,6 +1,7 @@
 package top.learningman.hystime
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -110,6 +111,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val uri = newUri ?: SharedPrefRepo.getEndpoint()
         val authCode = newAuthCode ?: SharedPrefRepo.getAuthCode()
         HystimeClient(uri, authCode)
+        Log.d("refreshClient", "$uri with $authCode")
         viewModelScope.launch(Dispatchers.IO) {
             client.refreshValid().fold({
                 _serverStatus.postValue(Status.SUCCESS)
