@@ -65,4 +65,8 @@
     <string name="focusing">专注中</string>
     <string name="fail_to_create_timepiece_toast">无法创建时间片</string>
     <string name="too_short_time_piece_toast">短于 1 分钟的时间片不会被记录</string>
+    <string name="target_name">目标名</string>
+    <string name="spent_time">已花费时间</string>
+    <string name="normal">常规</string>
+    <string name="longterm">长期</string>
 </resources>

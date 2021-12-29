@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
@@ -142,7 +141,9 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     private fun add() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.add_target)
-            .setView()
+            .setView(R.layout.dialog_add_target)
+            .create()
+            .show()
     }
 }
 

@@ -17,4 +17,10 @@
         <attr name="android:entries" />
     </declare-styleable>
 
+    <string-array name="units">
+        <item>@string/hour</item>
+        <item>@string/minute</item>
+        <item>@string/second</item>
+    </string-array>
+
 </resources>

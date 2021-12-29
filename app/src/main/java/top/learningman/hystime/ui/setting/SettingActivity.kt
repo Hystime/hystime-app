@@ -15,8 +15,8 @@ import androidx.preference.PreferenceFragmentCompat
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ActivitySettingsBinding
-import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
-import top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceDialogFragmentCompat
+import top.learningman.hystime.view.numberPicker.NumberPickerPreferenceCompat
+import top.learningman.hystime.view.numberPicker.NumberPickerPreferenceDialogFragmentCompat
 
 
 class SettingActivity : AppCompatActivity() {

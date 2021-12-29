@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/setting_category_timer_setting_title">
-        <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
+        <top.learningman.hystime.view.numberPicker.NumberPickerPreferenceCompat
             app:defaultValue="25"
             app:key="@string/setting_pomodoro_length_key"
             app:maxValue="50"
             app:minValue="1"
             app:title="@string/setting_pomodoro_length_title"
             app:unitText="@string/minute" />
-        <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
+        <top.learningman.hystime.view.numberPicker.NumberPickerPreferenceCompat
             app:defaultValue="5"
             app:key="@string/setting_pomodoro_short_break_key"
             app:maxValue="30"
             app:minValue="1"
             app:title="@string/setting_pomodoro_short_break_title"
             app:unitText="@string/minute" />
-        <top.learningman.hystime.utils.numberPicker.NumberPickerPreferenceCompat
+        <top.learningman.hystime.view.numberPicker.NumberPickerPreferenceCompat
             app:defaultValue="15"
             app:key="@string/setting_pomodoro_long_break_key"
             app:maxValue="60"
