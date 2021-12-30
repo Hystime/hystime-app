@@ -69,4 +69,6 @@
     <string name="spent_time">已花费时间</string>
     <string name="normal">常规</string>
     <string name="longterm">长期</string>
+    <string name="target_name_empty">目标名不能为空</string>
+    <string name="target_time_invalid"></string>
 </resources>

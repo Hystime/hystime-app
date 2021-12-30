@@ -106,10 +106,13 @@
     <string name="fail_to_create_timepiece_toast">Failed to create time piece.</string>
     <string name="too_short_time_piece_toast">Time piece shorted than 1 minute will not be recorded.</string>
 
-    <string name="target_name">Target</string>
+    <string name="target_name">Target name</string>
     <string name="spent_time">Spent time</string>
 
     <string name="normal">Normal</string>
     <string name="longterm">Long Term</string>
+    <string name="create">Create</string>
+    <string name="target_name_empty">Target name can not be empty</string>
+    <string name="target_time_invalid">Target time is invalid</string>
 
 </resources>

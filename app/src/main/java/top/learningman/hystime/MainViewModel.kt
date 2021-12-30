@@ -85,6 +85,24 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun addTarget(name: String, timeSpent: Int) {
+        if (name.isEmpty()) {
+            _error.postValue(Error(context.getString(R.string.target_name_empty)))
+            return
+        }
+        if (timeSpent < 0) {
+            _error.postValue(Error(context.getString(R.string.target_time_invalid)))
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            TargetRepo.addTarget(_user.value!!.id, name, timeSpent).fold({
+                _targets.value = _targets.value!!.plus(it)
+            }, {
+                _error.postValue(it)
+            })
+        }
+    }
+
     fun refreshUser(newUser: String?) {
         val username = newUser ?: SharedPrefRepo.getUser()
         if (username.isEmpty()) {

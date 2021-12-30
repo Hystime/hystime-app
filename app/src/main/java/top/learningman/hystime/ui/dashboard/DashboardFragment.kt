@@ -11,6 +11,7 @@ import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.data.TargetBean
+import top.learningman.hystime.databinding.DialogAddTargetBinding
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.utils.Interface
@@ -139,9 +140,20 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     }
 
     private fun add() {
+        val binding = DialogAddTargetBinding.inflate(layoutInflater, null, false).apply {
+
+        }
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.add_target)
-            .setView(R.layout.dialog_add_target)
+            .setView(binding.root)
+            .setCancelable(false)
+            .setPositiveButton(R.string.create) { dialog, _ ->
+                val name = binding.target.text.toString()
+                val hour = binding.hour.text.toString().toInt()
+                val minute = binding.minute.text.toString().toInt()
+                val timeSpent = hour * 60 + minute
+                dialog.dismiss()
+            }
             .create()
             .show()
     }
