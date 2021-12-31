@@ -15,6 +15,7 @@ import top.learningman.hystime.repo.TargetRepo
 import top.learningman.hystime.repo.UserRepo
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.utils.Status
+import type.TargetType
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val context by lazy { getApplication<Application>().applicationContext }
@@ -47,6 +48,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _error = MutableLiveData<Throwable?>()
     val error: LiveData<Throwable?> = _error
+
+    fun setError(e: Throwable) {
+        _error.postValue(e)
+    }
 
     fun resetError() {
         _error.postValue(null)
@@ -85,18 +90,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun addTarget(name: String, timeSpent: Int) {
-        if (name.isEmpty()) {
-            _error.postValue(Error(context.getString(R.string.target_name_empty)))
-            return
-        }
-        if (timeSpent < 0) {
-            _error.postValue(Error(context.getString(R.string.target_time_invalid)))
-            return
-        }
+    fun addTarget(name: String, timeSpent: Int, type: TargetType) {
         viewModelScope.launch(Dispatchers.IO) {
-            TargetRepo.addTarget(_user.value!!.id, name, timeSpent).fold({
-                _targets.value = _targets.value!!.plus(it)
+            TargetRepo.addTarget(_user.value!!.id, name, timeSpent, type).fold({
+                showSnackBarMessage(it.name + context.getString(R.string.target_add_success_postfix))
+                _targets.postValue(_targets.value!!.plus(it))
             }, {
                 _error.postValue(it)
             })

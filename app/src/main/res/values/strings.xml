@@ -114,5 +114,8 @@
     <string name="create">Create</string>
     <string name="target_name_empty">Target name can not be empty</string>
     <string name="target_time_invalid">Target time is invalid</string>
+    <string name="target_type">Target type</string>
+    <string name="cancel">Cancel</string>
+    <string name="target_add_success_postfix">&#160;added successfully.</string>
 
 </resources>

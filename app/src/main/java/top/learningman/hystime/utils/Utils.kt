@@ -14,9 +14,12 @@ fun Long.toTimeString(): String {
     return "%02d:%02d".format(min, sec)
 }
 
-fun LGD(log: String) {
-    val info = log.split(";")
-    Log.d(info[0], info[1]);
+fun String.toSafeInt(): Int {
+    return if (this.isEmpty()) {
+        0
+    } else {
+        this.toInt()
+    }
 }
 
 enum class Status {

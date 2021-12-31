@@ -1,7 +1,10 @@
 package top.learningman.hystime.ui.dashboard
 
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -15,6 +18,9 @@ import top.learningman.hystime.databinding.DialogAddTargetBinding
 import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.utils.Interface
+import top.learningman.hystime.utils.toSafeInt
+import type.TargetType
+
 
 class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
@@ -141,19 +147,45 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
 
     private fun add() {
         val binding = DialogAddTargetBinding.inflate(layoutInflater, null, false).apply {
+            hour.text = Editable.Factory.getInstance().newEditable("0")
+            minute.text = Editable.Factory.getInstance().newEditable("0")
 
+            val array = resources.getStringArray(R.array.target_type)
+            Log.d("TargetType", array.toString())
+            val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                array
+            )
+            type.text = Editable.Factory.getInstance().newEditable(array[0])
+            type.setAdapter(adapter)
         }
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.add_target)
             .setView(binding.root)
             .setCancelable(false)
             .setPositiveButton(R.string.create) { dialog, _ ->
-                val name = binding.target.text.toString()
-                val hour = binding.hour.text.toString().toInt()
-                val minute = binding.minute.text.toString().toInt()
-                val timeSpent = hour * 60 + minute
-                dialog.dismiss()
+                try {
+                    val name = binding.target.text.toString()
+                    if (binding.target.text == null || name.isEmpty()) {
+                        throw IllegalArgumentException(getString(R.string.target_name_empty))
+                    }
+                    val hour = binding.hour.text.toString().toSafeInt()
+                    val minute = binding.minute.text.toString().toSafeInt()
+                    val timeSpent = (hour + minute * 60) * 1000
+                    val types = resources.getStringArray(R.array.target_type)
+                    val type: TargetType = when (binding.type.text.toString()) {
+                        types[0] -> TargetType.NORMAL
+                        types[1] -> TargetType.LONGTERM
+                        else -> TargetType.NORMAL
+                    }
+                    viewModel.addTarget(name, timeSpent, type)
+                    dialog.dismiss()
+                } catch (e: Throwable) {
+                    viewModel.setError(e)
+                }
             }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
             .create()
             .show()
     }

@@ -70,5 +70,9 @@
     <string name="normal">常规</string>
     <string name="longterm">长期</string>
     <string name="target_name_empty">目标名不能为空</string>
-    <string name="target_time_invalid"></string>
+    <string name="target_time_invalid">目标时间无效</string>
+    <string name="target_type">目标类型</string>
+    <string name="create">创建</string>
+    <string name="cancel">取消</string>
+    <string name="target_add_success_postfix">&#160;成功添加</string>
 </resources>
