@@ -46,6 +46,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _currentTarget.postValue(null)
     }
 
+    fun currentTargetAddTime(duration: Int) {
+        _currentTarget.value?.let {
+            it.timeSpent += duration
+            _currentTarget.postValue(it)
+        }
+    }
+
     private val _error = MutableLiveData<Throwable?>()
     val error: LiveData<Throwable?> = _error
 

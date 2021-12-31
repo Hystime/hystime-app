@@ -7,9 +7,9 @@ import java.util.*
 
 data class TimePieceBean(
     val id: Int,
-    val start: Date,
-    val duration: Int,
-    val type: TimePieceType
+    var start: Date,
+    var duration: Int,
+    var type: TimePieceType
 ) {
     enum class TimePieceType(s: String) {
         NORMAL("NORMAL"),

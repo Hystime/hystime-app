@@ -8,10 +8,10 @@ import java.util.*
 
 data class TargetBean(
     val id: String,
-    val name: String,
-    val created_at: Date,
-    val type: TargetType,
-    val timeSpent: Int
+    var name: String,
+    var created_at: Date,
+    var type: TargetType,
+    var timeSpent: Int
 ) {
     enum class TargetType(s: String) {
         NORMAL("NORMAL"),
