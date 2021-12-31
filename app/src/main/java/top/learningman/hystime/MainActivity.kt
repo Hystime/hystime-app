@@ -159,8 +159,10 @@ class MainActivity : AppCompatActivity() {
             .setMessage(error.localizedMessage)
             .setNegativeButton("Close") { _, _ -> }
             .show()
-            .findViewById<TextView>(android.R.id.message).apply {
-                typeface = Typeface.MONOSPACE
+            .apply {
+                findViewById<TextView>(android.R.id.message).apply {
+                    typeface = Typeface.MONOSPACE
+                }
             }
     }
 

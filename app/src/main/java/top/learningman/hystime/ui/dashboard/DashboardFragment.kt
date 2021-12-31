@@ -102,12 +102,12 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
     class TargetRecyclerAdapter(
         private val viewModel: MainViewModel,
         private val list: List<TargetBean>,
-        val context: MainActivity
+        val activity: MainActivity
     ) : RecyclerView.Adapter<TargetRecyclerAdapter.TargetViewHolder>() {
         fun Int.toLocalTimeString(): String {
             val hour = this / 3600
             val minute = (this % 3600) / 60
-            return "$hour ${context.getString(R.string.hour)} $minute ${context.getString(R.string.minute)}"
+            return "$hour ${activity.getString(R.string.hour)} $minute ${activity.getString(R.string.minute)}"
         }
 
         inner class TargetViewHolder(private val binding: ItemDashboardTargetBinding) :
@@ -117,7 +117,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
                 binding.startTimer.setOnClickListener {
                     viewModel.setCurrentTarget(targetBean)
-                    context.getPager().currentItem = 1
+                    activity.getPager().currentItem = 1
                 }
             }
         }
@@ -172,7 +172,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
                     }
                     val hour = binding.hour.text.toString().toSafeInt()
                     val minute = binding.minute.text.toString().toSafeInt()
-                    val timeSpent = (hour + minute * 60) * 1000
+                    val timeSpent = (60 * hour + minute) * 60
                     val types = resources.getStringArray(R.array.target_type)
                     val type: TargetType = when (binding.type.text.toString()) {
                         types[0] -> TargetType.NORMAL
