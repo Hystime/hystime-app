@@ -95,6 +95,7 @@ class TimerFragment : Fragment() {
                             }
                         ).fold({
                             Log.d("TimerFragment", "Add time piece success")
+                            mainViewModel.fetchTarget(null)
                         }, {
                             Log.e("TimerFragment", "Add time piece failed", it)
                             Toast.makeText(
