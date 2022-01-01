@@ -15,17 +15,17 @@ import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.DialogAddTargetBinding
-import top.learningman.hystime.databinding.FragmentDashboardBinding
+import top.learningman.hystime.databinding.FragmentDashboardListBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
 
 
-class DashboardFragment : Fragment(), Interface.RefreshableFragment {
+class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentDashboardListBinding? = null
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
@@ -37,7 +37,7 @@ class DashboardFragment : Fragment(), Interface.RefreshableFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentDashboardListBinding.inflate(inflater, container, false)
 
         val root = binding.root
 

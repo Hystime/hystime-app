@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="top.learningman.hystime.ui.dashboard.DashboardFragment"
+        android:name="top.learningman.hystime.ui.dashboard.DashboardListFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 

@@ -19,7 +19,7 @@ import top.learningman.hystime.databinding.ActivityMainBinding
 import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.sdk.HystimeClient
-import top.learningman.hystime.ui.dashboard.DashboardFragment
+import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
 import kotlin.math.abs
@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment =
             when (position) {
-                0 -> DashboardFragment()
+                0 -> DashboardListFragment()
                 1 -> TimerFragment()
                 2 -> SettingFragment()
                 else -> throw IllegalArgumentException("Invalid position")
