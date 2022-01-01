@@ -126,7 +126,7 @@ class TimerService : Service() {
             timer = Timer({ time ->
                 // FIXME: buggy implement, depends on string resource.
                 val notifyTime =
-                    if (name.startsWith(StringRepo.getString(R.string.tab_pomodoro_timing))) {
+                    if (name.startsWith(StringRepo.getString(R.string.tab_pomodoro_timing)) || name.endsWith(StringRepo.getString(R.string.timer_break))) {
                         duration - time
                     } else {
                         time
@@ -140,7 +140,6 @@ class TimerService : Service() {
             }, {
                 sendCleanBroadcast()
                 stopForeground(true)
-//                stopSelf()
             }, duration)
             timer?.start()
         }

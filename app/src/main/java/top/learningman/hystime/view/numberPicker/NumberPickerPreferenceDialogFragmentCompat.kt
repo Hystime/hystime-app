@@ -53,7 +53,7 @@ class NumberPickerPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompa
                     " @id/number_picker"
         }
         val vib = requireActivity().getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
-        val vibEft = VibrationEffect.createOneShot(20, 125)
+        val vibEft = VibrationEffect.createOneShot(10, 255)
         mNumberPicker?.apply {
             minValue = numberPickerPreference.minValue
             maxValue = numberPickerPreference.maxValue

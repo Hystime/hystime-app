@@ -117,5 +117,6 @@
     <string name="target_type">Target type</string>
     <string name="cancel">Cancel</string>
     <string name="target_add_success_postfix">&#160;added successfully.</string>
+    <string name="too_short_pomodoro_toast">Only full pomodoro will be recored</string>
 
 </resources>

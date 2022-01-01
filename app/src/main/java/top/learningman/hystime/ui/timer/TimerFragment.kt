@@ -27,6 +27,7 @@ import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
+import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
@@ -54,6 +55,7 @@ class TimerFragment : Fragment() {
                     timerViewModel.setRemainTime(remain)
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
+                    var needSubmit = true
                     when (timerViewModel.status.value) {
                         WORK_RUNNING -> {
                             timerViewModel.setStatus(WORK_FINISH)
@@ -62,7 +64,12 @@ class TimerFragment : Fragment() {
                             timerViewModel.setStatus(WAIT_START)
                         }
                         BREAK_RUNNING -> {
-                            timerViewModel.setStatus(BREAK_FINISH)
+                            needSubmit = false
+                            Log.d("TimerFragment", "Break should not be recorded.")
+                            timerViewModel.setStatus(WAIT_START)
+                        }
+                        BREAK_FINISH -> {
+                            needSubmit = false
                         }
                         else -> {
                             Log.d(
@@ -72,6 +79,11 @@ class TimerFragment : Fragment() {
                         }
                     }
                     timerViewModel.unbind()
+
+                    if (!needSubmit) {
+                        return
+                    }
+
                     val duration =
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
                     val startedAt =
@@ -83,6 +95,17 @@ class TimerFragment : Fragment() {
                             Toast.LENGTH_LONG
                         ).show()
                         return
+                    }
+                    if (timerViewModel.type.value == TimerViewModel.TimerType.POMODORO) {
+                        if (duration < SharedPrefRepo.getPomodoroFocusLength() * 60 - 10) {
+                            Log.d("TimerFragment", "Failed pomodoro should not be recorded.")
+                            Toast.makeText(
+                                context,
+                                getString(R.string.too_short_pomodoro_toast),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            return
+                        }
                     }
                     lifecycleScope.launch(Dispatchers.IO) {
                         TimePieceRepo.addTimePiece(
@@ -96,7 +119,7 @@ class TimerFragment : Fragment() {
                             }
                         ).fold({
                             Log.d("TimerFragment", "Add time piece success")
-                            mainViewModel.fetchTarget(null)
+                            // TODO update dashboard
                         }, {
                             Log.e("TimerFragment", "Add time piece failed", it)
                             Toast.makeText(
@@ -106,7 +129,6 @@ class TimerFragment : Fragment() {
                             ).show()
                         })
                     }
-
                 }
             }
         }
@@ -238,13 +260,13 @@ class TimerFragment : Fragment() {
         }
 
         timerViewModel.time.observe(viewLifecycleOwner) {
-            if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
+            if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL && !timerViewModel.isBreak()) {
                 binding.time.text = it.toTimeString()
             }
         }
 
         timerViewModel.remainTime.observe(viewLifecycleOwner) {
-            if (timerViewModel.type.value == TimerViewModel.TimerType.POMODORO) {
+            if (timerViewModel.type.value == TimerViewModel.TimerType.POMODORO || timerViewModel.isBreak()) {
                 binding.time.text = it.toTimeString()
             }
         }

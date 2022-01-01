@@ -29,7 +29,7 @@ class TimerViewModel : ViewModel() {
 
     enum class TimerType {
         NORMAL,
-        POMODORO
+        POMODORO,
     }
 
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
@@ -45,6 +45,8 @@ class TimerViewModel : ViewModel() {
     fun setStatus(status: TimerStatus) {
         _status.postValue(status)
     }
+
+    fun isBreak() = status.value == TimerStatus.BREAK_RUNNING
 
     private val _time = MutableLiveData(0L)
     val time: LiveData<Long> = _time
@@ -102,8 +104,13 @@ class TimerViewModel : ViewModel() {
 
     fun exitAll() {
         Log.d("exitAll", "call resetTimer")
-        setStatus(TimerStatus.WAIT_START)
-        resetTimer()
+        if (status.value in arrayOf(TimerStatus.WORK_FINISH, TimerStatus.BREAK_FINISH)) {
+            Log.d("exitAll", "Just switch to WAIT_START")
+            setStatus(TimerStatus.WAIT_START)
+        } else {
+            Log.d("exitAll", "Try to stop service.")
+            resetTimer()
+        }
     }
 
     fun startFocus() {
@@ -141,7 +148,6 @@ class TimerViewModel : ViewModel() {
         setTime(0L)
         setRemainTime(0L)
         // Only used for success end.
-
     }
 
     var binder: TimerService.TimerBinder? = null
@@ -165,12 +171,11 @@ class TimerViewModel : ViewModel() {
             intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
         }
         Log.d("startService", "bindService")
-        val ret = AppRepo.context.bindService(
+        AppRepo.context.bindService(
             intent,
             connection,
             Context.BIND_AUTO_CREATE
         )
-        Log.d("startService", "Bind ret = $ret")
     }
 
     private fun stopService() {
@@ -179,7 +184,7 @@ class TimerViewModel : ViewModel() {
         binder = null
     }
 
-    fun unbind(){
+    fun unbind() {
         AppRepo.context.unbindService(connection)
     }
 }
