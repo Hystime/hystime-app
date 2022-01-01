@@ -1,5 +1,6 @@
 package top.learningman.hystime.ui.timer
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -139,6 +140,7 @@ class TimerFragment : Fragment() {
             }
         }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -183,9 +185,9 @@ class TimerFragment : Fragment() {
                 }.show()
         }
 
-        binding.container.setOnClickListener {
+        binding.container.setOnTouchListener { _, _ ->
             if (timerViewModel.status.value != WORK_RUNNING) {
-                return@setOnClickListener
+                return@setOnTouchListener false
             }
             Intent(requireContext(), TimerFullScreenActivity::class.java).apply {
                 action = Constant.TIMER_FULLSCREEN_ACTION
@@ -202,6 +204,7 @@ class TimerFragment : Fragment() {
                 startActivity(it)
                 requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
             }
+            true
         }
 
         return binding.root
