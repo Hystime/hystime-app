@@ -59,6 +59,7 @@ class TimerFragment : Fragment() {
                     when (timerViewModel.status.value) {
                         WORK_RUNNING -> {
                             timerViewModel.setStatus(WORK_FINISH)
+                            timerViewModel.resetTimer()
                         }
                         WORK_PAUSE -> {
                             timerViewModel.setStatus(WAIT_START)

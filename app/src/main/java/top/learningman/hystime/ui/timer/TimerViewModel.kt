@@ -109,7 +109,7 @@ class TimerViewModel : ViewModel() {
             setStatus(TimerStatus.WAIT_START)
         } else {
             Log.d("exitAll", "Try to stop service.")
-            resetTimer()
+            killTimer()
         }
     }
 
@@ -139,15 +139,18 @@ class TimerViewModel : ViewModel() {
 
     fun skipBreak() {
         setStatus(TimerStatus.BREAK_FINISH)
+        killTimer()
+    }
+
+    private fun killTimer() {
+        Log.d("TimerViewModel", "resetTimer")
+        stopService()
         resetTimer()
     }
 
-    private fun resetTimer() {
-        Log.d("TimerViewModel", "resetTimer")
-        stopService()
+    fun resetTimer() {
         setTime(0L)
         setRemainTime(0L)
-        // Only used for success end.
     }
 
     var binder: TimerService.TimerBinder? = null
