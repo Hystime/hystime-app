@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hystime">
         <activity
+            android:name=".ui.dashboard.DashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.timer.TimerFullScreenActivity"
             android:exported="false"
             android:launchMode="singleInstance" />
@@ -38,6 +41,7 @@
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

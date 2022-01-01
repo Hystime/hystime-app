@@ -5,4 +5,12 @@
         <item name="android:textColor">#42000000</item>
         <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="Theme.Hystime.DashboardCardView" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/dashboard_card_CornerRadius</item>
+        <item name="android:layout_height">@dimen/dashboard_card_height</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
 </resources>

@@ -8,4 +8,7 @@
     <dimen name="timer_horizontal_margin_half">24dp</dimen>
 
     <item name="timer_dias" type="dimen" format="float">0.4</item>
+
+    <dimen name="dashboard_card_height">100dp</dimen>
+    <dimen name="dashboard_card_CornerRadius">10dp</dimen>
 </resources>
