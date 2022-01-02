@@ -10,6 +10,7 @@
         android:id="@+id/dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:orientation="vertical"
         tools:context=".ui.dashboard.ui.DashboardFragment">
 
@@ -18,9 +19,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" />
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView">
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" />
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Theme.Hystime.DashboardCardViewTitle"
+                    android:text="@string/today_pomodoro" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Theme.Hystime.DashboardCardViewTitle"
+                    android:text="@string/today_focus_length" />
+            </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -28,11 +38,31 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" />
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Theme.Hystime.DashboardCardViewTitle"
+                    android:text="@string/total_pomodoro" />
+            </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" />
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Theme.Hystime.DashboardCardViewTitle"
+                    android:text="@string/total_focus_length" />
+            </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Theme.Hystime.DashboardCardView"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dashboard_card_height" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 </ScrollView>
 

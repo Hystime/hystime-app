@@ -76,4 +76,8 @@
     <string name="cancel">取消</string>
     <string name="target_add_success_postfix">&#160;成功添加</string>
     <string name="too_short_pomodoro_toast">只有完整的番茄会被记录</string>
+    <string name="today_pomodoro">今日番茄</string>
+    <string name="today_focus_length">今日专注时长</string>
+    <string name="total_pomodoro">总番茄</string>
+    <string name="total_focus_length">总专注时长</string>
 </resources>

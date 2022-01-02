@@ -118,5 +118,9 @@
     <string name="cancel">Cancel</string>
     <string name="target_add_success_postfix">&#160;added successfully.</string>
     <string name="too_short_pomodoro_toast">Only full pomodoro will be recored</string>
+    <string name="today_pomodoro">Today pomodoro</string>
+    <string name="today_focus_length">Today focus length</string>
+    <string name="total_pomodoro">Total Pomodoro</string>
+    <string name="total_focus_length">Total focus length</string>
 
 </resources>
