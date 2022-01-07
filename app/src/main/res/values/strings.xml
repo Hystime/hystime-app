@@ -92,6 +92,7 @@
     <!-- Place Holder -->
     <string name="default_target" translatable="false">Timing</string>
     <string name="default_time" translatable="false">00:00</string>
+    <string name="default_number" translatable="false">0</string>
 
     <string name="refresh">Refresh</string>
     <string name="target_title_placeholder">Target Title</string>
@@ -122,5 +123,9 @@
     <string name="today_focus_length">Today focus length</string>
     <string name="total_pomodoro">Total Pomodoro</string>
     <string name="total_focus_length">Total focus length</string>
+    <string name="timepieces">Timepieces</string>
+    <string name="default_type" translatable="false">Normal</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

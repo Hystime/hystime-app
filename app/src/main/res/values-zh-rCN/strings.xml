@@ -80,4 +80,5 @@
     <string name="today_focus_length">今日专注时长</string>
     <string name="total_pomodoro">总番茄</string>
     <string name="total_focus_length">总专注时长</string>
+    <string name="timepieces">时间片</string>
 </resources>

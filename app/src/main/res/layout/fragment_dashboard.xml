@@ -24,12 +24,23 @@
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/today_pomodoro" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/today_pomodoro"
+                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
+                    android:text="@string/default_number" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView">
+
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/today_focus_length" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/today_focus_length"
+                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
+                    android:text="@string/default_time" />
             </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -38,16 +49,28 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView">
+
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/total_pomodoro" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_pomodoro"
+                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
+                    android:text="@string/default_number" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView" >
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardCardView">
+
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/total_focus_length" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_focus_length"
+                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
+                    android:text="@string/default_time" />
             </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -58,11 +81,73 @@
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Theme.Hystime.DashboardCardView"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/dashboard_card_height" />
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/Theme.Hystime.DashboardCardViewTitle"
+                        android:text="@string/timepieces" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/default_type"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/default_time" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="10dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/default_time" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/default_number" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_chevron_right_white_24dp" />
+
+            </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 </ScrollView>
 

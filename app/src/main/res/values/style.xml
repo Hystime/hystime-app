@@ -12,13 +12,20 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_margin">4dp</item>
-        <item name="contentPadding">8dp</item>
+        <item name="contentPadding">12dp</item>
     </style>
 
     <style name="Theme.Hystime.DashboardCardViewTitle" parent="@style/Widget.MaterialComponents.TextView">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">start|top</item>
+    </style>
 
+    <style name="Theme.Hystime.DashboardCardViewContentNumber" parent="@style/Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">start|bottom</item>
     </style>
 </resources>
