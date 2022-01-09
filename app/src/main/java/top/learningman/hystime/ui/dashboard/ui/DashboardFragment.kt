@@ -1,12 +1,11 @@
 package top.learningman.hystime.ui.dashboard.ui
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.card.MaterialCardView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import top.learningman.hystime.R
 
 class DashboardFragment : Fragment() {
@@ -24,7 +23,11 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
+        arguments
+    }
 
+    companion object {
+        const val FRAGMENT_DATA_KEY = "fragment_data_key"
     }
 
 }

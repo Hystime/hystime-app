@@ -134,7 +134,6 @@
                             android:layout_marginEnd="10dp"
                             android:text="@string/default_number" />
 
-
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -143,7 +142,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_chevron_right_white_24dp" />
+                    android:padding="12dp"
+                    android:src="@drawable/ic_chevron_right_white_24dp"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
             </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
