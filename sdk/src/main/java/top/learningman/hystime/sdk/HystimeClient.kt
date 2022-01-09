@@ -125,13 +125,13 @@ class HystimeClient(endpoint: String, authCode: String) {
     suspend fun getUserLastWeekTimePieces(
         username: String
     ) = wrap {
-        queryData(UserLastWeekTimePiecesQuery(username)).user?.last_week_timePieces
+        queryData(UserLastWeekTimePiecesQuery(username)).user?.lastWeekTimePieces
     }
 
     suspend fun getTargetLastWeekTimePieces(
         targetID: String
     ) = wrap {
-        queryData(TargetLastWeekTimePiecesQuery(targetID)).target?.last_week_timePieces
+        queryData(TargetLastWeekTimePiecesQuery(targetID)).target?.lastWeekTimePieces
     }
 
     suspend fun createUser(username: String) = wrap {

@@ -17,7 +17,7 @@ data class TimePieceBean(
     }
 
     companion object {
-        fun fromUserLastWeekTimePieces(value: UserLastWeekTimePiecesQuery.Last_week_timePiece) =
+        fun fromUserLastWeekTimePieces(value: UserLastWeekTimePiecesQuery.LastWeekTimePiece) =
             TimePieceBean(
                 value.id,
                 value.start,
@@ -25,7 +25,7 @@ data class TimePieceBean(
                 TimePieceType.valueOf(value.type.toString())
             )
 
-        fun fromTargetLastWeekTimePieces(value: TargetLastWeekTimePiecesQuery.Last_week_timePiece) =
+        fun fromTargetLastWeekTimePieces(value: TargetLastWeekTimePiecesQuery.LastWeekTimePiece) =
             TimePieceBean(
                 value.id,
                 value.start,
