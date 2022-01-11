@@ -3,7 +3,6 @@ package top.learningman.hystime.sdk
 import TargetCreateMutation
 import TargetDeleteMutation
 import TargetLastWeekTimePiecesQuery
-import TargetQuery
 import TargetTimePiecesQuery
 import TargetUpdateMutation
 import TestQuery
@@ -102,16 +101,13 @@ class HystimeClient(endpoint: String, authCode: String) {
         queryData(UserTargetsQuery(username)).user?.targets
     }
 
-    suspend fun getTarget(username: String) = wrap {
-        queryData(TargetQuery(username)).target
-    }
-
     suspend fun getTargetTimePieces(
+        username: String,
         targetID: String,
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(TargetTimePiecesQuery(targetID, first, after)).target?.timePieces
+        queryData(TargetTimePiecesQuery(username, targetID, first, after)).user?.target?.timePieces
     }
 
     suspend fun getUserTimePieces(
@@ -119,7 +115,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(UserTimePiecesQuery(userID, first, after)).timepieces
+        queryData(UserTimePiecesQuery(userID, first, after)).user?.timePieces
     }
 
     suspend fun getUserLastWeekTimePieces(
@@ -129,9 +125,15 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     suspend fun getTargetLastWeekTimePieces(
+        username: String,
         targetID: String
     ) = wrap {
-        queryData(TargetLastWeekTimePiecesQuery(targetID)).target?.lastWeekTimePieces
+        queryData(
+            TargetLastWeekTimePiecesQuery(
+                username,
+                targetID
+            )
+        ).user?.target?.lastWeekTimePieces
     }
 
     suspend fun createUser(username: String) = wrap {

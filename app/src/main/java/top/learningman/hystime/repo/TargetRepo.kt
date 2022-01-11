@@ -14,10 +14,6 @@ object TargetRepo {
         }
     }
 
-    suspend fun getTarget(targetId: String) = client.getTarget(targetId).map {
-        TargetBean.fromTargetQuery(it!!)
-    }
-
     suspend fun addTarget(
         userID: String,
         name: String,

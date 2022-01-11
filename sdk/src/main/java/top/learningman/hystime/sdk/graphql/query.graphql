@@ -22,23 +22,37 @@ query UserTargets($username: String!) {
     }
 }
 
-query Target($targetId: ID!) {
-    target(target_id: $targetId) {
-        id
-        created_at
-        name
-        type
-        timeSpent
+query TargetTimePieces($username: String!, $targetId: ID!, $first: Int!, $after: String) {
+    user(username: $username){
+        target(id: $targetId) {
+            timePieces(first: $first, after: $after) {
+                totalCount
+                edges {
+                    node {
+                        id
+                        start
+                        duration
+                        type
+                    }
+                    cursor
+                }
+                pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                }
+            }
+        }
     }
 }
 
-query TargetTimePieces($targetId: ID!, $first: Int!, $after: String) {
-    target(target_id: $targetId) {
-        timePieces(first: $first, after: $after) {
+query UserTimePieces($username: String!, $first: Int!, $after: String) {
+    user(username: $username) {
+        timePieces(first: $first,after: $after) {
             totalCount
             edges {
                 node {
-                    id
                     start
                     duration
                     type
@@ -55,45 +69,62 @@ query TargetTimePieces($targetId: ID!, $first: Int!, $after: String) {
     }
 }
 
-query UserTimePieces($userId: ID!, $first: Int!, $after: String) {
-    timepieces(user_id: $userId, first: $first, after: $after) {
-        totalCount
-        edges {
-            node {
-                id
+query UserLastWeekTimePieces($username: String!) {
+    user(username: $username) {
+        lastWeekTimePieces {
+            start
+            duration
+            type
+        }
+    }
+}
+
+query TargetLastWeekTimePieces($username:String! ,$targetId: ID!) {
+    user(username: $username) {
+        target(id: $targetId) {
+            lastWeekTimePieces {
                 start
                 duration
                 type
             }
-            cursor
-        }
-        pageInfo {
-            startCursor
-            endCursor
-            hasPreviousPage
-            hasNextPage
         }
     }
 }
 
-query UserLastWeekTimePieces($username: String!) {
+query UserStatistic($username: String!) {
     user(username: $username) {
-        lastWeekTimePieces {
-            id
-            start
-            duration
-            type
+        pomodoroCount
+        todayPomodoroCount
+        timeSpent
+        todayTimeSpent
+        timePieces(first: 1){
+            edges {
+                node {
+                    start
+                    duration
+                    type
+                }
+            }
         }
     }
 }
 
-query TargetLastWeekTimePieces($target_Id: ID!) {
-    target(target_id: $target_Id) {
-        lastWeekTimePieces {
-            id
-            start
-            duration
-            type
+query TargetStatistic($username: String!, $targetId: ID!) {
+    user(username: $username) {
+        target(id: $targetId) {
+            pomodoroCount
+            todayPomodoroCount
+            timeSpent
+            todayTimeSpent
+            timePieces(first: 1){
+                edges {
+                    node {
+                        start
+                        duration
+                        type
+                    }
+                }
+            }
         }
     }
 }
