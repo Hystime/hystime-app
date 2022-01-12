@@ -3,6 +3,7 @@ package top.learningman.hystime.sdk
 import TargetCreateMutation
 import TargetDeleteMutation
 import TargetLastWeekTimePiecesQuery
+import TargetStatisticQuery
 import TargetTimePiecesQuery
 import TargetUpdateMutation
 import TestQuery
@@ -13,6 +14,7 @@ import TimePiecesCreateForTargetMutation
 import UserCreateMutation
 import UserInfoQuery
 import UserLastWeekTimePiecesQuery
+import UserStatisticQuery
 import UserTargetsQuery
 import UserTimePiecesQuery
 import UserUpdateMutation
@@ -134,6 +136,19 @@ class HystimeClient(endpoint: String, authCode: String) {
                 targetID
             )
         ).user?.target?.lastWeekTimePieces
+    }
+
+    suspend fun getUserStatistic(
+        username: String
+    ) = wrap {
+        queryData(UserStatisticQuery(username)).user
+    }
+
+    suspend fun getTargetStatistic(
+        username: String,
+        targetID: String
+    ) = wrap {
+        queryData(TargetStatisticQuery(username, targetID)).user?.target
     }
 
     suspend fun createUser(username: String) = wrap {
