@@ -1,12 +1,10 @@
 package top.learningman.hystime.ui.setting
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
@@ -117,6 +115,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
                         intent.putExtra(Constant.TIMER_SETTING_INTENT_KEY, it)
                     }
                     context?.startActivity(intent)
+                    activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                     true
                 }
         }
