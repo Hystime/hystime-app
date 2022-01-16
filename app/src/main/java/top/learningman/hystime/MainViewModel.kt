@@ -22,7 +22,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val client by HystimeClient.Companion.Client()
 
     private val _user = MutableLiveData<UserBean?>(null)
-    val user: LiveData<UserBean?> = _user
+    private val user: LiveData<UserBean?> = _user
 
     private val _targets = MutableLiveData<List<TargetBean>>(emptyList())
     val targets: LiveData<List<TargetBean>> = _targets

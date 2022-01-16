@@ -17,6 +17,7 @@ import top.learningman.hystime.data.TargetBean
 import top.learningman.hystime.databinding.DialogAddTargetBinding
 import top.learningman.hystime.databinding.FragmentDashboardListBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
+import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
@@ -118,6 +119,11 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 binding.startTimer.setOnClickListener {
                     viewModel.setCurrentTarget(targetBean)
                     activity.getPager().currentItem = 1
+                }
+                binding.card.setOnClickListener {
+                    val user = SharedPrefRepo.getUser()
+                    val intent = DashboardActivity.getTargetIntent(activity, user, targetBean.id)
+                    activity.startActivity(intent)
                 }
             }
         }

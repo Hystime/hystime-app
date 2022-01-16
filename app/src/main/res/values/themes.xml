@@ -2,18 +2,40 @@
     <!-- Base application theme. -->
     <style name="Theme.Hystime" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:windowIsTranslucent">false</item>
         <item name="colorPrimary">@color/primaryLightColor</item>
         <item name="colorSecondary">@color/secondaryLightColor</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/primaryColor</item>
 
         <item name="preferenceTheme">@style/PrefsTheme</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
+    </style>
+
+    <style name="Theme.HystimeActionbar" parent="Theme.MaterialComponents.Light">
+        <!-- Primary brand color. -->
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="colorPrimary">@color/primaryLightColor</item>
+        <item name="colorSecondary">@color/secondaryLightColor</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primaryColor</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+
+        <item name="preferenceTheme">@style/PrefsTheme</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
 
     <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">
         <item name="android:layout">@layout/fragment_settings</item>
         <item name="android:listPreferredItemPaddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:listPreferredItemPaddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="WindowAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 
 

@@ -115,7 +115,7 @@ class TimerViewModel : ViewModel() {
 
     fun startFocus() {
         setStatus(TimerStatus.WORK_RUNNING)
-        startService(getFocusTime(), getServiceName())
+        startTimerService(getFocusTime(), getServiceName())
     }
 
     fun pauseFocus() {
@@ -134,7 +134,7 @@ class TimerViewModel : ViewModel() {
 
     fun startBreak() {
         setStatus(TimerStatus.BREAK_RUNNING)
-        startService(getBreakTime(), getServiceName(true))
+        startTimerService(getBreakTime(), getServiceName(true))
     }
 
     fun skipBreak() {
@@ -167,7 +167,7 @@ class TimerViewModel : ViewModel() {
         }
     }
 
-    private fun startService(duration: Long, name: String? = null) {
+    private fun startTimerService(duration: Long, name: String? = null) {
         val intent = Intent(AppRepo.context, TimerService::class.java)
         intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration)
         name?.let {

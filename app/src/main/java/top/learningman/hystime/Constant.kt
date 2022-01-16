@@ -1,6 +1,9 @@
 package top.learningman.hystime
 
 object Constant {
+    const val DASHBOARD_TYPE_INTENT_KEY = "dashboard_type_intent_key"
+    const val DASHBOARD_TARGET_ID_INTENT_KEY = "dashboard_target_id_intent_key"
+
     const val TIMER_SETTING_INTENT_KEY = "timer_setting_intent_key"
 
     const val TIMER_DURATION_INTENT_KEY = "timer_duration_intent_key"
