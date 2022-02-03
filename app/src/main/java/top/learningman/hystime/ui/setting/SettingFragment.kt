@@ -114,8 +114,7 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
                     }.let {
                         intent.putExtra(Constant.TIMER_SETTING_INTENT_KEY, it)
                     }
-                    context?.startActivity(intent)
-                    activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+                    it.context.startActivity(intent)
                     true
                 }
         }

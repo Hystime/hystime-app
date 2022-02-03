@@ -122,9 +122,9 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 }
                 binding.card.setOnClickListener {
                     val user = SharedPrefRepo.getUser()
-                    val intent = DashboardActivity.getTargetIntent(activity, user, targetBean.id, targetBean.name)
-                    activity.startActivity(intent)
-                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+                    val intent = DashboardActivity.getTargetIntent(it.context, user, targetBean.id, targetBean.name)
+                    it.context.startActivity(intent)
+//                    activity.slideEnterAnimation()
                 }
             }
         }

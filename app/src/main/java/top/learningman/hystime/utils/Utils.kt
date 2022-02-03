@@ -1,7 +1,8 @@
 package top.learningman.hystime.utils
 
+import android.app.Activity
 import android.content.res.Resources
-import android.util.Log
+import top.learningman.hystime.R
 
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -28,3 +29,10 @@ enum class Status {
     PENDING
 }
 
+fun Activity.slideEnterAnimation() {
+    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+}
+
+fun Activity.slideExitAnimation() {
+    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+}

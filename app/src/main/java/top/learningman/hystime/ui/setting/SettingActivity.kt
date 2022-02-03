@@ -57,7 +57,6 @@ class SettingActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
     class SettingsFragment(@XmlRes val type: Int, private val fragmentTitle: String) : PreferenceFragmentCompat() {

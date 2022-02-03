@@ -97,7 +97,7 @@
     <string name="refresh">Refresh</string>
     <string name="target_title_placeholder">Target Title</string>
     <string name="add_target">Add Target</string>
-    <string name="user_not_valid">User not Valid</string>
+    <string name="user_not_valid">No valid users.</string>
     <string name="no_target">No Target</string>
     <string name="refresh_target_hint">Refreshing targets.</string>
     <string name="select_target_title">Select Target</string>
@@ -125,7 +125,5 @@
     <string name="total_focus_length">Total focus length</string>
     <string name="timepieces">Timepieces</string>
     <string name="default_type" translatable="false">Normal</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
