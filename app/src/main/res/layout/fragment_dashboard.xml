@@ -37,10 +37,13 @@
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/today_focus_length" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <ViewStub
                     android:id="@+id/today_focus_length"
-                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
-                    android:text="@string/default_time" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inflatedId="@+id/today_focus_length"
+                    android:layout="@layout/item_dashboard_hourmin_text" />
+
             </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -67,10 +70,12 @@
                     style="@style/Theme.Hystime.DashboardCardViewTitle"
                     android:text="@string/total_focus_length" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <ViewStub
                     android:id="@+id/total_focus_length"
-                    style="@style/Theme.Hystime.DashboardCardViewContentNumber"
-                    android:text="@string/default_time" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inflatedId="@+id/total_focus_length"
+                    android:layout="@layout/item_dashboard_hourmin_text" />
             </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -14,6 +14,9 @@
     <string name="minute">Minute</string>
     <string name="hour">Hour</string>
 
+    <string name="minute_short" translatable="false">m</string>
+    <string name="hour_short" translatable="false">h</string>
+
     <!-- Setting Strings -->
     <string name="setting_filename" translatable="false">top.learningman.hystime_preferences</string>
 
@@ -92,6 +95,7 @@
     <!-- Place Holder -->
     <string name="default_target" translatable="false">Timing</string>
     <string name="default_time" translatable="false">00:00</string>
+    <string name="default_time_number" translatable="false">00</string>
     <string name="default_number" translatable="false">0</string>
 
     <string name="refresh">Refresh</string>
@@ -125,5 +129,6 @@
     <string name="total_focus_length">Total focus length</string>
     <string name="timepieces">Timepieces</string>
     <string name="default_type" translatable="false">Normal</string>
+
 
 </resources>
