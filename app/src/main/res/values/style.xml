@@ -7,6 +7,7 @@
     </style>
 
     <style name="Theme.Hystime.DashboardCardView" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="elevation">2dp</item>
         <item name="cardCornerRadius">@dimen/dashboard_card_CornerRadius</item>
         <item name="android:layout_height">@dimen/dashboard_card_height</item>
         <item name="android:layout_width">0dp</item>

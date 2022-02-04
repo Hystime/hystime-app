@@ -22,8 +22,7 @@
 
         <activity
             android:name=".ui.timer.TimerFullScreenActivity"
-            android:exported="false"
-            android:launchMode="singleInstance" />
+            android:exported="false" />
 
         <activity
             android:name=".ui.setting.SettingActivity"

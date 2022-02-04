@@ -138,10 +138,6 @@ class DashboardActivity : AppCompatActivity() {
             .commitNow()
     }
 
-    override fun finish() {
-        super.finish()
-    }
-
     companion object {
         private const val TYPE_KEY = "type_key"
         private const val USER_ID_KEY = "user_id_key"

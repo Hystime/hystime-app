@@ -208,9 +208,9 @@ class TimerFragment : Fragment() {
                 }.show()
         }
 
-        binding.container.setOnTouchListener { _, _ ->
+        binding.container.setOnClickListener { _ ->
             if (timerViewModel.status.value != WORK_RUNNING) {
-                return@setOnTouchListener false
+                return@setOnClickListener
             }
             Intent(requireContext(), TimerFullScreenActivity::class.java).apply {
                 action = Constant.TIMER_FULLSCREEN_ACTION
@@ -227,7 +227,6 @@ class TimerFragment : Fragment() {
                 startActivity(it)
                 requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
             }
-            true
         }
 
         return binding.root

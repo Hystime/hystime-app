@@ -41,8 +41,8 @@ class DashboardFragment : Fragment() {
         const val FRAGMENT_DATA_KEY = "fragment_data_key"
 
         fun Int.toTimeStr(): String {
-            val hour = this / 60
-            val minute = this % 60
+            val hour = this / 3600
+            val minute = this % 3600 / 60
             return "%02d:%02d".format(hour, minute)
         }
     }
