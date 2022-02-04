@@ -7,21 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.textview.MaterialTextView
-import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentDashboardBinding
+import top.learningman.hystime.databinding.ItemDashboardHourminTextBinding
 import top.learningman.hystime.ui.dashboard.DashboardActivity
+import top.learningman.hystime.utils.autoCleared
 
 class DashboardFragment : Fragment() {
 
     private lateinit var viewModel: DashboardViewModel
-    private lateinit var binding: FragmentDashboardBinding
+    private var binding: FragmentDashboardBinding by autoCleared()
+    private var todayFocusBinding: ItemDashboardHourminTextBinding by autoCleared()
+    private var totalFocusBinding: ItemDashboardHourminTextBinding by autoCleared()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        binding.todayFocusLength.setOnInflateListener { _, inflated ->
+            todayFocusBinding = ItemDashboardHourminTextBinding.bind(inflated)
+        }
+        binding.totalFocusLength.setOnInflateListener { _, inflated ->
+            totalFocusBinding = ItemDashboardHourminTextBinding.bind(inflated)
+        }
         return binding.root
     }
 
@@ -42,18 +50,18 @@ class DashboardFragment : Fragment() {
         ).forEach {
             val time = it.key.toTime()
             val vs = it.value
-            if (time.minuteOnly()) {
-                vs.layoutResource = R.layout.item_dashboard_min_text
-                val v = vs.inflate()
-                val min: MaterialTextView = v.findViewById(R.id.minute)
-                min.text = time.minute.toString()
-            } else {
-                val v = vs.inflate()
-                val min: MaterialTextView = v.findViewById(R.id.minute)
-                val hour: MaterialTextView = v.findViewById(R.id.hour)
-                min.text = time.minute.toString()
-                hour.text = time.hour.toString()
+            vs.inflate()
+            val stubBinding = when (vs) {
+                binding.totalFocusLength -> totalFocusBinding
+                binding.todayFocusLength -> todayFocusBinding
+                else -> throw IllegalArgumentException("Unknown viewStub")
             }
+            if (time.minuteOnly()) {
+                stubBinding.hourGroup.visibility = View.GONE
+            } else {
+                stubBinding.hour.text = time.hour.toString()
+            }
+            stubBinding.minute.text = time.minute.toString()
         }
     }
 

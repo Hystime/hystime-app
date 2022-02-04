@@ -4,14 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/hour"
-        style="@style/Theme.Hystime.DashboardCardViewContentNumber"
-        android:text="@string/default_time_number" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/hour_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
-        style="@style/Theme.Hystime.DashboardCardViewContentUnit"
-        android:text="@string/hour_short" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/hour"
+            style="@style/Theme.Hystime.DashboardCardViewContentNumber"
+            android:text="@string/default_time_number" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Theme.Hystime.DashboardCardViewContentUnit"
+            android:text="@string/hour_short" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/minute"
