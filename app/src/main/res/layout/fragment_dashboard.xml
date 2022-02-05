@@ -117,10 +117,18 @@
                             android:layout_height="wrap_content"
                             >
                             <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/target"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="@string/default_target"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/type"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="end"
                                 android:layout_marginEnd="16dp"
                                 android:text="@string/default_type"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />

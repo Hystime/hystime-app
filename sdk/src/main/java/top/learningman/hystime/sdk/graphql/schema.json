@@ -698,6 +698,22 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "target",
+              "description": "Target this piece belongs to",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Target",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,

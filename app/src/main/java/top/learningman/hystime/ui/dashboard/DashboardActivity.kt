@@ -33,7 +33,8 @@ class DashboardActivity : AppCompatActivity() {
         val tpDuration: Int?,
         val tpType: TimePieceBean.TimePieceType?,
         val type: Type,
-        val targetId: String?,
+        val tpTargetId: String?,
+        val tpTargetName: String?,
         val username: String,
     ) : Serializable {
         fun hasTimepiece(): Boolean {
@@ -51,7 +52,8 @@ class DashboardActivity : AppCompatActivity() {
                     input.timePieces.edges.firstOrNull()?.node?.duration,
                     TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
                     Type.USER,
-                    null,
+                    input.timePieces.edges.firstOrNull()?.node?.target?.id,
+                    input.timePieces.edges.firstOrNull()?.node?.target?.name,
                     username
                 )
             }
@@ -71,6 +73,7 @@ class DashboardActivity : AppCompatActivity() {
                     TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
                     Type.TARGET,
                     targetId,
+                    null,
                     username
                 )
             }

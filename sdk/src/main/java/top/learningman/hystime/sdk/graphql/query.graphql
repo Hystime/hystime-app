@@ -56,6 +56,9 @@ query UserTimePieces($username: String!, $first: Int!, $after: String) {
                     start
                     duration
                     type
+                    target {
+                        name
+                    }
                 }
                 cursor
             }
@@ -75,6 +78,9 @@ query UserLastWeekTimePieces($username: String!) {
             start
             duration
             type
+            target {
+                name
+            }
         }
     }
 }
@@ -103,6 +109,10 @@ query UserStatistic($username: String!) {
                     start
                     duration
                     type
+                    target {
+                        id
+                        name
+                    }
                 }
             }
         }
