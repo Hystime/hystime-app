@@ -6,18 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import top.learningman.hystime.R
+import top.learningman.hystime.data.TimePieceBean.TimePieceType.NORMAL
+import top.learningman.hystime.data.TimePieceBean.TimePieceType.POMODORO
 import top.learningman.hystime.databinding.FragmentDashboardBinding
-import top.learningman.hystime.databinding.ItemDashboardHourminTextBinding
+import top.learningman.hystime.databinding.WidgetDashboardHourminTextBinding
+import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.dashboard.DashboardActivity
 import top.learningman.hystime.utils.autoCleared
+import top.learningman.hystime.utils.plus
+import top.learningman.hystime.utils.shortFormat
 
 class DashboardFragment : Fragment() {
 
-    private lateinit var viewModel: DashboardViewModel
     private var binding: FragmentDashboardBinding by autoCleared()
-    private var todayFocusBinding: ItemDashboardHourminTextBinding by autoCleared()
-    private var totalFocusBinding: ItemDashboardHourminTextBinding by autoCleared()
+    private var todayFocusBinding: WidgetDashboardHourminTextBinding by autoCleared()
+    private var totalFocusBinding: WidgetDashboardHourminTextBinding by autoCleared()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,10 +29,10 @@ class DashboardFragment : Fragment() {
     ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         binding.todayFocusLength.setOnInflateListener { _, inflated ->
-            todayFocusBinding = ItemDashboardHourminTextBinding.bind(inflated)
+            todayFocusBinding = WidgetDashboardHourminTextBinding.bind(inflated)
         }
         binding.totalFocusLength.setOnInflateListener { _, inflated ->
-            totalFocusBinding = ItemDashboardHourminTextBinding.bind(inflated)
+            totalFocusBinding = WidgetDashboardHourminTextBinding.bind(inflated)
         }
         return binding.root
     }
@@ -36,7 +40,6 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("DashboardFragment", "onViewCreated")
-        viewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
         val data =
             requireArguments().getSerializable(FRAGMENT_DATA_KEY) as DashboardActivity.Statistic
@@ -63,6 +66,23 @@ class DashboardFragment : Fragment() {
             }
             stubBinding.minute.text = time.minute.toString()
         }
+
+        if (data.hasTimepiece()) {
+            binding.start.text = data.tpStart?.shortFormat()
+            val end = data.tpStart!! + data.tpDuration!!
+            binding.end.text = end.shortFormat()
+            binding.duration.text = data.tpDuration.toTime().toString()
+            binding.type.text = when (data.tpType) {
+                NORMAL -> StringRepo.getString(R.string.normal)
+                POMODORO -> StringRepo.getString(R.string.pomodoro)
+                else -> throw IllegalArgumentException("Unknown timepiece type")
+            }
+        } else {
+            binding.timepiece.visibility = View.GONE
+            binding.timepieceButton.visibility = View.GONE
+            binding.placeholderTimepiece.visibility = View.VISIBLE
+        }
+
     }
 
     companion object {
@@ -74,6 +94,14 @@ class DashboardFragment : Fragment() {
         ) {
             fun minuteOnly(): Boolean {
                 return hour == 0
+            }
+
+            override fun toString(): String {
+                return if (minuteOnly()) {
+                    "$minute ${StringRepo.getString(R.string.minute)}"
+                } else {
+                    "$hour ${StringRepo.getString(R.string.hour)} $minute ${StringRepo.getString(R.string.minute)}"
+                }
             }
         }
 

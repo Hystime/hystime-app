@@ -116,6 +116,8 @@
 
     <string name="normal">Normal</string>
     <string name="longterm">Long Term</string>
+    <string name="pomodoro">Pomodoro</string>
+
     <string name="create">Create</string>
     <string name="target_name_empty">Target name can not be empty</string>
     <string name="target_time_invalid">Target time is invalid</string>
@@ -129,6 +131,7 @@
     <string name="total_focus_length">Total focus length</string>
     <string name="timepieces">Timepieces</string>
     <string name="default_type" translatable="false">Normal</string>
+    <string name="no_timepiece">No timepiece.</string>
 
 
 </resources>

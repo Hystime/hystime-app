@@ -81,4 +81,6 @@
     <string name="total_pomodoro">总番茄</string>
     <string name="total_focus_length">总专注时长</string>
     <string name="timepieces">时间片</string>
+    <string name="pomodoro">番茄</string>
+    <string name="no_timepiece">没有时间片</string>
 </resources>

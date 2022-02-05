@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import top.learningman.hystime.R
+import java.util.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -40,6 +41,19 @@ fun Activity.slideEnterAnimation() {
 
 fun Activity.slideExitAnimation() {
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+}
+
+operator fun Date.plus(time: Int): Date {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    cal.add(Calendar.SECOND, time)
+    return cal.time
+}
+
+fun Date.shortFormat(): String {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return "%02d:%02d".format(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
 }
 
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {

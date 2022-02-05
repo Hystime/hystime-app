@@ -32,10 +32,16 @@ class DashboardActivity : AppCompatActivity() {
         val tpStart: Date?,
         val tpDuration: Int?,
         val tpType: TimePieceBean.TimePieceType?,
-        val type: Type
+        val type: Type,
+        val targetId: String?,
+        val username: String,
     ) : Serializable {
+        fun hasTimepiece(): Boolean {
+            return tpStart != null && tpDuration != null && tpType != null
+        }
+
         companion object {
-            fun fromUser(type: Type, input: UserStatisticQuery.User): Statistic {
+            fun fromUser(username: String, input: UserStatisticQuery.User): Statistic {
                 return Statistic(
                     input.pomodoroCount,
                     input.todayPomodoroCount,
@@ -44,11 +50,17 @@ class DashboardActivity : AppCompatActivity() {
                     input.timePieces.edges.firstOrNull()?.node?.start,
                     input.timePieces.edges.firstOrNull()?.node?.duration,
                     TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
-                    type
+                    Type.USER,
+                    null,
+                    username
                 )
             }
 
-            fun fromTarget(type: Type, input: TargetStatisticQuery.Target): Statistic {
+            fun fromTarget(
+                username: String,
+                targetId: String,
+                input: TargetStatisticQuery.Target
+            ): Statistic {
                 return Statistic(
                     input.pomodoroCount,
                     input.todayPomodoroCount,
@@ -57,7 +69,9 @@ class DashboardActivity : AppCompatActivity() {
                     input.timePieces.edges.firstOrNull()?.node?.start,
                     input.timePieces.edges.firstOrNull()?.node?.duration,
                     TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
-                    type
+                    Type.TARGET,
+                    targetId,
+                    username
                 )
             }
         }
@@ -106,24 +120,32 @@ class DashboardActivity : AppCompatActivity() {
 
                     when (type) {
                         Type.USER -> {
-                            val userId = intent.getStringExtra(USER_ID_KEY)
-                            supportActionBar?.title = userId
-                            client.getUserStatistic(userId!!)
+                            val username = intent.getStringExtra(USER_NAME_KEY)
+                            supportActionBar?.title = username
+                            client.getUserStatistic(username!!)
                         }
                         Type.TARGET -> {
                             val targetId = intent.getStringExtra(TARGET_ID_KEY)
-                            val username = intent.getStringExtra(USER_ID_KEY)
+                            val username = intent.getStringExtra(USER_NAME_KEY)
                             val targetName = intent.getStringExtra(TARGET_NAME_KEY)
                             supportActionBar?.title = targetName
                             client.getTargetStatistic(username!!, targetId!!)
                         }
                     }.fold({
                         data = when (type) {
-                            Type.USER -> Statistic.fromUser(type, it as UserStatisticQuery.User)
-                            Type.TARGET -> Statistic.fromTarget(
-                                type,
-                                it as TargetStatisticQuery.Target
-                            )
+                            Type.USER -> {
+                                val username = intent.getStringExtra(USER_NAME_KEY)!!
+                                Statistic.fromUser(username, it as UserStatisticQuery.User)
+                            }
+                            Type.TARGET -> {
+                                val targetId = intent.getStringExtra(TARGET_ID_KEY)!!
+                                val username = intent.getStringExtra(USER_NAME_KEY)!!
+                                Statistic.fromTarget(
+                                    username,
+                                    targetId,
+                                    it as TargetStatisticQuery.Target
+                                )
+                            }
                         }
                     }, { throwable ->
                         throwable.message?.let {
@@ -140,14 +162,14 @@ class DashboardActivity : AppCompatActivity() {
 
     companion object {
         private const val TYPE_KEY = "type_key"
-        private const val USER_ID_KEY = "user_id_key"
+        private const val USER_NAME_KEY = "user_name_key"
         private const val TARGET_ID_KEY = "target_id_key"
         private const val TARGET_NAME_KEY = "target_name_key"
 
         fun getUserIntent(context: Context, username: String): Intent {
             return Intent(context, DashboardActivity::class.java).apply {
                 putExtra(TYPE_KEY, Type.USER)
-                putExtra(USER_ID_KEY, username)
+                putExtra(USER_NAME_KEY, username)
             }
         }
 
@@ -159,7 +181,7 @@ class DashboardActivity : AppCompatActivity() {
         ): Intent {
             return Intent(context, DashboardActivity::class.java).apply {
                 putExtra(TYPE_KEY, Type.TARGET)
-                putExtra(USER_ID_KEY, username)
+                putExtra(USER_NAME_KEY, username)
                 putExtra(TARGET_ID_KEY, targetId)
                 putExtra(TARGET_NAME_KEY, targetName)
             }
