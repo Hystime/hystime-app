@@ -83,4 +83,5 @@
     <string name="timepieces">时间片</string>
     <string name="pomodoro">番茄</string>
     <string name="no_timepiece">没有时间片</string>
+    <string name="user_info">用户统计</string>
 </resources>

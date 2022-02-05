@@ -96,6 +96,10 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 add()
                 true
             }
+            R.id.user_info -> {
+                userInfo()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -122,9 +126,13 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 }
                 binding.card.setOnClickListener {
                     val user = SharedPrefRepo.getUser()
-                    val intent = DashboardActivity.getTargetIntent(it.context, user, targetBean.id, targetBean.name)
+                    val intent = DashboardActivity.getTargetIntent(
+                        it.context,
+                        user,
+                        targetBean.id,
+                        targetBean.name
+                    )
                     it.context.startActivity(intent)
-//                    activity.slideEnterAnimation()
                 }
             }
         }
@@ -150,6 +158,12 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
     override fun refresh() {
         viewModel.fetchTarget(null)
         viewModel.showSnackBarMessage(getString(R.string.refresh_target_hint))
+    }
+
+    private fun userInfo() {
+        val user = SharedPrefRepo.getUser()
+        val intent = DashboardActivity.getUserIntent(requireActivity(), user)
+        startActivity(intent)
     }
 
     private fun add() {
