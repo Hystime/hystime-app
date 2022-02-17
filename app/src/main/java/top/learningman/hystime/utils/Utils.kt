@@ -50,6 +50,12 @@ operator fun Date.plus(time: Int): Date {
     return cal.time
 }
 
+fun Date.weekday(): Int {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return cal.get(Calendar.DAY_OF_WEEK)
+}
+
 fun Date.shortFormat(): String {
     val cal = Calendar.getInstance()
     cal.time = this

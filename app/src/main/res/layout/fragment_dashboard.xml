@@ -73,9 +73,9 @@
 
                 <ViewStub
                     android:id="@+id/total_focus_length"
-                    android:layout_gravity="start|bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|bottom"
                     android:inflatedId="@+id/total_focus_length"
                     android:layout="@layout/widget_dashboard_hourmin_text" />
             </com.google.android.material.card.MaterialCardView>
@@ -84,11 +84,9 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                style="@style/Theme.Hystime.DashboardCardView"
-                android:layout_height="wrap_content">
+            <com.google.android.material.card.MaterialCardView style="@style/Theme.Hystime.DashboardWideCardView">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -108,22 +106,22 @@
                             android:id="@+id/placeholder_timepiece"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:text="@string/no_timepiece" />
+                            android:text="@string/no_timepiece"
+                            android:visibility="gone" />
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:id="@+id/timepiece"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            >
+                            android:layout_height="wrap_content">
+
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/target"
-                                android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
                                 android:text="@string/default_target"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:visibility="gone" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/type"
@@ -177,7 +175,29 @@
                     tools:ignore="SpeakableTextPresentCheck" />
 
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Theme.Hystime.DashboardWideCardView"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/Theme.Hystime.DashboardCardViewTitle"
+                        android:text="@string/heatmap" />
+
+                    <top.learningman.hystime.view.HeatMap
+                        android:id="@+id/heatmap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

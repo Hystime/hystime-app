@@ -133,6 +133,7 @@
     <string name="default_type" translatable="false">Normal</string>
     <string name="no_timepiece">No timepiece.</string>
     <string name="user_info">User statistic</string>
+    <string name="heatmap">Heatmap</string>
 
 
 </resources>
