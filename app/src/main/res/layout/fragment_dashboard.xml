@@ -189,8 +189,9 @@
                         style="@style/Theme.Hystime.DashboardCardViewTitle"
                         android:text="@string/heatmap" />
 
-                    <top.learningman.hystime.view.HeatMap
+                    <top.learningman.hystime.view.HeatMapView
                         android:id="@+id/heatmap"
+                        android:minHeight="50dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </androidx.appcompat.widget.LinearLayoutCompat>

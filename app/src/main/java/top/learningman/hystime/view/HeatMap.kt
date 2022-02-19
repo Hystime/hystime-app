@@ -1,14 +1,15 @@
 package top.learningman.hystime.view
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import top.learningman.hystime.utils.weekday
 import java.util.*
 import kotlin.math.ceil
 
-class HeatMap(context: Context, attrs: AttributeSet?) : View(context, attrs) {
-    private val mData: Cal? = null
+class HeatMapView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+    private var mData: Cal? = null
 
     private var ceilWidth: Int = 0
 
@@ -20,24 +21,30 @@ class HeatMap(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         defStyleAttr
     )
 
+    fun setData(data: Cal) {
+        mData = data
+        invalidate()
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = MeasureSpec.getSize(heightMeasureSpec)
         if (mData == null) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         } else {
-            val day = mData.start.weekday()
-            val dayCount = mData.data.size + (day - 1)
+            val width = MeasureSpec.getSize(widthMeasureSpec)
+            val day = mData!!.start.weekday()
+            val dayCount = mData!!.data.size + (day - 1)
             val weekCount = ceil(dayCount.toDouble() / 7).toInt()
             val ceilCount = weekCount * 5
             // 4 ceil for a time block and 1 ceil for slide
             val ceilEdge = width / ceilCount
             this.ceilWidth = ceilEdge
 
-            val newHeight = ceilEdge * (7 * 4 + 6)
-            setMeasuredDimension(width, newHeight)
+            val height = ceilEdge * (7 * 4 + 6)
+            setMeasuredDimension(width, height)
         }
+    }
+
+    override fun onDraw(canvas: Canvas) {
 
     }
 
@@ -47,6 +54,5 @@ class HeatMap(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             val data: List<Int?>
         )
     }
-
 
 }

@@ -116,6 +116,11 @@ query UserStatistic($username: String!) {
                 }
             }
         }
+        heatMap {
+            start
+            end
+            data
+        }
     }
 }
 
@@ -134,6 +139,11 @@ query TargetStatistic($username: String!, $targetId: ID!) {
                         type
                     }
                 }
+            }
+            heatMap {
+                start
+                end
+                data
             }
         }
     }

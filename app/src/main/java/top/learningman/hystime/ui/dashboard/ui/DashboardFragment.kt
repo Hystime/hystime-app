@@ -67,6 +67,7 @@ class DashboardFragment : Fragment() {
             stubBinding.minute.text = time.minute.toString()
         }
 
+        // Render timepiece
         if (data.hasTimepiece()) {
             binding.start.text = data.tpStart?.shortFormat()
             val end = data.tpStart!! + data.tpDuration!!
@@ -88,6 +89,9 @@ class DashboardFragment : Fragment() {
             binding.timepieceButton.visibility = View.GONE
             binding.placeholderTimepiece.visibility = View.VISIBLE
         }
+
+        // Render heatmap
+        binding.heatmap.setData(data.heatMap)
 
     }
 

@@ -15,6 +15,7 @@ import top.learningman.hystime.data.TimePieceBean
 import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.ui.DashboardFragment
 import top.learningman.hystime.utils.LoadingFragment
+import top.learningman.hystime.view.HeatMapView
 import java.io.Serializable
 import java.util.*
 
@@ -36,6 +37,7 @@ class DashboardActivity : AppCompatActivity() {
         val tpTargetId: String?,
         val tpTargetName: String?,
         val username: String,
+        val heatMap: HeatMapView.Companion.Cal,
     ) : Serializable {
         fun hasTimepiece(): Boolean {
             return tpStart != null && tpDuration != null && tpType != null
@@ -54,7 +56,8 @@ class DashboardActivity : AppCompatActivity() {
                     Type.USER,
                     input.timePieces.edges.firstOrNull()?.node?.target?.id,
                     input.timePieces.edges.firstOrNull()?.node?.target?.name,
-                    username
+                    username,
+                    HeatMapView.Companion.Cal(input.heatMap.start, input.heatMap.data)
                 )
             }
 
@@ -74,7 +77,8 @@ class DashboardActivity : AppCompatActivity() {
                     Type.TARGET,
                     targetId,
                     null,
-                    username
+                    username,
+                    HeatMapView.Companion.Cal(input.heatMap.start, input.heatMap.data)
                 )
             }
         }
