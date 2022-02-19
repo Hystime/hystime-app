@@ -22,4 +22,22 @@ object ScalarAdapter {
             return Date.from(Instant.parse(str))
         }
     }
+
+    val DateAdapter = object : CustomTypeAdapter<Date> {
+        private val sdf = SimpleDateFormat(
+            "yyyy-MM-dd",
+            Locale.US
+        )
+
+        override fun encode(value: Date): CustomTypeValue<*> {
+            return CustomTypeValue.GraphQLString(
+                sdf.format(value)
+            )
+        }
+
+        override fun decode(value: CustomTypeValue<*>): Date {
+            val str = value.value.toString()
+            return sdf.parse(str)!!
+        }
+    }
 }

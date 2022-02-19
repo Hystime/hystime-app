@@ -66,6 +66,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                             .build()
                     )
                     .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
+                    .addCustomTypeAdapter(CustomType.DATE, ScalarAdapter.DateAdapter)
                     .build()
             } catch (e: Exception) {
                 this.status = Status.CLIENT_ERROR
@@ -100,7 +101,7 @@ class HystimeClient(endpoint: String, authCode: String) {
     }
 
     suspend fun getUserTargets(username: String) = wrap {
-        queryData(UserTargetsQuery(username)).user?.targets
+        queryData(UserTargetsQuery(username)).user.targets
     }
 
     suspend fun getTargetTimePieces(
@@ -109,7 +110,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(TargetTimePiecesQuery(username, targetID, first, after)).user?.target?.timePieces
+        queryData(TargetTimePiecesQuery(username, targetID, first, after)).user.target.timePieces
     }
 
     suspend fun getUserTimePieces(
@@ -117,13 +118,13 @@ class HystimeClient(endpoint: String, authCode: String) {
         first: Int,
         after: Input<String>
     ) = wrap {
-        queryData(UserTimePiecesQuery(userID, first, after)).user?.timePieces
+        queryData(UserTimePiecesQuery(userID, first, after)).user.timePieces
     }
 
     suspend fun getUserLastWeekTimePieces(
         username: String
     ) = wrap {
-        queryData(UserLastWeekTimePiecesQuery(username)).user?.lastWeekTimePieces
+        queryData(UserLastWeekTimePiecesQuery(username)).user.lastWeekTimePieces
     }
 
     suspend fun getTargetLastWeekTimePieces(
@@ -135,7 +136,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                 username,
                 targetID
             )
-        ).user?.target?.lastWeekTimePieces
+        ).user.target.lastWeekTimePieces
     }
 
     suspend fun getUserStatistic(
@@ -148,7 +149,7 @@ class HystimeClient(endpoint: String, authCode: String) {
         username: String,
         targetID: String
     ) = wrap {
-        queryData(TargetStatisticQuery(username, targetID)).user?.target
+        queryData(TargetStatisticQuery(username, targetID)).user.target
     }
 
     suspend fun createUser(username: String) = wrap {

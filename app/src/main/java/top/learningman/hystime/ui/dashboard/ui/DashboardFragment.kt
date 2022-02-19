@@ -79,14 +79,13 @@ class DashboardFragment : Fragment() {
                 else -> throw IllegalArgumentException("Unknown timepiece type")
             }
 
-            if (data.type == DashboardActivity.Type.USER){
+            if (data.type == DashboardActivity.Type.USER) {
                 binding.target.visibility = View.VISIBLE
                 binding.target.text = data.tpTargetName
             }
 
         } else {
             binding.timepiece.visibility = View.GONE
-            binding.timepieceButton.visibility = View.GONE
             binding.placeholderTimepiece.visibility = View.VISIBLE
         }
 
