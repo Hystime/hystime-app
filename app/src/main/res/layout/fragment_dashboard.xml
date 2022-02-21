@@ -191,6 +191,7 @@
                         android:text="@string/heatmap" />
 
                     <HorizontalScrollView
+                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:ignore="SpeakableTextPresentCheck">
@@ -200,7 +201,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minHeight="50dp"
-                            app:ceilSize="2dp" />
+                            app:ceilSize="3dp" />
                     </HorizontalScrollView>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
