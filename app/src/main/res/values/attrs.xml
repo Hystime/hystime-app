@@ -7,6 +7,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="HeatMapView">
+        <attr name="ceilSize" format="dimension" />
+    </declare-styleable>
+
 
     <declare-styleable name="NumberPickerPreferenceCompat">
         <attr name="minValue" format="integer" />

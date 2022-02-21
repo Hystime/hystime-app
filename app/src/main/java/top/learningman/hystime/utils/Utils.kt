@@ -11,7 +11,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
-fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+fun Int.toPx(): Float = this * Resources.getSystem().displayMetrics.density
 
 // Applied to milliseconds
 fun Long.toTimeString(): String {

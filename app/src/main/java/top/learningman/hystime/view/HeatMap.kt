@@ -26,6 +26,12 @@ class HeatMapView(context: Context, attrs: AttributeSet?) : View(context, attrs)
         context, attrs, defStyleAttr
     )
 
+    init {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.HeatMapView)
+        this.cellLength = typedArray.getDimension(R.styleable.HeatMapView_ceilSize, 2f)
+        typedArray.recycle()
+    }
+
     fun setData(data: Cal) {
         mData = data
         invalidate()
@@ -37,20 +43,12 @@ class HeatMapView(context: Context, attrs: AttributeSet?) : View(context, attrs)
             val width = MeasureSpec.getSize(widthMeasureSpec)
             Log.d("HeatMapViewDefault", "width: $width")
         } else {
-            val width = MeasureSpec.getSize(widthMeasureSpec)
             val day = mData!!.start.weekday()
             val dayCount = mData!!.data.size + (day - 1)
             val weekCount = ceil(dayCount.toDouble() / 7).toInt()
-            val cellCount = weekCount * 5
-            Log.d(
-                "HeatMapViewMeasure",
-                "dayCount: $dayCount, weekCount: $weekCount, cellCount: $cellCount width: $width"
-            )
-            // 4 cell for a time block and 1 cell for slide
-            val cellEdge = width.toFloat() / cellCount
-            this.cellLength = cellEdge
-
-            val height = (cellEdge * (7 * 4 + 6)).toInt()
+            // 4 cell for a time block and 1 cell for divider
+            val height = (this.cellLength * (7 * 4 + 6)).toInt()
+            val width = (this.cellLength * (weekCount * 4 + (weekCount - 1))).toInt()
             setMeasuredDimension(width, height)
         }
     }
@@ -77,10 +75,10 @@ class HeatMapView(context: Context, attrs: AttributeSet?) : View(context, attrs)
             val loc = dayPrefix + day
             val week = loc / 7
             val weekDay = loc % 7
-            Log.d(
-                "HeatMapView",
-                "day: $day week: $week, weekDay: $weekDay loc: $loc cellLength: $cellLength"
-            )
+//            Log.d(
+//                "HeatMapView",
+//                "day: $day week: $week, weekDay: $weekDay loc: $loc cellLength: $cellLength"
+//            )
             val leftTopX = week * cellLength * 5
             val leftTopY = weekDay * cellLength * 5
             val rightBottomX = leftTopX + cellLength * 4
