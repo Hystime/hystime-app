@@ -11,7 +11,9 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
-fun Int.toPx(): Float = this * Resources.getSystem().displayMetrics.density
+fun Int.dipToPx(): Float = this * Resources.getSystem().displayMetrics.density
+
+fun Int.spToPx(): Float = this * Resources.getSystem().displayMetrics.scaledDensity
 
 // Applied to milliseconds
 fun Long.toTimeString(): String {
@@ -43,17 +45,40 @@ fun Activity.slideExitAnimation() {
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 }
 
-operator fun Date.plus(time: Int): Date {
+fun Date.plusSecs(time: Int): Date {
     val cal = Calendar.getInstance()
     cal.time = this
     cal.add(Calendar.SECOND, time)
     return cal.time
 }
 
+fun Date.plusDays(time: Int): Date {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    cal.add(Calendar.DAY_OF_MONTH, time)
+    return cal.time
+}
+
+fun <T, U> pairOf(first: T, second: U): Pair<T, U> {
+    return Pair(first, second)
+}
+
 fun Date.weekday(): Int {
     val cal = Calendar.getInstance()
     cal.time = this
     return cal.get(Calendar.DAY_OF_WEEK)
+}
+
+fun Date.newMonth(): Int {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return cal.get(Calendar.MONTH)
+}
+
+fun Date.monthStr(): String {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)!!
 }
 
 fun Date.shortFormat(): String {

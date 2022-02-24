@@ -5,6 +5,7 @@ import UserStatisticQuery
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -158,6 +159,7 @@ class DashboardActivity : AppCompatActivity() {
                         throwable.message?.let {
                             Toast.makeText(this@DashboardActivity, it, Toast.LENGTH_LONG).show()
                         }
+                        Log.d("DashboardActivity", throwable.stackTraceToString())
                         finish()
                         return@launch
                     })

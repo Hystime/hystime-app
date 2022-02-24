@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import top.learningman.hystime.R
 import top.learningman.hystime.data.TimePieceBean.TimePieceType.NORMAL
@@ -14,7 +16,7 @@ import top.learningman.hystime.databinding.WidgetDashboardHourminTextBinding
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.dashboard.DashboardActivity
 import top.learningman.hystime.utils.autoCleared
-import top.learningman.hystime.utils.plus
+import top.learningman.hystime.utils.plusSecs
 import top.learningman.hystime.utils.shortFormat
 
 class DashboardFragment : Fragment() {
@@ -70,7 +72,7 @@ class DashboardFragment : Fragment() {
         // Render timepiece
         if (data.hasTimepiece()) {
             binding.start.text = data.tpStart?.shortFormat()
-            val end = data.tpStart!! + data.tpDuration!!
+            val end = data.tpStart!!.plusSecs(data.tpDuration!!)
             binding.end.text = end.shortFormat()
             binding.duration.text = data.tpDuration.toTime().toString()
             binding.type.text = when (data.tpType) {
@@ -92,6 +94,13 @@ class DashboardFragment : Fragment() {
         // Render heatmap
         binding.heatmap.setData(data.heatMap)
 
+
+
+        binding.heatmap.doOnLayout {
+            binding.scroll.isSmoothScrollingEnabled = false
+            binding.scroll.fullScroll(ScrollView.FOCUS_RIGHT)
+            binding.scroll.isSmoothScrollingEnabled = true
+        }
     }
 
     companion object {

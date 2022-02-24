@@ -118,6 +118,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         inner class TargetViewHolder(private val binding: ItemDashboardTargetBinding) :
             RecyclerView.ViewHolder(binding.root) {
             fun bind(targetBean: TargetBean) {
+                Log.d("TargetViewHolder", "bind: ${targetBean.name}")
                 binding.title.text = targetBean.name
                 binding.timeSpent.text = targetBean.timeSpent.toLocalTimeString()
                 binding.startTimer.setOnClickListener {
@@ -138,6 +139,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetViewHolder {
+            Log.d("TargetRecyclerAdapter", "onCreateViewHolder")
             val root = ItemDashboardTargetBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -147,6 +149,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         }
 
         override fun onBindViewHolder(holder: TargetViewHolder, position: Int) {
+            Log.d("BindViewHolder", "True")
             holder.bind(list[position])
         }
 
