@@ -108,6 +108,7 @@
     <string name="no_target_hint">Please select a target.</string>
     <string name="vibration_hint">Use of vibration as operational feedback</string>
     <string name="focusing">Focusing</string>
+    <string name="relaxing">Relaxing</string>
     <string name="fail_to_create_timepiece_toast">Failed to create time piece.</string>
     <string name="too_short_time_piece_toast">Time piece shorted than 1 minute will not be recorded.</string>
 
@@ -124,7 +125,7 @@
     <string name="target_type">Target type</string>
     <string name="cancel">Cancel</string>
     <string name="target_add_success_postfix">&#160;added successfully.</string>
-    <string name="too_short_pomodoro_toast">Only full pomodoro will be recored</string>
+    <string name="too_short_pomodoro_toast">Only complete pomodoro will be recored</string>
     <string name="today_pomodoro">Today pomodoro</string>
     <string name="today_focus_length">Today focus length</string>
     <string name="total_pomodoro">Total Pomodoro</string>
@@ -134,6 +135,7 @@
     <string name="no_timepiece">No timepiece.</string>
     <string name="user_info">User statistic</string>
     <string name="heatmap">Heatmap</string>
+    <string name="no_target_toast">No available target</string>
 
 
 </resources>

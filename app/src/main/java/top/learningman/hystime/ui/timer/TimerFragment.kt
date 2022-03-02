@@ -30,7 +30,6 @@ import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
-import top.learningman.hystime.ui.timer.buttonGroup.ButtonFragments
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimerViewFragment
 import top.learningman.hystime.utils.toTimeString
@@ -108,6 +107,7 @@ class TimerFragment : Fragment() {
                             return
                         }
                     }
+                    // TODO： create a queue to handle timepieces
                     lifecycleScope.launch(Dispatchers.IO) {
                         TimePieceRepo.addTimePiece(
                             mainViewModel.currentTarget.value!!.id,
@@ -201,11 +201,20 @@ class TimerFragment : Fragment() {
             val targets = mainViewModel.targets.value!!.map {
                 it.name
             }.toTypedArray()
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.select_target_title))
-                .setItems(targets) { _, which ->
-                    mainViewModel.setCurrentTarget(targets[which])
-                }.show()
+            if (targets.isEmpty()) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.no_target_toast),
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            } else {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.select_target_title))
+                    .setItems(targets) { _, which ->
+                        mainViewModel.setCurrentTarget(targets[which])
+                    }.show()
+            }
         }
 
         binding.container.setOnClickListener { _ ->
@@ -235,29 +244,15 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val filter = IntentFilter().apply {
+        requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
             addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
-        }
-        requireActivity().registerReceiver(timerReceiver, filter)
+        })
 
         mainViewModel.currentTarget.observe(viewLifecycleOwner) {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
-        timerViewModel.status.observe(viewLifecycleOwner) {
-            setButtonFragment(
-                when (it) {
-                    WAIT_START -> ButtonFragments.WaitStartFragment()
-                    WORK_RUNNING -> ButtonFragments.WorkRunningFragment()
-                    WORK_PAUSE -> ButtonFragments.WorkPauseFragment()
-                    WORK_FINISH -> ButtonFragments.WorkFinishFragment()
-                    BREAK_RUNNING -> ButtonFragments.BreakRunningFragment()
-                    BREAK_FINISH -> ButtonFragments.BreakFinishFragment()
-                    else -> throw Error("Unexpected status")
-                }
-            )
-        }
 
         timerViewModel.time.observe(viewLifecycleOwner) {
             if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL && !timerViewModel.isBreak()) {
@@ -307,34 +302,11 @@ class TimerFragment : Fragment() {
         }
     }
 
-    private fun setButtonFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.buttonGroup, fragment)
-            .commit()
-    }
-
     private fun enterEnv() {
         (requireActivity() as MainActivity).hideNav()
-        binding.tabLayout.apply {
-            if (isShown) {
-                visibility = View.INVISIBLE
-            }
-        }
-        binding.timerHost.forbidScroll()
-        binding.target.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_null)
-        binding.target.isClickable = false
     }
 
     private fun leaveEnv() {
         (requireActivity() as MainActivity).showNav()
-        binding.tabLayout.apply {
-            if (!isShown) {
-                visibility = View.VISIBLE
-            }
-        }
-        binding.timerHost.allowScroll()
-        binding.target.icon =
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_chevron_right_white_24dp)
-        binding.target.isClickable = true
     }
 }

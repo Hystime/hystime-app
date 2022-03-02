@@ -14,8 +14,7 @@ import top.learningman.hystime.R
 import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 
 class TimerViewModel : ViewModel() {
     enum class TimerStatus {
@@ -30,6 +29,7 @@ class TimerViewModel : ViewModel() {
     enum class TimerType {
         NORMAL,
         POMODORO,
+        BREAK
     }
 
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
@@ -61,15 +61,18 @@ class TimerViewModel : ViewModel() {
         _time.postValue(time)
     }
 
-    private fun getServiceName(isBreak: Boolean = false) = when (type.value) {
+    private fun getServiceName() = when (type.value) {
         NORMAL -> {
             StringRepo.getString(R.string.tab_normal_timing)
         }
         POMODORO -> {
             StringRepo.getString(R.string.tab_pomodoro_timing)
         }
+        BREAK -> {
+            StringRepo.getString(R.string.timer_break)
+        }
         else -> throw Error("Unexpected type")
-    } + if (isBreak) " ${StringRepo.getString(R.string.timer_break)}" else ""
+    }
 
     fun getTime() =
         when (status.value) {
@@ -102,46 +105,6 @@ class TimerViewModel : ViewModel() {
 
     // Timer Actions
 
-    fun exitAll() {
-        Log.d("exitAll", "call resetTimer")
-        if (status.value in arrayOf(TimerStatus.WORK_FINISH, TimerStatus.BREAK_FINISH)) {
-            Log.d("exitAll", "Just switch to WAIT_START")
-            setStatus(TimerStatus.WAIT_START)
-        } else {
-            Log.d("exitAll", "Try to stop service.")
-            killTimer()
-        }
-    }
-
-    fun startFocus() {
-        setStatus(TimerStatus.WORK_RUNNING)
-        startTimerService(getFocusTime(), getServiceName())
-    }
-
-    fun pauseFocus() {
-        setStatus(TimerStatus.WORK_PAUSE)
-        binder?.pause()
-    }
-
-    fun resumeFocus() {
-        status.value?.let {
-            if (it == TimerStatus.WORK_PAUSE) {
-                setStatus(TimerStatus.WORK_RUNNING)
-                binder?.resume()
-            }
-        }
-    }
-
-    fun startBreak() {
-        setStatus(TimerStatus.BREAK_RUNNING)
-        startTimerService(getBreakTime(), getServiceName(true))
-    }
-
-    fun skipBreak() {
-        setStatus(TimerStatus.BREAK_FINISH)
-        killTimer()
-    }
-
     private fun killTimer() {
         Log.d("TimerViewModel", "resetTimer")
         stopService()
@@ -163,7 +126,7 @@ class TimerViewModel : ViewModel() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.d("onServiceDisconnected", "Disconnected")
-            binder = null
+            binder = null // FIXME: handle service crash
         }
     }
 

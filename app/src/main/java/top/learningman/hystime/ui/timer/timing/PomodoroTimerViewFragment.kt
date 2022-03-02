@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import top.learningman.hystime.databinding.FragmentPomodoroTimingBinding
 
-class PomodoroTimerViewFragment : TimerViewFragment() {
+class PomodoroTimerViewFragment : Fragment() {
 
     private lateinit var binding: FragmentPomodoroTimingBinding
 

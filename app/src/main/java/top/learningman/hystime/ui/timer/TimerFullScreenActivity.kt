@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ActivityTimerFullScreenBinding
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 import top.learningman.hystime.utils.toTimeString
 
 class TimerFullScreenActivity : AppCompatActivity() {
@@ -27,10 +28,13 @@ class TimerFullScreenActivity : AppCompatActivity() {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
                     when (type) {
-                        TimerViewModel.TimerType.NORMAL -> {
+                        NORMAL -> {
                             binding.time.text = time.toTimeString()
                         }
-                        TimerViewModel.TimerType.POMODORO -> {
+                        POMODORO -> {
+                            binding.time.text = remain.toTimeString()
+                        }
+                        BREAK -> {
                             binding.time.text = remain.toTimeString()
                         }
                     }
@@ -46,7 +50,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 30) {
@@ -66,8 +70,12 @@ class TimerFullScreenActivity : AppCompatActivity() {
             if (it == Constant.TIMER_FULLSCREEN_ACTION) {
                 val time = intent.getLongExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY, 0)
                 binding.time.text = time.toTimeString()
+
                 type =
                     intent.getSerializableExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY) as TimerViewModel.TimerType
+                if (type == BREAK) { // TODO: also add different string for work
+                    binding.text.text = getString(R.string.relaxing)
+                }
             } else {
                 back()
             }
@@ -82,7 +90,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
             back()
         }
     }
-    
+
     fun back() {
         finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)

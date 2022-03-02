@@ -18,7 +18,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     enum class TimerViewType {
         NORMAL,
         POMODORO,
-        RELAX
+        BREAK
     }
 
     private var cx: Float = 0f
@@ -33,7 +33,8 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var mCurrentPaint: Paint
     private var mCurrentBasePaint: Paint
 
-    private var isBreak = false
+    private val isBreak
+    get() = mType == TimerViewType.BREAK
 
     private fun getColor(): Int {
         return if (isBreak) {
@@ -87,7 +88,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             when (it) {
                 0 -> TimerViewType.NORMAL
                 1 -> TimerViewType.POMODORO
-                2 -> TimerViewType.RELAX
+                2 -> TimerViewType.BREAK
                 else -> TimerViewType.NORMAL
             }
         }
@@ -102,7 +103,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                 mCurrentPaint = mPomodoroCirclePaint
                 mCurrentBasePaint = mPomodoroBaseCirclePaint
             }
-            TimerViewType.RELAX -> {
+            TimerViewType.BREAK -> {
                 mCurrentPaint = mNormalCirclePaint.apply {
                     color = context.getColor(R.color.relax_color)
                 }
