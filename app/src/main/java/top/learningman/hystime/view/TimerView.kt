@@ -13,14 +13,12 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import top.learningman.hystime.R
 import top.learningman.hystime.repo.AppRepo
-import top.learningman.hystime.ui.timer.TimerViewModel
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
-    lateinit var viewModel: TimerViewModel
-
     enum class TimerViewType {
         NORMAL,
-        POMODORO
+        POMODORO,
+        RELAX
     }
 
     private var cx: Float = 0f
@@ -37,46 +35,26 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private var isBreak = false
 
-    fun isBreak() {
-        isBreak = true
-        updatePaintColor()
-    }
-
-    fun isFocus() {
-        isBreak = false
-        updatePaintColor()
-    }
-
     private fun getColor(): Int {
         return if (isBreak) {
             AppRepo.context.getColor(R.color.relax_color)
         } else {
-            AppRepo.context.getColor(R.color.timing_circle)
+            AppRepo.context.getColor(R.color.timing_color)
         }
     }
 
     private fun getBaseColor(): Int {
         return if (isBreak) {
-            AppRepo.context.getColor(R.color.relax_color_base)
+            AppRepo.context.getColor(R.color.relax_base_color)
         } else {
-            AppRepo.context.getColor(R.color.timing_circle_base)
+            AppRepo.context.getColor(R.color.timing_base_color)
         }
-    }
-
-    private fun updatePaintColor() {
-        listOf(mPomodoroCirclePaint, mNormalCirclePaint).forEach {
-            it.color = getColor()
-        }
-        listOf(mPomodoroBaseCirclePaint, mNormalBaseCirclePaint).forEach {
-            it.color = getBaseColor()
-        }
-        postInvalidate()
     }
 
     private var mPomodoroBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
-        color = context.getColor(R.color.timing_circle_base)
+        color = context.getColor(R.color.timing_base_color)
         strokeWidth = 40F
         pathEffect = DashPathEffect(floatArrayOf(5f, 15f), 0f)
     }
@@ -84,7 +62,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var mPomodoroCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
-        color = context.getColor(R.color.timing_circle)
+        color = context.getColor(R.color.timing_color)
         strokeWidth = 40F
         pathEffect = DashPathEffect(floatArrayOf(5f, 15f), -10f)
     }
@@ -92,14 +70,14 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var mNormalBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
-        color = context.getColor(R.color.timing_circle_base)
+        color = context.getColor(R.color.timing_base_color)
         strokeWidth = 20F
     }
 
     private var mNormalCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
-        color = context.getColor(R.color.timing_circle)
+        color = context.getColor(R.color.timing_color)
         strokeWidth = 20F
     }
 
@@ -109,6 +87,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             when (it) {
                 0 -> TimerViewType.NORMAL
                 1 -> TimerViewType.POMODORO
+                2 -> TimerViewType.RELAX
                 else -> TimerViewType.NORMAL
             }
         }
@@ -122,6 +101,14 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             TimerViewType.POMODORO -> {
                 mCurrentPaint = mPomodoroCirclePaint
                 mCurrentBasePaint = mPomodoroBaseCirclePaint
+            }
+            TimerViewType.RELAX -> {
+                mCurrentPaint = mNormalCirclePaint.apply {
+                    color = context.getColor(R.color.relax_color)
+                }
+                mCurrentBasePaint = mNormalBaseCirclePaint.apply {
+                    color = context.getColor(R.color.relax_base_color)
+                }
             }
         }
 
@@ -167,22 +154,15 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                 invalidate()
             }
             addListener(object : AnimatorListenerAdapter() {
-                private fun reset(update: Boolean = false) {
+                private fun reset() {
                     angle = 0f
-                    if (update) {
-                        if (isBreak) {
-                            isFocus()
-                        } else {
-                            isBreak()
-                        }
-                    }
                     invalidate()
                     animation = null
                 }
 
                 override fun onAnimationEnd(animator: Animator?) {
                     super.onAnimationEnd(animator)
-                    reset(true)
+                    reset()
                 }
 
                 override fun onAnimationCancel(animator: Animator?) {

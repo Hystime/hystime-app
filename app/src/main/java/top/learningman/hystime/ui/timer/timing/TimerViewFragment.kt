@@ -17,7 +17,6 @@ open class TimerViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val timerView = view.findViewById<TimerView>(R.id.timer)
-        timerView.viewModel = viewModel
 
         viewModel.status.observe(viewLifecycleOwner) {
             when (it) {
@@ -39,13 +38,11 @@ open class TimerViewFragment : Fragment() {
                 }
                 BREAK_FINISH -> {
                     timerView.cancel()
-                    timerView.isFocus()
                 }
                 WAIT_START -> {
                     if (timerView.isStarted()) {
                         timerView.cancel()
                     }
-                    timerView.isFocus()
                 }
                 null -> throw Error("TimerViewModel.status is null")
             }

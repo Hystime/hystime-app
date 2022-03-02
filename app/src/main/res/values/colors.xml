@@ -10,10 +10,10 @@
     <color name="secondaryTextColor">#ffffff</color>
     <color name="primaryLightTextColor">#000000</color>
 
-    <color name="timing_circle_base">#ede7f6</color>
-    <color name="timing_circle">#9575cd</color>
+    <color name="timing_base_color">#ede7f6</color>
+    <color name="timing_color">#9575cd</color>
 
-    <color name="relax_color_base">#C8E6C9</color>
+    <color name="relax_base_color">#C8E6C9</color>
     <color name="relax_color">#4CAF50</color>
 
     <color name="warm_grey">#A9A9A9</color>

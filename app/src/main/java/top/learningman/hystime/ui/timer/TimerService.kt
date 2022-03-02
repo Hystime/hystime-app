@@ -97,7 +97,7 @@ class TimerService : Service() {
 
     private var cleanTrigger = false
     private fun sendCleanBroadcast() {
-        if (cleanTrigger) return
+        if (cleanTrigger) return // FIXME: remove this
         cleanTrigger = true
         Log.d("broadcast", "sendCleanBroadcast")
         Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).apply {

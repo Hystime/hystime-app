@@ -70,7 +70,7 @@
             app:icon="@drawable/ic_chevron_right_white_24dp"
             app:iconGravity="end"
             app:iconPadding="0dp"
-            app:iconTint="@color/timing_circle"
+            app:iconTint="@color/timing_color"
             app:layout_constraintBottom_toTopOf="@id/ref"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

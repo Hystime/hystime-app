@@ -4,6 +4,7 @@
         <attr name="type" format="enum">
             <enum name="normal" value="0" />
             <enum name="pomodoro" value="1" />
+            <enum name="relax" value="2" />
         </attr>
     </declare-styleable>
 
