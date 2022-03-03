@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_setting">Setting</string>
@@ -136,6 +136,8 @@
     <string name="user_info">User statistic</string>
     <string name="heatmap">Heatmap</string>
     <string name="no_target_toast">No available target</string>
+    <string name="take_break_hint">Focus finished, just take a break.</string>
+    <string name="zero_time" translatable="false">00:00</string>
 
 
 </resources>

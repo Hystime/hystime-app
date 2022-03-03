@@ -8,7 +8,7 @@
     tools:context=".ui.timer.timing.NormalTimerViewFragment">
 
 
-    <top.learningman.hystime.view.TimerView
+    <top.learningman.hystime.ui.timer.TimerView
         android:id="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="0dp"

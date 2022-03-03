@@ -70,13 +70,6 @@ class Timer constructor(
         isRunning = false
     }
 
-    /**
-     * Resumes the timer if it was paused, else starts the timer.
-     */
-    fun resume() {
-        start()
-    }
-
 
     /**
      * Stops the timer. If the timer is not running, then this call does nothing.

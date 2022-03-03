@@ -25,6 +25,7 @@ class TimerService : Service() {
 
     private var duration: Long = 0
     private var startedAt: Date? = null
+    private var type: TimerViewModel.TimerType = TimerViewModel.TimerType.NORMAL
 
     inner class TimerBinder : Binder() {
         fun pause() {
@@ -37,10 +38,6 @@ class TimerService : Service() {
 
         fun start() {
             timer?.start()
-        }
-
-        fun resume() {
-            timer?.resume()
         }
     }
 
@@ -104,6 +101,7 @@ class TimerService : Service() {
             val dur = (Date().time - startedAt!!.time) / 1000
             putExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, dur)
             putExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA, startedAt)
+            putExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA, this@TimerService.type)
         }.also {
             sendBroadcast(it)
         }
@@ -112,21 +110,27 @@ class TimerService : Service() {
 
     override fun onBind(intent: Intent): IBinder {
         intent.let {
-            duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0) * 1000
+            duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0)
             startedAt = Date()
             val name =
                 it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: StringRepo.getString(
                     R.string.timer
                 )
+            type =
+                it.getSerializableExtra(Constant.TIMER_TYPE_INTENT_KEY) as TimerViewModel.TimerType
+
             createNotificationChannel()
 
             val notificationBuilder = getNotificationBuilder()
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
             timer = Timer({ time ->
-                // FIXME: buggy implement, depends on string resource.
                 val notifyTime =
-                    if (name.startsWith(StringRepo.getString(R.string.tab_pomodoro_timing)) || name.endsWith(StringRepo.getString(R.string.timer_break))) {
+                    if (type in listOf(
+                            TimerViewModel.TimerType.BREAK,
+                            TimerViewModel.TimerType.POMODORO
+                        )
+                    ) {
                         duration - time
                     } else {
                         time
@@ -140,6 +144,7 @@ class TimerService : Service() {
             }, {
                 sendCleanBroadcast()
                 stopForeground(true)
+                stopSelf()
             }, duration)
             timer?.start()
         }

@@ -22,7 +22,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
     val binding by lazy { ActivityTimerFullScreenBinding.inflate(layoutInflater) }
 
     private val timerReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context, intent: Intent?) {
             when (intent?.action) {
                 Constant.TIMER_BROADCAST_TIME_ACTION -> {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
@@ -73,6 +73,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
 
                 type =
                     intent.getSerializableExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY) as TimerViewModel.TimerType
+
                 if (type == BREAK) { // TODO: also add different string for work
                     binding.text.text = getString(R.string.relaxing)
                 }

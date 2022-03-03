@@ -1,11 +1,13 @@
 package top.learningman.hystime.ui.timer
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +29,13 @@ import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.TimePieceRepo
+import top.learningman.hystime.ui.dashboard.ui.DashboardFragment.Companion.toTime
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
+import top.learningman.hystime.ui.timer.timing.CountdownFragment
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimerViewFragment
+import top.learningman.hystime.utils.toTimeString
 import type.TimePieceType
 import java.util.*
 import kotlin.math.abs
@@ -44,47 +50,20 @@ class TimerFragment : Fragment() {
     private val timerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                Constant.TIMER_BROADCAST_TIME_ACTION -> {
-                    val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
-                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
-                    timerViewModel.setTime(time)
-                    timerViewModel.setRemainTime(remain)
-                }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
-                    var needSubmit = true
-                    when (timerViewModel.status.value) {
-                        WORK_RUNNING -> {
-                            timerViewModel.setStatus(WORK_FINISH)
-                            timerViewModel.resetTimer()
-                        }
-                        WORK_PAUSE -> {
-                            timerViewModel.setStatus(WAIT_START)
-                        }
-                        BREAK_RUNNING -> {
-                            needSubmit = false
-                            Log.d("TimerFragment", "Break should not be recorded.")
-                            timerViewModel.setStatus(WAIT_START)
-                        }
-                        BREAK_FINISH -> {
-                            needSubmit = false
-                        }
-                        else -> {
-                            Log.d(
-                                "Clean Broadcast",
-                                "No need to set with status ${timerViewModel.status.value!!.name}"
-                            )
-                        }
-                    }
-                    timerViewModel.unbind()
-
-                    if (!needSubmit) {
-                        return
-                    }
-
                     val duration =
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
                     val startedAt =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA)!! as Date
+                    val type =
+                        intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType
+
+                    if (type == BREAK) {
+                        Log.d("TimerFragment", "BREAK CLEAN will not be recorded")
+                        return
+                    }
+
+                    // ignore too short time piece
                     if (duration < 60) {
                         Toast.makeText(
                             context,
@@ -93,9 +72,10 @@ class TimerFragment : Fragment() {
                         ).show()
                         return
                     }
-                    if (timerViewModel.type.value == TimerViewModel.TimerType.POMODORO) {
+
+                    if (type == POMODORO) {
                         if (duration < SharedPrefRepo.getPomodoroFocusLength() * 60 - 10) {
-                            Log.d("TimerFragment", "Failed pomodoro should not be recorded.")
+                            Log.d("TimerFragment", "Broken pomodoro should not be recorded.")
                             Toast.makeText(
                                 context,
                                 getString(R.string.too_short_pomodoro_toast),
@@ -104,13 +84,14 @@ class TimerFragment : Fragment() {
                             return
                         }
                     }
+
                     // TODO： create a queue to handle timepieces
                     lifecycleScope.launch(Dispatchers.IO) {
                         TimePieceRepo.addTimePiece(
-                            mainViewModel.currentTarget.value!!.id,
+                            mainViewModel.currentTarget.value!!.id, // FIXME: make target transaction safe
                             startedAt,
                             duration.toInt(),
-                            if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
+                            if (type == NORMAL) {
                                 TimePieceType.NORMAL
                             } else {
                                 TimePieceType.POMODORO
@@ -176,8 +157,8 @@ class TimerFragment : Fragment() {
                 super.onPageSelected(position)
                 timerViewModel.setType(
                     when (position) {
-                        0 -> TimerViewModel.TimerType.NORMAL
-                        1 -> TimerViewModel.TimerType.POMODORO
+                        0 -> NORMAL
+                        1 -> POMODORO
                         else -> throw Error("Unexpected position")
                     }
                 )
@@ -189,6 +170,21 @@ class TimerFragment : Fragment() {
             TabLayoutMediator(it, viewPager) { tab, position ->
                 tab.text = getFragmentName(position)
             }.attach()
+        }
+
+        // update time at wait start
+        timerViewModel.type.observe(viewLifecycleOwner) {
+            when (it) {
+                NORMAL -> {
+                    binding.time.text = getString(R.string.zero_time)
+                }
+                POMODORO -> {
+                    binding.time.text =
+                        (SharedPrefRepo.getPomodoroFocusLength() * 60 * 1000).toLong()
+                            .toTimeString()
+                }
+                else -> {}
+            }
         }
 
         binding.target.setOnClickListener {
@@ -212,6 +208,10 @@ class TimerFragment : Fragment() {
                         mainViewModel.setCurrentTarget(targets[which])
                     }.show()
             }
+        }
+
+        binding.start.setOnClickListener {
+            timerViewModel.setStatus(WORK_RUNNING)
         }
 
 //        binding.container.setOnClickListener { _ ->
@@ -242,7 +242,6 @@ class TimerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
-            addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
             addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
         })
 
@@ -250,6 +249,22 @@ class TimerFragment : Fragment() {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
+        fun switchFragment(fragment: Fragment) {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commitNow()
+        }
+
+        timerViewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                WORK_RUNNING, BREAK_RUNNING -> switchFragment(CountdownFragment())
+                WORK_FINISH -> TODO()
+                BREAK_FINISH -> TODO()
+                else -> {}
+            }
+        }
+
+        // switch env
         timerViewModel.status.observe(viewLifecycleOwner) {
             when (it) {
                 WORK_RUNNING -> enterEnv()
@@ -288,9 +303,25 @@ class TimerFragment : Fragment() {
 
     private fun enterEnv() {
         (requireActivity() as MainActivity).hideNav()
+        binding.tabLayout.apply {
+            if (isShown) {
+                visibility = View.INVISIBLE
+            }
+        }
+        binding.timerHost.visibility = View.GONE
+        binding.fragmentContainer.visibility = View.VISIBLE
+
+
     }
 
     private fun leaveEnv() {
         (requireActivity() as MainActivity).showNav()
+        binding.tabLayout.apply {
+            if (!isShown) {
+                visibility = View.VISIBLE
+            }
+        }
+        binding.timerHost.visibility = View.VISIBLE
+        binding.fragmentContainer.visibility = View.GONE
     }
 }
