@@ -139,7 +139,7 @@
     <string name="take_break_hint">Focus finished, just take a break.</string>
     <string name="zero_time" translatable="false">00:00</string>
     <string name="work_finish_hint">Just finish a time piece!</string>
-    <string name="break_finish_hint">The break is over</string>
+    <string name="break_finish_hint">Ready to start focusing</string>
 
 
 </resources>

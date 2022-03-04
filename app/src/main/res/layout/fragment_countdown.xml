@@ -52,11 +52,11 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/work_running"
+        android:visibility="invisible"
         android:layout_width="176dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/timer_horizontal_margin_half"
         android:orientation="vertical"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timer">
@@ -81,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/timer_horizontal_margin_half"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timer">
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="12dp"
-            android:text="@string/start"
+            android:text="@string/work_continue"
             android:textAllCaps="false"
             android:textSize="16sp"
             app:cornerRadius="20dp"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="12dp"
-            android:text="@string/pause"
+            android:text="@string/exit"
             android:textAllCaps="false"
             android:textColor="#AB47BC"
             android:textSize="16sp"
@@ -119,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/timer_horizontal_margin_half"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timer">

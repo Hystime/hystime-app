@@ -23,7 +23,6 @@ import top.learningman.hystime.utils.toTimeString
 
 class CountdownFragment : Fragment() {
     lateinit var binding: FragmentCountdownBinding
-    lateinit var type: TimerViewModel.TimerType
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val timerViewModel: TimerViewModel by activityViewModels()
@@ -39,17 +38,16 @@ class CountdownFragment : Fragment() {
         // update visibility and configure buttons
         when (timerViewModel.status.value) {
             TimerViewModel.TimerStatus.WORK_RUNNING -> {
+                binding.workRunning.visibility = View.VISIBLE
                 binding.target.visibility = View.VISIBLE
                 binding.target.text = mainViewModel.currentTarget.value!!.name
-                binding.workRunning.visibility = View.VISIBLE
-
 
                 // work running buttons
                 binding.resume.setOnClickListener {
                     binding.timer.resume()
                     binder!!.start()
 
-                    binding.workPause.visibility = View.GONE
+                    binding.workPause.visibility = View.INVISIBLE
                     binding.workRunning.visibility = View.VISIBLE
                 }
 
@@ -57,13 +55,12 @@ class CountdownFragment : Fragment() {
                     binding.timer.pause()
                     binder!!.pause()
 
-                    binding.workRunning.visibility = View.GONE
+                    binding.workRunning.visibility = View.INVISIBLE
                     binding.workPause.visibility = View.VISIBLE
                 }
 
                 binding.exit.setOnClickListener {
-                    stopTimerService()
-                    timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START) // destroy self
+                    stopTimerService() // redirect to WAIT_START internal
                 }
             }
             TimerViewModel.TimerStatus.BREAK_RUNNING -> {
@@ -75,8 +72,7 @@ class CountdownFragment : Fragment() {
                 }
 
                 binding.exit2.setOnClickListener {
-                    stopTimerService()
-                    timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START) // destroy self
+                    stopTimerService() // redirect to WAIT_START internal
                 }
             }
             else -> {}
@@ -95,6 +91,8 @@ class CountdownFragment : Fragment() {
         }
 
         startTimerService(timerViewModel.getTime(), getServiceName())
+        binding.timer.setType(timerViewModel.type.value!!)
+        binding.timer.start(timerViewModel.getTime())
 
         requireActivity().registerReceiver(receiver, IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
@@ -111,15 +109,15 @@ class CountdownFragment : Fragment() {
                 Constant.TIMER_BROADCAST_TIME_ACTION -> {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
-                    val timeStr = when (type) {
+                    val timeStr = when (timerViewModel.type.value) {
                         BREAK, POMODORO -> remain.toTimeString()
                         NORMAL -> time.toTimeString()
+                        else -> "ERR"
                     }
                     binding.time.text = timeStr
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
-                    stopTimerService()
-                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
+                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, 0)
 
                     if (remain > 0) {
                         timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START)
@@ -156,13 +154,15 @@ class CountdownFragment : Fragment() {
         }
     }
 
+    private var isConnected: Boolean = false
     private fun startTimerService(duration: Long, name: String? = null) {
         val intent = Intent(AppRepo.context, TimerService::class.java)
-        intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration)
+        intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration * 1000)
         intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
+        intent.putExtra(Constant.TIMER_TYPE_INTENT_KEY, timerViewModel.type.value)
 
         Log.d("startService", "bindService")
-        AppRepo.context.bindService(
+        isConnected = AppRepo.context.bindService(
             intent,
             connection,
             Context.BIND_AUTO_CREATE
@@ -176,8 +176,11 @@ class CountdownFragment : Fragment() {
         binder = null
     }
 
-    fun unbind() {
-        AppRepo.context.unbindService(connection)
+    private fun unbind() {
+        if (isConnected) {
+            AppRepo.context.unbindService(connection)
+            isConnected = false
+        }
     }
 
     private fun getServiceName() = when (timerViewModel.type.value) {

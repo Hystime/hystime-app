@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 import top.learningman.hystime.Constant
 import top.learningman.hystime.MainActivity
@@ -26,6 +28,7 @@ import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.repo.SharedPrefRepo
+import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
@@ -42,6 +45,8 @@ class TimerFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val timerViewModel: TimerViewModel by activityViewModels()
+
+    private lateinit var parentPager: ViewPager2
 
     private var _binding: FragmentTimerBinding? = null
 
@@ -171,6 +176,30 @@ class TimerFragment : Fragment() {
             }.attach()
         }
 
+        binding.target.setOnClickListener {
+            val targets = mainViewModel.targets.value!!.map {
+                it.name
+            }.toTypedArray()
+            if (targets.isEmpty()) {
+                mainViewModel.showSnackBarMessage(getString(R.string.no_target_toast))
+                return@setOnClickListener
+            } else {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.select_target_title))
+                    .setItems(targets) { _, which ->
+                        mainViewModel.setCurrentTarget(targets[which])
+                    }.show()
+            }
+        }
+
+        binding.start.setOnClickListener {
+            if (mainViewModel.currentTarget.value == null) {
+                mainViewModel.showSnackBarMessage(StringRepo.getString(R.string.no_target_hint))
+            } else {
+                timerViewModel.setStatus(WORK_RUNNING)
+            }
+        }
+
         // update time at wait start
         timerViewModel.type.observe(viewLifecycleOwner) {
             when (it) {
@@ -186,49 +215,13 @@ class TimerFragment : Fragment() {
             }
         }
 
-        binding.target.setOnClickListener {
-            if (timerViewModel.status.value != WAIT_START) {
-                return@setOnClickListener
-            }
-            val targets = mainViewModel.targets.value!!.map {
-                it.name
-            }.toTypedArray()
-            if (targets.isEmpty()) {
-                Toast.makeText(
-                    context,
-                    getString(R.string.no_target_toast),
-                    Toast.LENGTH_LONG
-                ).show()
-                return@setOnClickListener
-            } else {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.select_target_title))
-                    .setItems(targets) { _, which ->
-                        mainViewModel.setCurrentTarget(targets[which])
-                    }.show()
-            }
-        }
-
-        binding.start.setOnClickListener {
-            timerViewModel.setStatus(WORK_RUNNING)
-        }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
-            addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
-        })
-
         mainViewModel.currentTarget.observe(viewLifecycleOwner) {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
         fun switchFragment(fragment: Fragment) {
             childFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
                 .replace(R.id.fragmentContainer, fragment)
                 .commitNow()
         }
@@ -249,6 +242,18 @@ class TimerFragment : Fragment() {
                 else -> {}
             }
         }
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
+            addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
+        })
+
+        parentPager = (requireActivity() as MainActivity).getPager()
     }
 
     override fun onDestroyView() {
@@ -285,10 +290,9 @@ class TimerFragment : Fragment() {
                 visibility = View.INVISIBLE
             }
         }
-        binding.timerHost.visibility = View.GONE
+        binding.timerHost.visibility = View.INVISIBLE
         binding.fragmentContainer.visibility = View.VISIBLE
-
-
+        parentPager.isUserInputEnabled = false
     }
 
     private fun leaveEnv() {
@@ -299,6 +303,7 @@ class TimerFragment : Fragment() {
             }
         }
         binding.timerHost.visibility = View.VISIBLE
-        binding.fragmentContainer.visibility = View.GONE
+        binding.fragmentContainer.visibility = View.INVISIBLE
+        parentPager.isUserInputEnabled = true
     }
 }

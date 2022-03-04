@@ -15,18 +15,13 @@ import top.learningman.hystime.R
 import top.learningman.hystime.repo.AppRepo
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
-    enum class TimerViewType {
-        NORMAL,
-        POMODORO,
-        BREAK
-    }
 
     private var cx: Float = 0f
     private var cy: Float = 0f
     private var radius: Float = 0f
 
-    private var mType: TimerViewType
-    fun setType(type: TimerViewType) {
+    private var mType: TimerViewModel.TimerType
+    fun setType(type: TimerViewModel.TimerType) {
         mType = type
         typeInvalidate()
     }
@@ -38,36 +33,17 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private lateinit var mCurrentPaint: Paint
     private lateinit var mCurrentBasePaint: Paint
 
-//    private val isBreak
-//    get() = mType == TimerViewType.BREAK
-//
-//    private fun getColor(): Int {
-//        return if (isBreak) {
-//            AppRepo.context.getColor(R.color.relax_color)
-//        } else {
-//            AppRepo.context.getColor(R.color.timing_color)
-//        }
-//    }
-//
-//    private fun getBaseColor(): Int {
-//        return if (isBreak) {
-//            AppRepo.context.getColor(R.color.relax_base_color)
-//        } else {
-//            AppRepo.context.getColor(R.color.timing_base_color)
-//        }
-//    }
-
     private fun typeInvalidate() {
         when (mType) {
-            TimerViewType.NORMAL -> {
+            TimerViewModel.TimerType.NORMAL -> {
                 mCurrentPaint = mNormalCirclePaint
                 mCurrentBasePaint = mNormalBaseCirclePaint
             }
-            TimerViewType.POMODORO -> {
+            TimerViewModel.TimerType.POMODORO -> {
                 mCurrentPaint = mPomodoroCirclePaint
                 mCurrentBasePaint = mPomodoroBaseCirclePaint
             }
-            TimerViewType.BREAK -> {
+            TimerViewModel.TimerType.BREAK -> {
                 mCurrentPaint = mNormalCirclePaint.apply {
                     color = context.getColor(R.color.relax_color)
                 }
@@ -114,10 +90,10 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView)
         mType = typedArray.getInt(R.styleable.TimerView_type, 0).let {
             when (it) {
-                0 -> TimerViewType.NORMAL
-                1 -> TimerViewType.POMODORO
-                2 -> TimerViewType.BREAK
-                else -> TimerViewType.NORMAL
+                0 -> TimerViewModel.TimerType.NORMAL
+                1 -> TimerViewModel.TimerType.POMODORO
+                2 -> TimerViewModel.TimerType.BREAK
+                else -> TimerViewModel.TimerType.NORMAL
             }
         }
         typedArray.recycle()

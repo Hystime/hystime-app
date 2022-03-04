@@ -107,15 +107,15 @@ class TimerService : Service() {
 
 
     override fun onBind(intent: Intent): IBinder {
-        intent.let {
-            duration = it.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0)
+        intent.let { iet ->
+            duration = iet.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0)
             startedAt = Date()
             val name =
-                it.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: StringRepo.getString(
+                iet.getStringExtra(Constant.TIMER_NAME_INTENT_KEY) ?: StringRepo.getString(
                     R.string.timer
                 )
             type =
-                it.getSerializableExtra(Constant.TIMER_TYPE_INTENT_KEY) as TimerViewModel.TimerType
+                iet.getSerializableExtra(Constant.TIMER_TYPE_INTENT_KEY) as TimerViewModel.TimerType
 
             createNotificationChannel()
 
@@ -142,7 +142,6 @@ class TimerService : Service() {
             }, {
                 sendCleanBroadcast(it)
                 stopForeground(true)
-                stopSelf()
             }, duration)
             timer?.start()
         }

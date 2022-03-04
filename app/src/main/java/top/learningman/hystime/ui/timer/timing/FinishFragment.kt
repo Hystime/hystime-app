@@ -25,14 +25,34 @@ class FinishFragment : Fragment() {
         binding = FragmentFinishBinding.inflate(inflater, container, false)
 
         when (timerViewModel.status.value) {
-            WORK_RUNNING -> {
+            WORK_FINISH -> {
                 listOf(binding.workFinish, binding.workFinishHint).forEach {
                     it.visibility = View.VISIBLE
                 }
+
+                binding.start.setOnClickListener {
+                    timerViewModel.setStatus(BREAK_RUNNING)
+                }
+
+                binding.skip.setOnClickListener {
+                    timerViewModel.setStatus(BREAK_FINISH)
+                }
+
+                binding.exit.setOnClickListener {
+                    timerViewModel.setStatus(WAIT_START)
+                }
             }
-            BREAK_RUNNING -> {
+            BREAK_FINISH -> {
                 listOf(binding.breakFinish, binding.breakFinishHint).forEach {
                     it.visibility = View.VISIBLE
+                }
+
+                binding.start2.setOnClickListener {
+                    timerViewModel.setStatus(WORK_RUNNING)
+                }
+
+                binding.exit2.setOnClickListener {
+                    timerViewModel.setStatus(WAIT_START)
                 }
             }
             else -> {

@@ -42,7 +42,6 @@ class NestedScrollableHost : ConstraintLayout {
                 parentPagerCache = v as? ViewPager2
             }
             return parentPagerCache
-
         }
 
     private val childViewPager: ViewPager2?
@@ -55,24 +54,6 @@ class NestedScrollableHost : ConstraintLayout {
 
     init {
         touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-    }
-
-    fun allowScroll() {
-        parentViewPager?.let {
-            it.isUserInputEnabled = true
-        }
-        childViewPager?.let {
-            it.isUserInputEnabled = true
-        }
-    }
-
-    fun forbidScroll() {
-        parentViewPager?.let {
-            it.isUserInputEnabled = false
-        }
-        childViewPager?.let {
-            it.isUserInputEnabled = false
-        }
     }
 
     private fun canChildScroll(orientation: Int, delta: Float): Boolean {
