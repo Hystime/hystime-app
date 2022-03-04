@@ -124,14 +124,11 @@ class TimerService : Service() {
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
             timer = Timer({ time ->
                 val notifyTime =
-                    if (type in listOf(
-                            TimerViewModel.TimerType.BREAK,
-                            TimerViewModel.TimerType.POMODORO
-                        )
+                    if (type == TimerViewModel.TimerType.NORMAL
                     ) {
-                        duration - time
-                    } else {
                         time
+                    } else {
+                        duration - time
                     }
                 val notification = notificationBuilder(name, notifyTime)
                 NotificationManagerCompat.from(applicationContext).notify(

@@ -20,7 +20,7 @@ class Timer constructor(
     private val duration: Long = -1,
 ) {
 
-    private var interval = 1000L // 1 second
+    private var interval = 100L // 1 second
 
     /**
      * @return true if the timer is currently running, and false otherwise.
@@ -44,10 +44,10 @@ class Timer constructor(
     fun start() {
         if (isRunning) return
         isRunning = true
-        future = execService.scheduleWithFixedDelay({
+        future = execService.scheduleAtFixedRate({
             try {
                 elapsedTime += interval
-                Log.d("Timer", "onTick $elapsedTime")
+                // Log.d("Timer", "onTick $elapsedTime")
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {
                     if (elapsedTime >= duration) {

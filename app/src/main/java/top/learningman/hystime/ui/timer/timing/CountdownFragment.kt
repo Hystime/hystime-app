@@ -47,7 +47,7 @@ class CountdownFragment : Fragment() {
                     binding.timer.resume()
                     binder!!.start()
 
-                    binding.workPause.visibility = View.INVISIBLE
+                    binding.workPause.visibility = View.GONE
                     binding.workRunning.visibility = View.VISIBLE
                 }
 
@@ -92,6 +92,10 @@ class CountdownFragment : Fragment() {
 
         startTimerService(timerViewModel.getTime(), getServiceName())
         binding.timer.setType(timerViewModel.type.value!!)
+
+        if (timerViewModel.type.value == POMODORO_BREAK) {
+            timerViewModel.updateBreakCount()
+        }
         binding.timer.start(timerViewModel.getTime())
 
         requireActivity().registerReceiver(receiver, IntentFilter().apply {
@@ -110,9 +114,8 @@ class CountdownFragment : Fragment() {
                     val time = intent.getLongExtra(Constant.TIMER_BROADCAST_PAST_TIME_EXTRA, 0)
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
                     val timeStr = when (timerViewModel.type.value) {
-                        BREAK, POMODORO -> remain.toTimeString()
                         NORMAL -> time.toTimeString()
-                        else -> "ERR"
+                        else -> remain.toTimeString()
                     }
                     binding.time.text = timeStr
                 }
@@ -126,7 +129,7 @@ class CountdownFragment : Fragment() {
                             NORMAL, POMODORO -> {
                                 timerViewModel.setStatus(TimerViewModel.TimerStatus.WORK_FINISH)
                             }
-                            BREAK -> {
+                            NORMAL_BREAK, POMODORO_BREAK -> {
                                 timerViewModel.setStatus(TimerViewModel.TimerStatus.BREAK_FINISH)
                             }
                         }
@@ -190,7 +193,7 @@ class CountdownFragment : Fragment() {
         POMODORO -> {
             StringRepo.getString(R.string.tab_pomodoro_timing)
         }
-        BREAK -> {
+        NORMAL_BREAK, POMODORO_BREAK -> {
             StringRepo.getString(R.string.timer_break)
         }
         else -> throw Error("Unexpected type")

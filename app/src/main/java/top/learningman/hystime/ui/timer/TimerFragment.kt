@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +19,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 import top.learningman.hystime.Constant
 import top.learningman.hystime.MainActivity
@@ -62,7 +60,7 @@ class TimerFragment : Fragment() {
                     val type =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType
 
-                    if (type == BREAK) {
+                    if (type.isBreak()) {
                         Log.d("TimerFragment", "BREAK CLEAN will not be recorded")
                         return
                     }
@@ -221,9 +219,8 @@ class TimerFragment : Fragment() {
 
         fun switchFragment(fragment: Fragment) {
             childFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
                 .replace(R.id.fragmentContainer, fragment)
-                .commitNow()
+                .commit()
         }
 
         timerViewModel.status.observe(viewLifecycleOwner) {
@@ -239,6 +236,24 @@ class TimerFragment : Fragment() {
             when (it) {
                 WORK_RUNNING -> enterEnv()
                 WAIT_START -> leaveEnv()
+                else -> {}
+            }
+        }
+
+        // sync timer type
+        timerViewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                BREAK_RUNNING -> {
+                    when (timerViewModel.type.value) {
+                        NORMAL -> {
+                            timerViewModel.setType(NORMAL_BREAK)
+                        }
+                        POMODORO -> {
+                            timerViewModel.setType(POMODORO_BREAK)
+                        }
+                        else -> {}
+                    }
+                }
                 else -> {}
             }
         }

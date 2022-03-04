@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import top.learningman.hystime.R
-import top.learningman.hystime.repo.AppRepo
 
 class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -43,7 +42,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                 mCurrentPaint = mPomodoroCirclePaint
                 mCurrentBasePaint = mPomodoroBaseCirclePaint
             }
-            TimerViewModel.TimerType.BREAK -> {
+            TimerViewModel.TimerType.NORMAL_BREAK, TimerViewModel.TimerType.POMODORO_BREAK -> {
                 mCurrentPaint = mNormalCirclePaint.apply {
                     color = context.getColor(R.color.relax_color)
                 }
@@ -53,7 +52,7 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             }
         }
 
-        postInvalidate()
+        invalidate()
     }
 
     private var mPomodoroBaseCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -92,7 +91,8 @@ class TimerView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             when (it) {
                 0 -> TimerViewModel.TimerType.NORMAL
                 1 -> TimerViewModel.TimerType.POMODORO
-                2 -> TimerViewModel.TimerType.BREAK
+                2 -> TimerViewModel.TimerType.NORMAL_BREAK
+                3 -> TimerViewModel.TimerType.POMODORO_BREAK
                 else -> TimerViewModel.TimerType.NORMAL
             }
         }

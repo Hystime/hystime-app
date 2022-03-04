@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import top.learningman.hystime.repo.SharedPrefRepo
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 
 class TimerViewModel : ViewModel() {
     enum class TimerStatus {
@@ -19,7 +18,12 @@ class TimerViewModel : ViewModel() {
     enum class TimerType {
         NORMAL,
         POMODORO,
-        BREAK
+        NORMAL_BREAK,
+        POMODORO_BREAK;
+
+        fun isBreak(): Boolean {
+            return this == NORMAL_BREAK || this == POMODORO_BREAK
+        }
     }
 
     private val _status = MutableLiveData(TimerStatus.WAIT_START)
@@ -36,10 +40,17 @@ class TimerViewModel : ViewModel() {
         _status.postValue(status)
     }
 
-    fun isBreak() = status.value == TimerStatus.BREAK_RUNNING
+    private var breakCount = 0 // TODO: persistent store
 
-    var breakCount = 0 // TODO: persistent store
+    private fun isLongBreak() = breakCount > 3
 
+    fun updateBreakCount() {
+        if (breakCount < 4) {
+            breakCount++
+        } else {
+            breakCount = 0
+        }
+    }
 
     fun getTime() =
         when (status.value) {
@@ -58,11 +69,11 @@ class TimerViewModel : ViewModel() {
 
     private fun getBreakTime(): Long {
         return when (type.value) {
-            NORMAL -> SharedPrefRepo.getNormalBreakLength()
-            POMODORO -> if (breakCount <= 3) {
-                SharedPrefRepo.getPomodoroShortBreakLength()
-            } else {
+            NORMAL_BREAK -> SharedPrefRepo.getNormalBreakLength()
+            POMODORO_BREAK -> if (isLongBreak()) {
                 SharedPrefRepo.getPomodoroLongBreakLength()
+            } else {
+                SharedPrefRepo.getPomodoroShortBreakLength()
             }
             else -> throw Error("Unexpected type")
         } * 60L

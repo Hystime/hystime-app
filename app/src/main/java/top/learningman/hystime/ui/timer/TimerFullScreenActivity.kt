@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import top.learningman.hystime.Constant
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.ActivityTimerFullScreenBinding
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
 import top.learningman.hystime.utils.toTimeString
 
 class TimerFullScreenActivity : AppCompatActivity() {
@@ -31,10 +31,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
                         NORMAL -> {
                             binding.time.text = time.toTimeString()
                         }
-                        POMODORO -> {
-                            binding.time.text = remain.toTimeString()
-                        }
-                        BREAK -> {
+                        else -> {
                             binding.time.text = remain.toTimeString()
                         }
                     }
@@ -74,7 +71,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
                 type =
                     intent.getSerializableExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY) as TimerViewModel.TimerType
 
-                if (type == BREAK) { // TODO: also add different string for work
+                if (type.isBreak()) { // TODO: also add different string for work
                     binding.text.text = getString(R.string.relaxing)
                 }
             } else {
