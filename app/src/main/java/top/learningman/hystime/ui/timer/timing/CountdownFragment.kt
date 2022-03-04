@@ -14,14 +14,12 @@ import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentCountdownBinding
 import top.learningman.hystime.repo.AppRepo
-import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
+import top.learningman.hystime.ui.timer.TimerFullScreenActivity
 import top.learningman.hystime.ui.timer.TimerService
 import top.learningman.hystime.ui.timer.TimerViewModel
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 import top.learningman.hystime.utils.toTimeString
-import java.util.*
-import kotlin.math.abs
 
 class CountdownFragment : Fragment() {
     lateinit var binding: FragmentCountdownBinding
@@ -75,8 +73,25 @@ class CountdownFragment : Fragment() {
                 binding.skip.setOnClickListener {
                     timerViewModel.setStatus(TimerViewModel.TimerStatus.BREAK_FINISH)
                 }
+
+                binding.exit2.setOnClickListener {
+                    stopTimerService()
+                    timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START) // destroy self
+                }
             }
             else -> {}
+        }
+
+        binding.container.setOnClickListener { _ ->
+            Intent(requireContext(), TimerFullScreenActivity::class.java).apply {
+                action = Constant.TIMER_FULLSCREEN_ACTION
+
+                putExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY, binding.time.text)
+                putExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY, timerViewModel.type.value)
+            }.also {
+                startActivity(it)
+                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            }
         }
 
         startTimerService(timerViewModel.getTime(), getServiceName())
@@ -104,29 +119,19 @@ class CountdownFragment : Fragment() {
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
                     stopTimerService()
-                    val duration =
-                        intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
-                    val type =
-                        intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType
+                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_REMAIN_TIME_EXTRA, 0)
 
-                    when (type) {
-                        NORMAL -> {
-                            val targetDuration = SharedPrefRepo.getNormalFocusLength() * 60
-                            if (abs(duration - targetDuration) < 2) {
+                    if (remain > 0) {
+                        timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START)
+                    } else {
+                        when (intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType) {
+                            NORMAL, POMODORO -> {
                                 timerViewModel.setStatus(TimerViewModel.TimerStatus.WORK_FINISH)
-                            } else {
-                                timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START)
+                            }
+                            BREAK -> {
+                                timerViewModel.setStatus(TimerViewModel.TimerStatus.BREAK_FINISH)
                             }
                         }
-                        POMODORO -> {
-                            val targetDuration = SharedPrefRepo.getPomodoroFocusLength() * 60
-                            if (abs(duration - targetDuration) < 2) {
-                                timerViewModel.setStatus(TimerViewModel.TimerStatus.WORK_FINISH)
-                            } else {
-                                timerViewModel.setStatus(TimerViewModel.TimerStatus.WAIT_START)
-                            }
-                        }
-                        BREAK -> timerViewModel.setStatus(TimerViewModel.TimerStatus.BREAK_FINISH)
                     }
 
                 }

@@ -92,14 +92,12 @@ class TimerService : Service() {
         }
     }
 
-    private var cleanTrigger = false
-    private fun sendCleanBroadcast() {
-        if (cleanTrigger) return // FIXME: remove this
-        cleanTrigger = true
+    private fun sendCleanBroadcast(remain: Long) {
         Log.d("broadcast", "sendCleanBroadcast")
         Intent(Constant.TIMER_BROADCAST_CLEAN_ACTION).apply {
             val dur = (Date().time - startedAt!!.time) / 1000
             putExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, dur)
+            putExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, remain / 1000)
             putExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA, startedAt)
             putExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA, this@TimerService.type)
         }.also {
@@ -142,7 +140,7 @@ class TimerService : Service() {
                 )
                 sendTimeBroadcast()
             }, {
-                sendCleanBroadcast()
+                sendCleanBroadcast(it)
                 stopForeground(true)
                 stopSelf()
             }, duration)

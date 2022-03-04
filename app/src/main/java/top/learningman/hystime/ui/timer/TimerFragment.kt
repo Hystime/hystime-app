@@ -1,13 +1,11 @@
 package top.learningman.hystime.ui.timer
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,10 +27,10 @@ import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.TimePieceRepo
-import top.learningman.hystime.ui.dashboard.ui.DashboardFragment.Companion.toTime
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 import top.learningman.hystime.ui.timer.timing.CountdownFragment
+import top.learningman.hystime.ui.timer.timing.FinishFragment
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
 import top.learningman.hystime.ui.timer.timing.PomodoroTimerViewFragment
 import top.learningman.hystime.utils.toTimeString
@@ -53,6 +51,7 @@ class TimerFragment : Fragment() {
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
                     val duration =
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
+                    val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, 0)
                     val startedAt =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA)!! as Date
                     val type =
@@ -74,7 +73,7 @@ class TimerFragment : Fragment() {
                     }
 
                     if (type == POMODORO) {
-                        if (duration < SharedPrefRepo.getPomodoroFocusLength() * 60 - 10) {
+                        if (remain > 0) {
                             Log.d("TimerFragment", "Broken pomodoro should not be recorded.")
                             Toast.makeText(
                                 context,
@@ -214,27 +213,6 @@ class TimerFragment : Fragment() {
             timerViewModel.setStatus(WORK_RUNNING)
         }
 
-//        binding.container.setOnClickListener { _ ->
-//            if (timerViewModel.status.value != WORK_RUNNING) {
-//                return@setOnClickListener
-//            }
-//            Intent(requireContext(), TimerFullScreenActivity::class.java).apply {
-//                action = Constant.TIMER_FULLSCREEN_ACTION
-//                if (timerViewModel.type.value == TimerViewModel.TimerType.NORMAL) {
-//                    putExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY, timerViewModel.time.value)
-//                } else {
-//                    putExtra(
-//                        Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY,
-//                        timerViewModel.remainTime.value
-//                    )
-//                }
-//                putExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY, timerViewModel.type.value)
-//            }.also {
-//                startActivity(it)
-//                requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-//            }
-//        }
-
         return binding.root
     }
 
@@ -258,8 +236,7 @@ class TimerFragment : Fragment() {
         timerViewModel.status.observe(viewLifecycleOwner) {
             when (it) {
                 WORK_RUNNING, BREAK_RUNNING -> switchFragment(CountdownFragment())
-                WORK_FINISH -> TODO()
-                BREAK_FINISH -> TODO()
+                WORK_FINISH, BREAK_FINISH -> switchFragment(FinishFragment())
                 else -> {}
             }
         }

@@ -40,7 +40,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
                     }
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
-                    back()
+                    suicide()
                 }
             }
         }
@@ -68,8 +68,8 @@ class TimerFullScreenActivity : AppCompatActivity() {
 
         intent.action?.let {
             if (it == Constant.TIMER_FULLSCREEN_ACTION) {
-                val time = intent.getLongExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY, 0)
-                binding.time.text = time.toTimeString()
+                val time = intent.getStringExtra(Constant.TIMER_FULLSCREEN_INTENT_TIME_KEY)
+                binding.time.text = time
 
                 type =
                     intent.getSerializableExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY) as TimerViewModel.TimerType
@@ -78,9 +78,9 @@ class TimerFullScreenActivity : AppCompatActivity() {
                     binding.text.text = getString(R.string.relaxing)
                 }
             } else {
-                back()
+                suicide()
             }
-        } ?: back()
+        } ?: suicide()
 
         registerReceiver(timerReceiver, IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
@@ -88,11 +88,11 @@ class TimerFullScreenActivity : AppCompatActivity() {
         })
 
         binding.layout.setOnClickListener {
-            back()
+            suicide()
         }
     }
 
-    fun back() {
+    fun suicide() {
         finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }

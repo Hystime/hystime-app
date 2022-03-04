@@ -15,6 +15,7 @@ object Constant {
     const val TIMER_BROADCAST_REMAIN_TIME_EXTRA = "timer_broadcast_remain_time_extra" // long ms
 
     const val TIMER_BROADCAST_CLEAN_DURATION_EXTRA = "timer_broadcast_clean_duration_extra" // long s
+    const val TIMER_BROADCAST_CLEAN_REMAIN_EXTRA = "timer_broadcast_clean_remain_extra" // long s
     const val TIMER_BROADCAST_CLEAN_START_EXTRA = "timer_broadcast_clean_start_extra" // Date
     const val TIMER_BROADCAST_CLEAN_TYPE_EXTRA = "timer_broadcast_clean_type_extra" // TimerType
 

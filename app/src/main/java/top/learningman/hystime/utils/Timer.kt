@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class Timer constructor(
     private val onTick: ((Long) -> Unit),
-    private val onFinish: (() -> Unit),
+    private val onFinish: ((Long) -> Unit),
     private val duration: Long = -1,
 ) {
 
@@ -51,7 +51,7 @@ class Timer constructor(
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {
                     if (elapsedTime >= duration) {
-                        onFinish.invoke()
+                        onFinish.invoke(duration - elapsedTime)
                         future!!.cancel(true)
                     }
                 }
@@ -76,8 +76,8 @@ class Timer constructor(
      */
     fun cancel() {
         pause()
+        onFinish.invoke(duration - elapsedTime)
         elapsedTime = 0
-        onFinish.invoke()
     }
 
     /**
