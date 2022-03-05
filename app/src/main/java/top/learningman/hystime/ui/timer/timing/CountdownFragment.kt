@@ -14,6 +14,7 @@ import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentCountdownBinding
 import top.learningman.hystime.repo.AppRepo
+import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.timer.TimerFullScreenActivity
 import top.learningman.hystime.ui.timer.TimerService
@@ -96,9 +97,15 @@ class CountdownFragment : Fragment() {
         if (timerViewModel.type.value == POMODORO_BREAK) {
             timerViewModel.updateBreakCount()
         }
+
+        if (timerViewModel.type.value == POMODORO) {
+            binding.time.text =
+                (SharedPrefRepo.getPomodoroFocusLength() * 60 * 1000L).toTimeString()
+        }
+
         binding.timer.start(timerViewModel.getTime())
 
-        requireActivity().registerReceiver(receiver, IntentFilter().apply {
+        requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
             addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
         })
@@ -107,7 +114,7 @@ class CountdownFragment : Fragment() {
     }
 
     // receiver
-    private val receiver = object : BroadcastReceiver() {
+    private val timerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             when (intent?.action) {
                 Constant.TIMER_BROADCAST_TIME_ACTION -> {

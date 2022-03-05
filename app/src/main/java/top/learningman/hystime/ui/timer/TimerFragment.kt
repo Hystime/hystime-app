@@ -29,7 +29,8 @@ import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
 import top.learningman.hystime.ui.timer.timing.CountdownFragment
 import top.learningman.hystime.ui.timer.timing.FinishFragment
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
@@ -91,9 +92,7 @@ class TimerFragment : Fragment() {
                     lifecycleScope.launch(Dispatchers.IO) {
                         TimePieceRepo.addTimePiece(
                             mainViewModel.currentTarget.value!!.id, // FIXME: make target transaction safe
-                            startedAt,
-                            duration.toInt(),
-                            if (type == NORMAL) {
+                            startedAt, duration.toInt(), if (type == NORMAL) {
                                 TimePieceType.NORMAL
                             } else {
                                 TimePieceType.POMODORO
@@ -120,34 +119,31 @@ class TimerFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val mTransformer =
-        ViewPager2.PageTransformer { view, position ->
-            view.apply {
-                val pageWidth = width
-                when {
-                    -1 <= position && position <= 1 -> {
-                        translationX = pageWidth * -position
-                    }
+    private val mTransformer = ViewPager2.PageTransformer { view, position ->
+        view.apply {
+            val pageWidth = width
+            when {
+                -1 <= position && position <= 1 -> {
+                    translationX = pageWidth * -position
                 }
-                alpha = when {
-                    position < -1 -> {
-                        0f
-                    }
-                    position <= 1 -> {
-                        1 - abs(position)
-                    }
-                    else -> {
-                        0f
-                    }
+            }
+            alpha = when {
+                position < -1 -> {
+                    0f
+                }
+                position <= 1 -> {
+                    1 - abs(position)
+                }
+                else -> {
+                    0f
                 }
             }
         }
+    }
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTimerBinding.inflate(inflater, container, false)
 
@@ -217,43 +213,31 @@ class TimerFragment : Fragment() {
             binding.target.text = it?.name ?: getString(R.string.no_target)
         }
 
-        fun switchFragment(fragment: Fragment) {
-            childFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .commit()
+        fun switchFragment(fragment: Fragment, cb: Runnable? = null) {
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).also {
+                if (cb != null) {
+                    it.runOnCommit(cb)
+                }
+            }.commit()
         }
 
         timerViewModel.status.observe(viewLifecycleOwner) {
             when (it) {
-                WORK_RUNNING, BREAK_RUNNING -> switchFragment(CountdownFragment())
-                WORK_FINISH, BREAK_FINISH -> switchFragment(FinishFragment())
-                else -> {}
-            }
-        }
-
-        // switch env
-        timerViewModel.status.observe(viewLifecycleOwner) {
-            when (it) {
-                WORK_RUNNING -> enterEnv()
-                WAIT_START -> leaveEnv()
-                else -> {}
-            }
-        }
-
-        // sync timer type
-        timerViewModel.status.observe(viewLifecycleOwner) {
-            when (it) {
+                WORK_RUNNING -> switchFragment(CountdownFragment()) { enterEnv() }
                 BREAK_RUNNING -> {
-                    when (timerViewModel.type.value) {
+                    when (timerViewModel.type.value) { // sync timer type
                         NORMAL -> {
-                            timerViewModel.setType(NORMAL_BREAK)
+                            timerViewModel.setType(TimerViewModel.TimerType.NORMAL_BREAK)
                         }
                         POMODORO -> {
-                            timerViewModel.setType(POMODORO_BREAK)
+                            timerViewModel.setType(TimerViewModel.TimerType.POMODORO_BREAK)
                         }
                         else -> {}
                     }
+                    switchFragment(CountdownFragment())
                 }
+                WORK_FINISH, BREAK_FINISH -> switchFragment(FinishFragment())
+                WAIT_START -> leaveEnv()
                 else -> {}
             }
         }
