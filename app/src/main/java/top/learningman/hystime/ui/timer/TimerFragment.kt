@@ -5,12 +5,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -303,7 +305,24 @@ class TimerFragment : Fragment() {
         }
     }
 
+    fun lightStatusBar(status: Boolean) {
+        if (status) {
+            requireActivity().window.let {
+                it.statusBarColor = Color.WHITE
+                WindowInsetsControllerCompat(it, it.decorView).isAppearanceLightStatusBars = true
+            }
+        } else {
+            requireActivity().window.let {
+                it.statusBarColor =
+                    requireContext().getColor(R.color.primaryColor)
+                WindowInsetsControllerCompat(it, it.decorView).isAppearanceLightStatusBars = false
+            }
+        }
+    }
+
     private fun enterEnv() {
+        lightStatusBar(true)
+
         (requireActivity() as MainActivity).hideNav()
         binding.tabLayout.apply {
             if (isShown) {
@@ -316,6 +335,8 @@ class TimerFragment : Fragment() {
     }
 
     private fun leaveEnv() {
+        lightStatusBar(false)
+
         (requireActivity() as MainActivity).showNav()
         binding.tabLayout.apply {
             if (!isShown) {

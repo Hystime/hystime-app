@@ -35,6 +35,7 @@ class Timer constructor(
     private fun finishWrapper(value: Long) {
         if (isFinished) return
         isFinished = true
+        Log.i("Timer", "finishWrapper called")
         onFinish.invoke(value)
     }
 
@@ -55,13 +56,13 @@ class Timer constructor(
         isRunning = true
         future = execService.scheduleAtFixedRate({
             try {
-                elapsedTime += interval
+                elapsedTime += interval*10
                 // Log.d("Timer", "onTick $elapsedTime")
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {
                     if (elapsedTime >= duration - 500) { // stop timer if it's almost finished (500ms)
-                        finishWrapper(duration - elapsedTime)
                         future!!.cancel(true)
+                        finishWrapper(duration - elapsedTime)
                     }
                 }
             } catch (e: Throwable) {

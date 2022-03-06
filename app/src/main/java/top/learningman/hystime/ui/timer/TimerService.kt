@@ -65,7 +65,7 @@ class TimerService : Service() {
             )
                 .setContentTitle(name)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_clock_outline_24dp)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
@@ -144,6 +144,12 @@ class TimerService : Service() {
             timer?.start()
         }
         return binder
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d("timer", "onUnbind")
+        stopSelf()
+        return false
     }
 
     override fun onDestroy() {

@@ -60,7 +60,7 @@ class CountdownFragment : Fragment() {
                 }
 
                 binding.exit.setOnClickListener {
-                    stopTimerService() // redirect to WAIT_START internal
+                    killTimerService() // redirect to WAIT_START internal
                 }
             }
             TimerViewModel.TimerStatus.BREAK_RUNNING -> {
@@ -72,7 +72,7 @@ class CountdownFragment : Fragment() {
                 }
 
                 binding.exit2.setOnClickListener {
-                    stopTimerService() // redirect to WAIT_START internal
+                    killTimerService() // redirect to WAIT_START internal
                 }
             }
             else -> {}
@@ -134,11 +134,8 @@ class CountdownFragment : Fragment() {
                     }
                     binding.time.text = timeStr
                 }
-                Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
-                    if (binder != null) {
-                        stopTimerService()
-                    }
-
+                Constant.TIMER_BROADCAST_CLEAN_ACTION -> { // TODO: use timer fragment to handle service
+                    unbindTimerService()
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, 0)
 
                     if (remain > 0) {
@@ -184,29 +181,30 @@ class CountdownFragment : Fragment() {
             putExtra(Constant.TIMER_TYPE_INTENT_KEY, timerViewModel.type.value)
         }
 
-
-        Log.d("startService", "bindService for $name")
         isConnected = AppRepo.context.bindService(
             intent,
             connection,
             Context.BIND_AUTO_CREATE
         )
+
+        Log.d("startService", "bindService for $name, Connect = $isConnected")
+        if (!isConnected) {
+            Log.e("startService", "bindService failed")
+        }
     }
 
-    private fun stopTimerService() {
+    private fun killTimerService() {
         Log.d("stopService", "unbindService")
         binder!!.cancel()
-        killService()
-        binder = null
     }
 
-    private fun killService() {
+    private fun unbindTimerService() {
+        Log.d("unbindService", "unbindService")
         if (isConnected) {
             AppRepo.context.unbindService(connection)
             isConnected = false
         }
-        val result = AppRepo.context.stopService(Intent(AppRepo.context, TimerService::class.java))
-        Log.d("stopService", "stopService $result")
+        binder = null
     }
 
     private fun getServiceName() = when (timerViewModel.type.value) {
