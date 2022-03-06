@@ -1,10 +1,7 @@
 package top.learningman.hystime.ui.timer
 
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +24,7 @@ import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
+import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.repo.TimePieceRepo
@@ -50,10 +48,14 @@ class TimerFragment : Fragment() {
 
     private var _binding: FragmentTimerBinding? = null
 
+    private lateinit var serviceController: TimerServiceController
+
     private val timerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
+                    serviceController.unbindTimerService()
+
                     val duration =
                         intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_DURATION_EXTRA, 0)
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, 0)
@@ -61,6 +63,21 @@ class TimerFragment : Fragment() {
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_START_EXTRA)!! as Date
                     val type =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType
+
+                    if (remain > 500) { // FIXME: break running has two status with remain > 500
+                        timerViewModel.setStatus(WAIT_START)
+                    } else {
+                        when (intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType) {
+                            NORMAL, POMODORO -> {
+                                Log.d("status", "NORMAL or POMODORO")
+                                timerViewModel.setStatus(WORK_FINISH)
+                            }
+                            NORMAL_BREAK, POMODORO_BREAK -> {
+                                Log.d("status", "NORMAL_BREAK or POMODORO_BREAK")
+                                timerViewModel.setStatus(BREAK_FINISH)
+                            }
+                        }
+                    }
 
                     if (type.isBreak()) {
                         Log.d("TimerFragment", "BREAK CLEAN will not be recorded")
@@ -115,6 +132,26 @@ class TimerFragment : Fragment() {
         }
     }
 
+    private val serviceReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("TimerFragmentServiceReceiver", "Receive broadcast")
+            when (intent?.action) {
+                Constant.TIMER_FRAGMENT_PAUSE_ACTION -> {
+                    Log.d("TimerFragment", "Pause action received")
+                    serviceController.pause()
+                }
+                Constant.TIMER_FRAGMENT_RESUME_ACTION -> {
+                    Log.d("TimerFragment", "Resume action received")
+                    serviceController.resume()
+                }
+                Constant.TIMER_FRAGMENT_CANCEL_ACTION -> {
+                    Log.d("TimerFragment", "Stop action received")
+                    serviceController.cancel()
+                }
+            }
+        }
+    }
+
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
@@ -142,6 +179,10 @@ class TimerFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        serviceController = TimerServiceController(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -249,8 +290,10 @@ class TimerFragment : Fragment() {
         timerViewModel.status.observe(viewLifecycleOwner) {
             when (it) {
                 WORK_RUNNING -> {
-                    workTypeSync()
-                    switchFragment(CountdownFragment()) { enterEnv() }
+                    if (!serviceController.isConnected) {
+                        workTypeSync()
+                        switchFragment(CountdownFragment()) { enterEnv() }
+                    }
                 }
                 BREAK_RUNNING -> {
                     breakTypeSync()
@@ -260,6 +303,21 @@ class TimerFragment : Fragment() {
                 WAIT_START -> {
                     leaveEnv()
                     workTypeSync()
+                }
+                else -> {}
+            }
+        }
+
+        timerViewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                WORK_RUNNING, BREAK_RUNNING -> {
+                    if (!serviceController.isConnected) {
+                        serviceController.startTimerService(
+                            timerViewModel.getTime(),
+                            timerViewModel.type.value!!,
+                            timerViewModel.getServiceName()
+                        )
+                    }
                 }
                 else -> {}
             }
@@ -275,12 +333,19 @@ class TimerFragment : Fragment() {
             addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
         })
 
+        requireActivity().registerReceiver(serviceReceiver, IntentFilter().apply {
+            addAction(Constant.TIMER_FRAGMENT_PAUSE_ACTION)
+            addAction(Constant.TIMER_FRAGMENT_RESUME_ACTION)
+            addAction(Constant.TIMER_FRAGMENT_CANCEL_ACTION)
+        })
+
         parentPager = (requireActivity() as MainActivity).getPager()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().unregisterReceiver(timerReceiver)
+        requireActivity().unregisterReceiver(serviceReceiver)
         _binding = null
     }
 
@@ -305,7 +370,7 @@ class TimerFragment : Fragment() {
         }
     }
 
-    fun lightStatusBar(status: Boolean) {
+    private fun lightStatusBar(status: Boolean) {
         if (status) {
             requireActivity().window.let {
                 it.statusBarColor = Color.WHITE

@@ -3,13 +3,16 @@ package top.learningman.hystime.ui.timer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import top.learningman.hystime.R
 import top.learningman.hystime.repo.SharedPrefRepo
+import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 
 class TimerViewModel : ViewModel() {
     enum class TimerStatus {
         WAIT_START, // wait_start
         WORK_RUNNING, // work_running
+        WORK_PAUSE, // work_pause
         WORK_FINISH, // work_finish
         BREAK_RUNNING, // break_running
         BREAK_FINISH, // break_finish
@@ -77,5 +80,18 @@ class TimerViewModel : ViewModel() {
             }
             else -> throw Error("Unexpected type")
         } * 60L
+    }
+
+    fun getServiceName() = when (type.value) {
+        NORMAL -> {
+            StringRepo.getString(R.string.tab_normal_timing)
+        }
+        POMODORO -> {
+            StringRepo.getString(R.string.tab_pomodoro_timing)
+        }
+        NORMAL_BREAK, POMODORO_BREAK -> {
+            StringRepo.getString(R.string.timer_break)
+        }
+        else -> throw Error("Unexpected type")
     }
 }

@@ -41,7 +41,6 @@ class TimerService : Service() {
         }
     }
 
-
     private fun createNotificationChannel() {
         val name = getString(R.string.timer_service_name)
         val descriptionText = getString(R.string.timer_service_notification)
@@ -80,7 +79,6 @@ class TimerService : Service() {
         }
     }
 
-
     private fun sendTimeBroadcast() {
         Intent(Constant.TIMER_BROADCAST_TIME_ACTION).apply {
             timer?.let {
@@ -105,7 +103,6 @@ class TimerService : Service() {
         }
     }
 
-
     override fun onBind(intent: Intent): IBinder {
         Log.d("timer", "onBind")
         intent.let { iet ->
@@ -117,9 +114,7 @@ class TimerService : Service() {
                 )
             type =
                 iet.getSerializableExtra(Constant.TIMER_TYPE_INTENT_KEY) as TimerViewModel.TimerType
-
             createNotificationChannel()
-
             val notificationBuilder = getNotificationBuilder()
 
             startForeground(Constant.FOREGROUND_NOTIFICATION_ID, notificationBuilder(name, 0))
