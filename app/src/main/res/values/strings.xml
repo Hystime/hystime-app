@@ -90,6 +90,7 @@
 
     <string name="break_start">Start break</string>
     <string name="break_skip">Skip break</string>
+    <string name="work_start">Start focus</string>
     <string name="work_continue">Continue focus</string>
 
     <!-- Place Holder -->

@@ -28,6 +28,8 @@ class CountdownFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private val timerViewModel: TimerViewModel by activityViewModels()
 
+    private lateinit var serviceIntent: Intent
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +93,8 @@ class CountdownFragment : Fragment() {
             }
         }
 
+        Log.d("CountdownFragment", "Configured view")
+
         startTimerService(timerViewModel.getTime(), getServiceName())
         binding.timer.setType(timerViewModel.type.value!!)
 
@@ -108,9 +112,16 @@ class CountdownFragment : Fragment() {
         requireActivity().registerReceiver(timerReceiver, IntentFilter().apply {
             addAction(Constant.TIMER_BROADCAST_TIME_ACTION)
             addAction(Constant.TIMER_BROADCAST_CLEAN_ACTION)
+            Log.d("Countdown", "registerReceiver")
         })
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("CountdownFragment", "onDestroyView")
+        requireActivity().unregisterReceiver(timerReceiver)
     }
 
     // receiver
@@ -134,18 +145,18 @@ class CountdownFragment : Fragment() {
                     } else {
                         when (intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType) {
                             NORMAL, POMODORO -> {
+                                Log.d("status", "NORMAL or POMODORO")
                                 timerViewModel.setStatus(TimerViewModel.TimerStatus.WORK_FINISH)
                             }
                             NORMAL_BREAK, POMODORO_BREAK -> {
+                                Log.d("status", "NORMAL_BREAK or POMODORO_BREAK")
                                 timerViewModel.setStatus(TimerViewModel.TimerStatus.BREAK_FINISH)
                             }
                         }
                     }
-
                 }
             }
         }
-
     }
 
 
@@ -171,7 +182,7 @@ class CountdownFragment : Fragment() {
         intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
         intent.putExtra(Constant.TIMER_TYPE_INTENT_KEY, timerViewModel.type.value)
 
-        Log.d("startService", "bindService")
+        Log.d("startService", "bindService for $name")
         isConnected = AppRepo.context.bindService(
             intent,
             connection,
@@ -181,16 +192,17 @@ class CountdownFragment : Fragment() {
 
     private fun stopTimerService() {
         Log.d("stopService", "unbindService")
-        binder?.cancel()
-        unbind()
+        binder!!.cancel()
+        killService()
         binder = null
     }
 
-    private fun unbind() {
+    private fun killService() {
         if (isConnected) {
             AppRepo.context.unbindService(connection)
             isConnected = false
         }
+        AppRepo.context.stopService(serviceIntent)
     }
 
     private fun getServiceName() = when (timerViewModel.type.value) {

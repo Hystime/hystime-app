@@ -29,8 +29,7 @@ import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.repo.TimePieceRepo
 import top.learningman.hystime.ui.timer.TimerViewModel.TimerStatus.*
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.NORMAL
-import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.POMODORO
+import top.learningman.hystime.ui.timer.TimerViewModel.TimerType.*
 import top.learningman.hystime.ui.timer.timing.CountdownFragment
 import top.learningman.hystime.ui.timer.timing.FinishFragment
 import top.learningman.hystime.ui.timer.timing.NormalTimerViewFragment
@@ -227,17 +226,28 @@ class TimerFragment : Fragment() {
                 BREAK_RUNNING -> {
                     when (timerViewModel.type.value) { // sync timer type
                         NORMAL -> {
-                            timerViewModel.setType(TimerViewModel.TimerType.NORMAL_BREAK)
+                            timerViewModel.setType(NORMAL_BREAK)
                         }
                         POMODORO -> {
-                            timerViewModel.setType(TimerViewModel.TimerType.POMODORO_BREAK)
+                            timerViewModel.setType(POMODORO_BREAK)
                         }
                         else -> {}
                     }
                     switchFragment(CountdownFragment())
                 }
                 WORK_FINISH, BREAK_FINISH -> switchFragment(FinishFragment())
-                WAIT_START -> leaveEnv()
+                WAIT_START -> {
+                    leaveEnv()
+                    when (timerViewModel.type.value) { // sync timer type
+                        NORMAL_BREAK -> {
+                            timerViewModel.setType(NORMAL)
+                        }
+                        POMODORO_BREAK -> {
+                            timerViewModel.setType(POMODORO)
+                        }
+                        else -> {}
+                    }
+                }
                 else -> {}
             }
         }
