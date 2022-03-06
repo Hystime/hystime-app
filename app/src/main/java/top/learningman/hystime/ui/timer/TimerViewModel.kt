@@ -63,7 +63,7 @@ class TimerViewModel : ViewModel() {
     private fun getFocusTime() = when (type.value) {
         NORMAL -> SharedPrefRepo.getNormalFocusLength()
         POMODORO -> SharedPrefRepo.getPomodoroFocusLength()
-        else -> throw Error("Unexpected type")
+        else -> throw Error("Unexpected type ${type.value.toString()}")
     } * 60L
 
 

@@ -2,7 +2,6 @@
 package top.learningman.hystime.utils
 
 import android.util.Log
-import top.learningman.hystime.BuildConfig
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -30,6 +29,15 @@ class Timer constructor(
     var isRunning = false
         private set
 
+    @Volatile
+    private var isFinished = false
+
+    private fun finishWrapper(value: Long) {
+        if (isFinished) return
+        isFinished = true
+        onFinish.invoke(value)
+    }
+
     /**
      * @return the elapsed time (in millis) since the start of the timer.
      */
@@ -47,16 +55,12 @@ class Timer constructor(
         isRunning = true
         future = execService.scheduleAtFixedRate({
             try {
-                if (BuildConfig.DEBUG) {
-                    elapsedTime += interval * 10
-                } else {
-                    elapsedTime += interval
-                }
+                elapsedTime += interval
                 // Log.d("Timer", "onTick $elapsedTime")
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {
                     if (elapsedTime >= duration - 500) { // stop timer if it's almost finished (500ms)
-                        onFinish.invoke(duration - elapsedTime)
+                        finishWrapper(duration - elapsedTime)
                         future!!.cancel(true)
                     }
                 }
@@ -75,13 +79,12 @@ class Timer constructor(
         isRunning = false
     }
 
-
     /**
      * Stops the timer. If the timer is not running, then this call does nothing.
      */
     fun cancel() {
         pause()
-        onFinish.invoke(duration - elapsedTime)
+        finishWrapper(duration - elapsedTime)
         elapsedTime = 0
     }
 

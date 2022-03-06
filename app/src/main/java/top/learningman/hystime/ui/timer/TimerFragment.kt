@@ -220,33 +220,44 @@ class TimerFragment : Fragment() {
             }.commit()
         }
 
+        fun workTypeSync() {
+            when (timerViewModel.type.value) { // sync timer type
+                NORMAL_BREAK -> {
+                    timerViewModel.setType(NORMAL)
+                }
+                POMODORO_BREAK -> {
+                    timerViewModel.setType(POMODORO)
+                }
+                else -> {}
+            }
+        }
+
+        fun breakTypeSync() {
+            when (timerViewModel.type.value) { // sync timer type
+                NORMAL -> {
+                    timerViewModel.setType(NORMAL_BREAK)
+                }
+                POMODORO -> {
+                    timerViewModel.setType(POMODORO_BREAK)
+                }
+                else -> {}
+            }
+        }
+
         timerViewModel.status.observe(viewLifecycleOwner) {
             when (it) {
-                WORK_RUNNING -> switchFragment(CountdownFragment()) { enterEnv() }
+                WORK_RUNNING -> {
+                    workTypeSync()
+                    switchFragment(CountdownFragment()) { enterEnv() }
+                }
                 BREAK_RUNNING -> {
-                    when (timerViewModel.type.value) { // sync timer type
-                        NORMAL -> {
-                            timerViewModel.setType(NORMAL_BREAK)
-                        }
-                        POMODORO -> {
-                            timerViewModel.setType(POMODORO_BREAK)
-                        }
-                        else -> {}
-                    }
+                    breakTypeSync()
                     switchFragment(CountdownFragment())
                 }
                 WORK_FINISH, BREAK_FINISH -> switchFragment(FinishFragment())
                 WAIT_START -> {
                     leaveEnv()
-                    when (timerViewModel.type.value) { // sync timer type
-                        NORMAL_BREAK -> {
-                            timerViewModel.setType(NORMAL)
-                        }
-                        POMODORO_BREAK -> {
-                            timerViewModel.setType(POMODORO)
-                        }
-                        else -> {}
-                    }
+                    workTypeSync()
                 }
                 else -> {}
             }

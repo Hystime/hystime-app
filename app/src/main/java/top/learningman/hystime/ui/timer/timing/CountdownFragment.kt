@@ -28,9 +28,6 @@ class CountdownFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private val timerViewModel: TimerViewModel by activityViewModels()
 
-    private lateinit var serviceIntent: Intent
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -138,6 +135,10 @@ class CountdownFragment : Fragment() {
                     binding.time.text = timeStr
                 }
                 Constant.TIMER_BROADCAST_CLEAN_ACTION -> {
+                    if (binder != null) {
+                        stopTimerService()
+                    }
+
                     val remain = intent.getLongExtra(Constant.TIMER_BROADCAST_CLEAN_REMAIN_EXTRA, 0)
 
                     if (remain > 0) {
@@ -177,10 +178,12 @@ class CountdownFragment : Fragment() {
 
     private var isConnected: Boolean = false
     private fun startTimerService(duration: Long, name: String? = null) {
-        val intent = Intent(AppRepo.context, TimerService::class.java)
-        intent.putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration * 1000)
-        intent.putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
-        intent.putExtra(Constant.TIMER_TYPE_INTENT_KEY, timerViewModel.type.value)
+        val intent = Intent(AppRepo.context, TimerService::class.java).apply {
+            putExtra(Constant.TIMER_DURATION_INTENT_KEY, duration * 1000)
+            putExtra(Constant.TIMER_NAME_INTENT_KEY, name)
+            putExtra(Constant.TIMER_TYPE_INTENT_KEY, timerViewModel.type.value)
+        }
+
 
         Log.d("startService", "bindService for $name")
         isConnected = AppRepo.context.bindService(
@@ -202,7 +205,8 @@ class CountdownFragment : Fragment() {
             AppRepo.context.unbindService(connection)
             isConnected = false
         }
-        AppRepo.context.stopService(serviceIntent)
+        val result = AppRepo.context.stopService(Intent(AppRepo.context, TimerService::class.java))
+        Log.d("stopService", "stopService $result")
     }
 
     private fun getServiceName() = when (timerViewModel.type.value) {

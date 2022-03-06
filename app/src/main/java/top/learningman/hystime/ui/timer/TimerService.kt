@@ -107,6 +107,7 @@ class TimerService : Service() {
 
 
     override fun onBind(intent: Intent): IBinder {
+        Log.d("timer", "onBind")
         intent.let { iet ->
             duration = iet.getLongExtra(Constant.TIMER_DURATION_INTENT_KEY, 0)
             startedAt = Date()
@@ -143,5 +144,10 @@ class TimerService : Service() {
             timer?.start()
         }
         return binder
+    }
+
+    override fun onDestroy() {
+        Log.d("timerService", "service killed")
+        super.onDestroy()
     }
 }
