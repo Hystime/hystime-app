@@ -27,7 +27,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
-import java.lang.Math.abs
+import kotlin.math.abs
 
 private const val NUM_PAGES = 3
 
