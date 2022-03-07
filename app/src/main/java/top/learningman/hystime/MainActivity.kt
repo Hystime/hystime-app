@@ -3,6 +3,7 @@ package top.learningman.hystime
 import android.app.AlertDialog
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -26,6 +27,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
+import top.learningman.hystime.utils.Interface
 import kotlin.math.abs
 
 private const val NUM_PAGES = 3
@@ -76,6 +78,13 @@ class MainActivity : AppCompatActivity() {
                 2 -> R.id.navigation_setting
                 else -> throw IllegalArgumentException("Invalid position")
             }
+            Log.d("onPageSelected", "position: $position")
+            when (position) { // FIXME: Setting updateSupportBar not get called
+                0, 2 -> ((viewPager.adapter as MainPagerAdapter)
+                    .getFragment(position) as Interface.SupportBarFragment)
+                    .updateSupportBar()
+            }
+
         }
     }
 
@@ -141,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
         viewPager.setPageTransformer(mTransformer)
-        viewPager.offscreenPageLimit = NUM_PAGES - 1
+        viewPager.offscreenPageLimit = 2
 
         HystimeClient(
             SharedPrefRepo.getEndpoint(),
@@ -197,6 +206,17 @@ class MainActivity : AppCompatActivity() {
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount() = NUM_PAGES
+
+        private val fragmentCache = mutableMapOf<Int, Fragment>()
+
+        private fun cache(position: Int, f: Fragment): Fragment {
+            fragmentCache[position] = f
+            return f
+        }
+
+        fun getFragment(position: Int): Fragment {
+            return fragmentCache[position] ?: cache(position, createFragment(position))
+        }
 
         override fun createFragment(position: Int): Fragment =
             when (position) {

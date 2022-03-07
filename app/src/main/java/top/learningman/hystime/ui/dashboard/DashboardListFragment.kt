@@ -23,7 +23,8 @@ import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
 
 
-class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
+class DashboardListFragment : Fragment(), Interface.RefreshableFragment,
+    Interface.SupportBarFragment {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var _binding: FragmentDashboardListBinding? = null
@@ -42,7 +43,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
 
         val root = binding.root
 
-        toolbar = root.findViewById(R.id.toolbar)
+        toolbar = binding.toolbar
         toolbar.setTitle(R.string.title_dashboard)
         setHasOptionsMenu(true)
 
@@ -70,11 +71,6 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         }
 
         return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
     }
 
     override fun onDestroyView() {
@@ -212,6 +208,13 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .create()
             .show()
+    }
+
+    override fun updateSupportBar() {
+        Log.d("Dashboard", "updateSupportBar")
+        if (this.isAdded) {
+            (requireActivity() as MainActivity).setSupportActionBar(toolbar)
+        }
     }
 }
 

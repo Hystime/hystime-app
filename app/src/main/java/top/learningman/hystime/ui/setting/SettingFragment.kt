@@ -2,6 +2,7 @@ package top.learningman.hystime.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -13,7 +14,8 @@ import top.learningman.hystime.*
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.Status
 
-class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
+class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment,
+    Interface.SupportBarFragment {
     private lateinit var toolbar: Toolbar
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -23,15 +25,10 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         savedInstanceState: Bundle?
     ): View {
         val root = super.onCreateView(inflater, container, savedInstanceState)
-        toolbar = requireNotNull(root).findViewById(R.id.toolbar)
+        toolbar = root.findViewById(R.id.toolbar)
         toolbar.setTitle(R.string.title_setting)
         setHasOptionsMenu(true)
         return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -158,5 +155,12 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     override fun refresh() {
         viewModel.refreshServer(null, null)
         viewModel.showSnackBarMessage("Refreshed Server Status")
+    }
+
+    override fun updateSupportBar() {
+        if (this.isAdded) {
+            Log.d("Setting", "updateSupportBar")
+            (requireActivity() as MainActivity).setSupportActionBar(toolbar)
+        }
     }
 }
