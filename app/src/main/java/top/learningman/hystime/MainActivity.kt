@@ -27,8 +27,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
-import top.learningman.hystime.utils.Interface
-import kotlin.math.abs
+import java.lang.Math.abs
 
 private const val NUM_PAGES = 3
 
@@ -79,52 +78,8 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Invalid position")
             }
             Log.d("onPageSelected", "position: $position")
-            when (position) { // FIXME: Setting updateSupportBar not get called
-                0, 2 -> ((viewPager.adapter as MainPagerAdapter)
-                    .getFragment(position) as Interface.SupportBarFragment)
-                    .updateSupportBar()
-            }
-
         }
     }
-
-    private val mTransformer =
-        ViewPager2.PageTransformer { view, position ->
-            val pageWidth = view.width
-            fun stay(view: View?) {
-                view?.let {
-                    when {
-                        -1 <= position && position <= 1 -> {
-                            view.translationX = pageWidth * -position
-                        }
-                    }
-                }
-            }
-
-            fun fade(view: View?) {
-                view?.let {
-                    it.alpha = when {
-                        position < -1 -> {
-                            0f
-                        }
-                        position <= 1 -> {
-                            1 - abs(position)
-                        }
-                        else -> {
-                            0f
-                        }
-                    }
-                }
-            }
-
-            val tabLayout: View? = view.findViewById(R.id.tabLayout)
-            val appbar: View? = view.findViewById(R.id.appbar)
-
-            stay(appbar)
-            stay(tabLayout)
-            fade(appbar)
-            fade(tabLayout)
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -149,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         val pagerAdapter = MainPagerAdapter(this)
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
-        viewPager.setPageTransformer(mTransformer)
+        // viewPager.setPageTransformer(mTransformer)
         viewPager.offscreenPageLimit = 2
 
         HystimeClient(
@@ -206,17 +161,6 @@ class MainActivity : AppCompatActivity() {
 
     private inner class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount() = NUM_PAGES
-
-        private val fragmentCache = mutableMapOf<Int, Fragment>()
-
-        private fun cache(position: Int, f: Fragment): Fragment {
-            fragmentCache[position] = f
-            return f
-        }
-
-        fun getFragment(position: Int): Fragment {
-            return fragmentCache[position] ?: cache(position, createFragment(position))
-        }
 
         override fun createFragment(position: Int): Fragment =
             when (position) {

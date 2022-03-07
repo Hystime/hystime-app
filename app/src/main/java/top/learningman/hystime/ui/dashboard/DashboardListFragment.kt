@@ -3,7 +3,9 @@ package top.learningman.hystime.ui.dashboard
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -23,8 +25,7 @@ import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
 
 
-class DashboardListFragment : Fragment(), Interface.RefreshableFragment,
-    Interface.SupportBarFragment {
+class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var _binding: FragmentDashboardListBinding? = null
@@ -45,7 +46,24 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment,
 
         toolbar = binding.toolbar
         toolbar.setTitle(R.string.title_dashboard)
-        setHasOptionsMenu(true)
+        toolbar.inflateMenu(R.menu.dashboard_toolbar_menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            return@setOnMenuItemClickListener when (item.itemId) {
+                R.id.refresh -> {
+                    refresh()
+                    true
+                }
+                R.id.add -> {
+                    add()
+                    true
+                }
+                R.id.user_info -> {
+                    userInfo()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
+        }
 
         mRecyclerView = binding.targets
         mRecyclerView.setHasFixedSize(true)
@@ -76,28 +94,6 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment,
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.dashboard_toolbar_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.refresh -> {
-                refresh()
-                true
-            }
-            R.id.add -> {
-                add()
-                true
-            }
-            R.id.user_info -> {
-                userInfo()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     class TargetRecyclerAdapter(
@@ -208,13 +204,6 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment,
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .create()
             .show()
-    }
-
-    override fun updateSupportBar() {
-        Log.d("Dashboard", "updateSupportBar")
-        if (this.isAdded) {
-            (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-        }
     }
 }
 

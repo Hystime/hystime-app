@@ -2,20 +2,23 @@ package top.learningman.hystime.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import top.learningman.hystime.*
+import top.learningman.hystime.BuildConfig
+import top.learningman.hystime.Constant
+import top.learningman.hystime.MainViewModel
+import top.learningman.hystime.R
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.Status
 
-class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment,
-    Interface.SupportBarFragment {
+class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragment {
     private lateinit var toolbar: Toolbar
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -27,22 +30,18 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
         val root = super.onCreateView(inflater, container, savedInstanceState)
         toolbar = root.findViewById(R.id.toolbar)
         toolbar.setTitle(R.string.title_setting)
-        setHasOptionsMenu(true)
-        return root
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.refresh -> {
-                refresh()
-                true
+        toolbar.inflateMenu(R.menu.setting_toolbar_menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            return@setOnMenuItemClickListener when (item.itemId) {
+                R.id.refresh -> {
+                    refresh()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-            else -> super.onOptionsItemSelected(item)
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.setting_toolbar_menu, menu)
+        return root
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -155,12 +154,5 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
     override fun refresh() {
         viewModel.refreshServer(null, null)
         viewModel.showSnackBarMessage("Refreshed Server Status")
-    }
-
-    override fun updateSupportBar() {
-        if (this.isAdded) {
-            Log.d("Setting", "updateSupportBar")
-            (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-        }
     }
 }

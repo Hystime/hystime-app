@@ -4,8 +4,4 @@ class Interface {
     interface RefreshableFragment{
         fun refresh()
     }
-
-    interface SupportBarFragment{
-        fun updateSupportBar()
-    }
 }
