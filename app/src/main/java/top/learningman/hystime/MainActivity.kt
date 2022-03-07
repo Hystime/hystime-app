@@ -1,7 +1,6 @@
 package top.learningman.hystime
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -27,7 +26,6 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
-import kotlin.concurrent.thread
 import kotlin.math.abs
 
 private const val NUM_PAGES = 3
@@ -120,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         // Load App Center

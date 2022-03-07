@@ -5,17 +5,24 @@
         <item name="colorPrimary">@color/primaryLightColor</item>
         <item name="colorSecondary">@color/secondaryLightColor</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/primaryColor</item>
+        <item name="android:statusBarColor">@color/primaryColor</item>
 
         <item name="preferenceTheme">@style/PrefsTheme</item>
     </style>
 
-    <style name="Theme.HystimeActionbar" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.Hystime.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_clock_white_24dp</item>
+
+        <item name="windowSplashScreenBackground">@color/primaryColor</item>
+        <item name="postSplashScreenTheme">@style/Theme.Hystime</item>
+    </style>
+
+    <style name="Theme.Hystime.Actionbar" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primaryLightColor</item>
         <item name="colorSecondary">@color/secondaryLightColor</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/primaryColor</item>
+        <item name="android:statusBarColor">@color/primaryColor</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
         <item name="preferenceTheme">@style/PrefsTheme</item>

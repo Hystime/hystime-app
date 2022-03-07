@@ -74,6 +74,8 @@ dependencies {
     implementation project(path: ':sdk')
 
     implementation 'androidx.core:core-ktx:1.9.0-alpha01'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+
     implementation 'androidx.appcompat:appcompat:1.4.1'
 
     implementation 'com.google.android.material:material:1.5.0'
@@ -85,6 +87,13 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
+
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
@@ -95,12 +104,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
 
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
 
     // About Page
     implementation 'com.github.Zxilly:about-page:5e4d1ac9de'

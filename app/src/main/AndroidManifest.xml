@@ -18,7 +18,7 @@
         <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="false"
-            android:theme="@style/Theme.HystimeActionbar" />
+            android:theme="@style/Theme.Hystime.Actionbar" />
 
         <activity
             android:name=".ui.timer.TimerFullScreenActivity"
@@ -35,7 +35,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/Theme.Hystime.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
