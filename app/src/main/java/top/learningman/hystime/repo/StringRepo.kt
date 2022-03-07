@@ -1,6 +1,5 @@
 package top.learningman.hystime.repo
 
-import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 
 object StringRepo {

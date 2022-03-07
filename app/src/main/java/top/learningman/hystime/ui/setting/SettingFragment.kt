@@ -107,8 +107,8 @@ class SettingFragment : PreferenceFragmentCompat(), Interface.RefreshableFragmen
                         getString(R.string.setting_pref_normal_key) -> R.xml.normal_timer_pref
                         getString(R.string.setting_pref_pomodoro_key) -> R.xml.pomodoro_timer_pref
                         else -> throw IllegalArgumentException("Unknown key: $key")
-                    }.let {
-                        intent.putExtra(Constant.TIMER_SETTING_INTENT_KEY, it)
+                    }.let { pref_key ->
+                        intent.putExtra(Constant.TIMER_SETTING_INTENT_KEY, pref_key)
                     }
                     it.context.startActivity(intent)
                     true

@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
 import top.learningman.hystime.Constant
-import top.learningman.hystime.repo.AppRepo
 
 class TimerServiceController(private val context: Context) {
     var binder: TimerService.TimerBinder? = null

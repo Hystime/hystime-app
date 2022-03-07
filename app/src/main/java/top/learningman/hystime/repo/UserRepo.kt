@@ -7,6 +7,6 @@ object UserRepo {
     private val client by Client()
 
     suspend fun getUser(username: String) = client.getUserInfo(username).map {
-        UserBean.fromUserInfoQuery(it!!)
+        UserBean.fromUserInfoQuery(it)
     }
 }

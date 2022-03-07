@@ -55,10 +55,6 @@ class SettingActivity : AppCompatActivity() {
         }
     }
 
-    override fun finish() {
-        super.finish()
-    }
-
     class SettingsFragment(@XmlRes val type: Int, private val fragmentTitle: String) : PreferenceFragmentCompat() {
         private val dialogFragmentTag = "androidx.preference.PreferenceFragment.DIALOG"
 
@@ -73,7 +69,7 @@ class SettingActivity : AppCompatActivity() {
         ): View {
             val root = super.onCreateView(inflater, container, savedInstanceState)
 
-            val toolbar = requireNotNull(root).findViewById<Toolbar>(R.id.toolbar)
+            val toolbar = root.findViewById<Toolbar>(R.id.toolbar)
             val activity = activity as SettingActivity
             activity.setSupportActionBar(toolbar)
             activity.supportActionBar!!.apply {
