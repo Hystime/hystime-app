@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_home">计时</string>
+    <string name="title_timer">计时</string>
     <string name="title_dashboard">控制台</string>
     <string name="title_setting">设置</string>
     <string name="setting_category_server">服务器</string>

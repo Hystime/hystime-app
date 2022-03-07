@@ -1,6 +1,7 @@
 package top.learningman.hystime
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -25,6 +27,7 @@ import top.learningman.hystime.sdk.HystimeClient
 import top.learningman.hystime.ui.dashboard.DashboardListFragment
 import top.learningman.hystime.ui.setting.SettingFragment
 import top.learningman.hystime.ui.timer.TimerFragment
+import kotlin.concurrent.thread
 import kotlin.math.abs
 
 private const val NUM_PAGES = 3
@@ -53,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                     goItem(0)
                     return true
                 }
-                R.id.navigation_home -> {
+                R.id.navigation_timer -> {
                     goItem(1)
                     return true
                 }
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             super.onPageSelected(position)
             binding.navView.selectedItemId = when (position) {
                 0 -> R.id.navigation_dashboard
-                1 -> R.id.navigation_home
+                1 -> R.id.navigation_timer
                 2 -> R.id.navigation_setting
                 else -> throw IllegalArgumentException("Invalid position")
             }
@@ -139,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = pagerAdapter
         viewPager.registerOnPageChangeCallback(mOnPageChangeCallback)
         viewPager.setPageTransformer(mTransformer)
+        viewPager.offscreenPageLimit = NUM_PAGES - 1
 
         HystimeClient(
             SharedPrefRepo.getEndpoint(),

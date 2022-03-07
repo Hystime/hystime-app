@@ -1,7 +1,11 @@
 package top.learningman.hystime.ui.timer
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +29,6 @@ import top.learningman.hystime.MainActivity
 import top.learningman.hystime.MainViewModel
 import top.learningman.hystime.R
 import top.learningman.hystime.databinding.FragmentTimerBinding
-import top.learningman.hystime.repo.AppRepo
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.repo.TimePieceRepo
@@ -363,25 +367,12 @@ class TimerFragment : Fragment() {
         }
     }
 
-    private fun lightStatusBar(status: Boolean) {
-        if (status) {
-            requireActivity().window.let {
-                it.statusBarColor = Color.WHITE
-                WindowInsetsControllerCompat(it, it.decorView).isAppearanceLightStatusBars = true
-            }
-        } else {
-            requireActivity().window.let {
-                it.statusBarColor =
-                    requireContext().getColor(R.color.primaryColor)
-                WindowInsetsControllerCompat(it, it.decorView).isAppearanceLightStatusBars = false
-            }
-        }
-    }
 
     private fun enterEnv() {
-        lightStatusBar(true)
-
-        (requireActivity() as MainActivity).hideNav()
+        updateStatusBar(true)
+        with((requireActivity() as MainActivity)) {
+            hideNav()
+        }
         binding.tabLayout.apply {
             if (isShown) {
                 visibility = View.INVISIBLE
@@ -393,9 +384,10 @@ class TimerFragment : Fragment() {
     }
 
     private fun leaveEnv() {
-        lightStatusBar(false)
-
-        (requireActivity() as MainActivity).showNav()
+        updateStatusBar(false)
+        with((requireActivity() as MainActivity)) {
+            showNav()
+        }
         binding.tabLayout.apply {
             if (!isShown) {
                 visibility = View.VISIBLE
@@ -404,5 +396,29 @@ class TimerFragment : Fragment() {
         binding.timerHost.visibility = View.VISIBLE
         binding.fragmentContainer.visibility = View.INVISIBLE
         parentPager.isUserInputEnabled = true
+    }
+
+    @SuppressLint("WrongConstant")
+    private fun updateStatusBar(status: Boolean) {
+        if (status) {
+            requireActivity().window.let {
+                it.statusBarColor = Color.WHITE
+                with(ViewCompat.getWindowInsetsController(it.decorView)!!) {
+                    isAppearanceLightStatusBars = true
+//                    hide(WindowInsetsCompat.Type.statusBars())
+                }
+            }
+
+
+        } else {
+            requireActivity().window.let {
+                it.statusBarColor =
+                    requireContext().getColor(R.color.primaryColor)
+                with(ViewCompat.getWindowInsetsController(it.decorView)!!) {
+                    isAppearanceLightStatusBars = false
+//                    show(WindowInsetsCompat.Type.statusBars())
+                }
+            }
+        }
     }
 }

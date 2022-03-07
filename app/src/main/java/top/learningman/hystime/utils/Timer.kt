@@ -56,7 +56,7 @@ class Timer constructor(
         isRunning = true
         future = execService.scheduleAtFixedRate({
             try {
-                elapsedTime += interval*10
+                elapsedTime += interval
                 // Log.d("Timer", "onTick $elapsedTime")
                 onTick.invoke(elapsedTime)
                 if (duration > 0) {
