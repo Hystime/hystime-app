@@ -19,7 +19,7 @@ class TimerServiceController(private val context: Context) {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.d("onServiceDisconnected", "Disconnected")
-            binder = null // FIXME: handle service crash
+            binder = null
         }
     }
 

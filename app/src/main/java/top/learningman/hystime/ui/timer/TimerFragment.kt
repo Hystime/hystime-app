@@ -113,7 +113,7 @@ class TimerFragment : Fragment() {
                             }
                         ).fold({
                             Log.d("TimerFragment", "Add time piece success")
-                            // TODO update dashboard
+                            mainViewModel.fetchTarget()
                         }, {
                             Log.e("TimerFragment", "Add time piece failed", it)
                             Toast.makeText(

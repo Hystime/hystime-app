@@ -71,7 +71,7 @@ class TimerFullScreenActivity : AppCompatActivity() {
                 type =
                     intent.getSerializableExtra(Constant.TIMER_FULLSCREEN_INTENT_TYPE_KEY) as TimerViewModel.TimerType
 
-                if (type.isBreak()) { // TODO: also add different string for work
+                if (type.isBreak()) {
                     binding.text.text = getString(R.string.relaxing)
                 }
             } else {

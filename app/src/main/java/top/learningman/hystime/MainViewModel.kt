@@ -73,7 +73,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _snackBarMessage.postValue(null)
     }
 
-    fun fetchTarget(newUser: UserBean?) {
+    fun fetchTarget(newUser: UserBean? = null) {
         if (user.value == null && newUser == null) {
             _error.postValue(Error(context.getString(R.string.user_not_valid)))
             return
