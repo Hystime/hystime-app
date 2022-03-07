@@ -78,6 +78,7 @@ class CountdownFragment : Fragment() {
 
                 binding.exit2.setOnClickListener {
                     timerViewModel.setStatus(WAIT_START)
+                    TimerServiceController.Companion.TimerController.killTimer(requireContext())
                 }
             }
             else -> {}

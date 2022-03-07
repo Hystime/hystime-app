@@ -64,18 +64,11 @@ class TimerFragment : Fragment() {
                     val type =
                         intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType
 
-                    if (remain > 500) { // FIXME: break running has two status with remain > 500
-                        timerViewModel.setStatus(WAIT_START)
-                    } else {
-                        when (intent.getSerializableExtra(Constant.TIMER_BROADCAST_CLEAN_TYPE_EXTRA)!! as TimerViewModel.TimerType) {
-                            NORMAL, POMODORO -> {
-                                Log.d("status", "NORMAL or POMODORO")
-                                timerViewModel.setStatus(WORK_FINISH)
-                            }
-                            NORMAL_BREAK, POMODORO_BREAK -> {
-                                Log.d("status", "NORMAL_BREAK or POMODORO_BREAK")
-                                timerViewModel.setStatus(BREAK_FINISH)
-                            }
+                    if (remain < 500) {
+                        when (timerViewModel.status.value) {
+                            WORK_RUNNING -> timerViewModel.setStatus(WORK_FINISH)
+                            BREAK_RUNNING -> timerViewModel.setStatus(BREAK_FINISH)
+                            else -> {}
                         }
                     }
 
@@ -85,7 +78,7 @@ class TimerFragment : Fragment() {
                     }
 
                     // ignore too short time piece
-                    if (duration < 60) {
+                    if (duration < 59) { // for stop 500ms before
                         Toast.makeText(
                             context,
                             getString(R.string.too_short_time_piece_toast),
