@@ -62,7 +62,7 @@ class HystimeClient(endpoint: String, authCode: String) {
                                     .addHeader("Auth", authCode)
                                     .build()
                                 chain.proceed(request)
-                            }.callTimeout(1000, TimeUnit.MILLISECONDS)
+                            }.callTimeout(5000, TimeUnit.MILLISECONDS)
                             .build()
                     )
                     .addCustomTypeAdapter(CustomType.DATETIME, ScalarAdapter.DateTimeAdapter)
