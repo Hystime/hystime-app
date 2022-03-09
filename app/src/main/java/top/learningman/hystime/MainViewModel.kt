@@ -132,6 +132,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             client.refreshValid().fold({
                 _serverStatus.postValue(Status.SUCCESS)
             }, {
+                Log.e("refreshClient", "Failed to refresh client", it)
                 _serverStatus.postValue(Status.FAILED)
                 _error.postValue(it)
             })

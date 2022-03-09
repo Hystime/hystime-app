@@ -400,23 +400,23 @@ class TimerFragment : Fragment() {
     @SuppressLint("WrongConstant")
     private fun updateStatusBar(status: Boolean) {
         if (status) {
-            requireActivity().window.let {
-                it.statusBarColor = Color.WHITE
-                with(ViewCompat.getWindowInsetsController(it.decorView)!!) {
-                    isAppearanceLightStatusBars = true
-//                    hide(WindowInsetsCompat.Type.statusBars())
+            requireActivity().window.let { window ->
+                window.statusBarColor = Color.WHITE
+                ViewCompat.getWindowInsetsController(window.decorView)?.let {
+                    it.isAppearanceLightStatusBars = true
                 }
             }
 
 
         } else {
-            requireActivity().window.let {
-                it.statusBarColor =
+            requireActivity().window.let { window ->
+                window.statusBarColor =
                     requireContext().getColor(R.color.primaryColor)
-                with(ViewCompat.getWindowInsetsController(it.decorView)!!) {
-                    isAppearanceLightStatusBars = false
-//                    show(WindowInsetsCompat.Type.statusBars())
+                ViewCompat.getWindowInsetsController(window.decorView)?.let {
+                    it.isAppearanceLightStatusBars = false
                 }
+
+
             }
         }
     }
