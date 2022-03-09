@@ -71,8 +71,8 @@ class DashboardFragment : Fragment() {
 
         // Render timepiece
         if (data.hasTimepiece()) {
-            binding.start.text = data.tpStart?.shortFormat()
-            val end = data.tpStart!!.plusSecs(data.tpDuration!!)
+            binding.start.text = data.tpStart!!.shortFormat()
+            val end = data.tpStart.plusSecs(data.tpDuration!!)
             binding.end.text = end.shortFormat()
             binding.duration.text = data.tpDuration.toTime().toString()
             binding.type.text = when (data.tpType) {
