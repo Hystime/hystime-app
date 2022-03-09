@@ -48,15 +48,15 @@ class DashboardFragment : Fragment() {
         binding.todayPomodoro.text = data.todayPomodoroCount.toString()
         binding.totalPomodoro.text = data.pomodoroCount.toString()
 
-        // Inflate ViewStub
-        mapOf(
+        val viewStubs = listOf(
             data.timeSpent to binding.totalFocusLength,
             data.todayTimeSpent to binding.todayFocusLength
-        ).forEach {
-            val time = it.key.toTime()
-            val vs = it.value
-            vs.inflate()
-            val stubBinding = when (vs) {
+        )
+        // Inflate ViewStub
+        viewStubs.forEach { (key, value) ->
+            val time = key.toTime()
+            value.inflate()
+            val stubBinding = when (value) {
                 binding.totalFocusLength -> totalFocusBinding
                 binding.todayFocusLength -> todayFocusBinding
                 else -> throw IllegalArgumentException("Unknown viewStub")

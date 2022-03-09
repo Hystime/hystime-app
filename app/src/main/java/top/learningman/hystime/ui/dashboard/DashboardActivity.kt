@@ -53,7 +53,9 @@ class DashboardActivity : AppCompatActivity() {
                     input.todayTimeSpent,
                     input.timePieces.edges.firstOrNull()?.node?.start,
                     input.timePieces.edges.firstOrNull()?.node?.duration,
-                    TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
+                    TimePieceBean.TimePieceType.valueOf(
+                        input.timePieces.edges.firstOrNull()?.node?.type?.toString() ?: "NORMAL"
+                    ),
                     Type.USER,
                     input.timePieces.edges.firstOrNull()?.node?.target?.id,
                     input.timePieces.edges.firstOrNull()?.node?.target?.name,
@@ -74,7 +76,9 @@ class DashboardActivity : AppCompatActivity() {
                     input.todayTimeSpent,
                     input.timePieces.edges.firstOrNull()?.node?.start,
                     input.timePieces.edges.firstOrNull()?.node?.duration,
-                    TimePieceBean.TimePieceType.valueOf(input.timePieces.edges.firstOrNull()?.node?.type.toString()),
+                    TimePieceBean.TimePieceType.valueOf(
+                        input.timePieces.edges.firstOrNull()?.node?.type?.toString() ?: "NORMAL"
+                    ),
                     Type.TARGET,
                     targetId,
                     null,

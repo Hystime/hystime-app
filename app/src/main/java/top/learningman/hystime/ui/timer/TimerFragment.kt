@@ -406,8 +406,6 @@ class TimerFragment : Fragment() {
                     it.isAppearanceLightStatusBars = true
                 }
             }
-
-
         } else {
             requireActivity().window.let { window ->
                 window.statusBarColor =
@@ -415,8 +413,6 @@ class TimerFragment : Fragment() {
                 ViewCompat.getWindowInsetsController(window.decorView)?.let {
                     it.isAppearanceLightStatusBars = false
                 }
-
-
             }
         }
     }
