@@ -1,11 +1,14 @@
 package top.learningman.hystime.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.res.Resources
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import top.learningman.hystime.R
+import top.learningman.hystime.repo.StringRepo
 import java.util.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -45,7 +48,7 @@ fun Activity.slideExitAnimation() {
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 }
 
-fun Date.plusSecs(time: Int): Date {
+fun Date.plusSec(time: Int): Date {
     val cal = Calendar.getInstance()
     cal.time = this
     cal.add(Calendar.SECOND, time)
@@ -81,10 +84,20 @@ fun Date.monthStr(): String {
     return cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)!!
 }
 
-fun Date.shortFormat(): String {
+fun Date.timeShortFormat(): String {
     val cal = Calendar.getInstance()
     cal.time = this
     return "%02d:%02d".format(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
+}
+
+fun Date.dateShortFormat(): String {
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return "${cal.get(Calendar.MONTH) + 1}${StringRepo.getString(R.string.month)}${cal.get(Calendar.DAY_OF_MONTH)}${
+        StringRepo.getString(
+            R.string.date
+        )
+    }"
 }
 
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
@@ -119,3 +132,12 @@ class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Frag
  * Creates an [AutoClearedValue] associated with this fragment.
  */
 fun <T : Any> Fragment.autoCleared() = AutoClearedValue<T>(this)
+
+
+fun getEditable(str: String): Editable {
+    return Editable.Factory.getInstance().newEditable(str)
+}
+
+fun enableBackButton(context: Context){
+
+}

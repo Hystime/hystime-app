@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import top.learningman.hystime.R
@@ -152,6 +153,7 @@ class DashboardActivity : AppCompatActivity() {
                         return@launch
                     })
                     supportFragmentManager.beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, DashboardFragment().apply {
                             arguments = Bundle().apply {
                                 putSerializable(

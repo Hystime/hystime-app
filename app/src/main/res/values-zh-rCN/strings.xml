@@ -92,4 +92,6 @@
     <string name="break_finish_hint">准备开始专注</string>
     <string name="work_start">开始专注</string>
     <string name="msg_login_first">请先登录。</string>
+    <string name="month">月</string>
+    <string name="date">日</string>
 </resources>

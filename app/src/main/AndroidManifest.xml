@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hystime">
         <activity
+            android:name=".ui.dashboard.TimePieceActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Hystime.Actionbar" />
+        <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Hystime.Actionbar" />

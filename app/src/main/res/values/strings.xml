@@ -143,6 +143,8 @@
     <string name="work_finish_hint">Just finish a time piece!</string>
     <string name="break_finish_hint">Ready to start focusing</string>
     <string name="msg_login_first">You should login before do this.</string>
+    <string name="month">Month</string>
+    <string name="date">Date</string>
 
 
 </resources>

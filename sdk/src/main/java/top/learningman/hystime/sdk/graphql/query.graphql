@@ -53,6 +53,7 @@ query UserTimePieces($username: String!, $first: Int!, $after: String) {
             totalCount
             edges {
                 node {
+                    id
                     start
                     duration
                     type

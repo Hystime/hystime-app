@@ -22,6 +22,7 @@ import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.utils.Interface
 import top.learningman.hystime.utils.Status
+import top.learningman.hystime.utils.getEditable
 import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
 
@@ -50,7 +51,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         toolbar.inflateMenu(R.menu.dashboard_toolbar_menu)
         toolbar.setOnMenuItemClickListener { item ->
             if (viewModel.userStatus.value != Status.SUCCESS) {
-               viewModel.showSnackBarMessage(getString(R.string.msg_login_first))
+                viewModel.showSnackBarMessage(getString(R.string.msg_login_first))
                 return@setOnMenuItemClickListener true
             }
             return@setOnMenuItemClickListener when (item.itemId) {
@@ -167,8 +168,8 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
 
     private fun add() {
         val binding = DialogAddTargetBinding.inflate(layoutInflater, null, false).apply {
-            hour.text = Editable.Factory.getInstance().newEditable("0")
-            minute.text = Editable.Factory.getInstance().newEditable("0")
+            hour.text = getEditable("0")
+            minute.text = getEditable("0")
 
             val array = resources.getStringArray(R.array.target_type)
             Log.d("TargetType", array.toString())
@@ -177,7 +178,7 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 android.R.layout.simple_spinner_dropdown_item,
                 array
             )
-            type.text = Editable.Factory.getInstance().newEditable(array[0])
+            type.text = getEditable(array[0])
             type.setAdapter(adapter)
         }
         AlertDialog.Builder(requireContext())

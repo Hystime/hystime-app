@@ -1,5 +1,6 @@
 package top.learningman.hystime.ui.dashboard.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,11 +16,15 @@ import top.learningman.hystime.databinding.FragmentDashboardBinding
 import top.learningman.hystime.databinding.WidgetDashboardHourminTextBinding
 import top.learningman.hystime.repo.StringRepo
 import top.learningman.hystime.ui.dashboard.DashboardActivity
+import top.learningman.hystime.ui.dashboard.TimePieceActivity
 import top.learningman.hystime.utils.autoCleared
-import top.learningman.hystime.utils.plusSecs
-import top.learningman.hystime.utils.shortFormat
+import top.learningman.hystime.utils.dateShortFormat
+import top.learningman.hystime.utils.plusSec
+import top.learningman.hystime.utils.timeShortFormat
 
 class DashboardFragment : Fragment() {
+
+    private lateinit var data: DashboardActivity.Statistic
 
     private var binding: FragmentDashboardBinding by autoCleared()
     private var todayFocusBinding: WidgetDashboardHourminTextBinding by autoCleared()
@@ -36,14 +41,8 @@ class DashboardFragment : Fragment() {
         binding.totalFocusLength.setOnInflateListener { _, inflated ->
             totalFocusBinding = WidgetDashboardHourminTextBinding.bind(inflated)
         }
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d("DashboardFragment", "onViewCreated")
-
-        val data =
+        data =
             requireArguments().getSerializable(FRAGMENT_DATA_KEY) as DashboardActivity.Statistic
         binding.todayPomodoro.text = data.todayPomodoroCount.toString()
         binding.totalPomodoro.text = data.pomodoroCount.toString()
@@ -71,10 +70,11 @@ class DashboardFragment : Fragment() {
 
         // Render timepiece
         if (data.hasTimepiece()) {
-            binding.start.text = data.tpStart!!.shortFormat()
-            val end = data.tpStart.plusSecs(data.tpDuration!!)
-            binding.end.text = end.shortFormat()
-            binding.duration.text = data.tpDuration.toTime().toString()
+            binding.start.text = data.tpStart!!.timeShortFormat()
+            binding.date.text = data.tpStart!!.dateShortFormat()
+            val end = data.tpStart!!.plusSec(data.tpDuration!!)
+            binding.end.text = end.timeShortFormat()
+            binding.duration.text = data.tpDuration!!.toTime().toString()
             binding.type.text = when (data.tpType) {
                 NORMAL -> StringRepo.getString(R.string.normal)
                 POMODORO -> StringRepo.getString(R.string.pomodoro)
@@ -85,11 +85,31 @@ class DashboardFragment : Fragment() {
                 binding.target.visibility = View.VISIBLE
                 binding.target.text = data.tpTargetName
             }
+
+            binding.timepieceButton.setOnClickListener {
+                val intent = Intent(requireContext(), TimePieceActivity::class.java)
+                val bundle = Bundle().apply {
+                    putSerializable(TimePieceActivity.BUNDLE_TYPE_KEY, data.type)
+                    putString(TimePieceActivity.BUNDLE_USERNAME_KEY, data.username)
+                    putString(TimePieceActivity.BUNDLE_TARGET_ID_KEY, data.tpTargetId)
+                }
+                intent.putExtra(TimePieceActivity.INTENT_BUNDLE_KEY, bundle)
+                startActivity(intent)
+            }
+
+
         } else {
             binding.timepieceButton.visibility = View.GONE
             binding.timepiece.visibility = View.GONE
             binding.placeholderTimepiece.visibility = View.VISIBLE
         }
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("DashboardFragment", "onViewCreated")
 
         // Render heatmap
         binding.heatmap.setData(data.heatMap)
@@ -114,9 +134,9 @@ class DashboardFragment : Fragment() {
 
             override fun toString(): String {
                 return if (minuteOnly()) {
-                    "$minute ${StringRepo.getString(R.string.minute)}"
+                    "$minute${StringRepo.getString(R.string.minute)}"
                 } else {
-                    "$hour ${StringRepo.getString(R.string.hour)} $minute ${StringRepo.getString(R.string.minute)}"
+                    "$hour${StringRepo.getString(R.string.hour)}$minute${StringRepo.getString(R.string.minute)}"
                 }
             }
         }

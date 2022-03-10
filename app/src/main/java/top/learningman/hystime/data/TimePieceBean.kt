@@ -1,6 +1,7 @@
 package top.learningman.hystime.data
 
 import TimePieceCreateMutation
+import UserTimePiecesQuery
 import java.util.*
 
 data class TimePieceBean(
@@ -11,7 +12,13 @@ data class TimePieceBean(
 ) {
     enum class TimePieceType(s: String) {
         NORMAL("NORMAL"),
-        POMODORO("POMODORO")
+        POMODORO("POMODORO");
+
+        companion object{
+            fun fromString(s: String): TimePieceType {
+                return valueOf(s)
+            }
+        }
     }
 
     companion object {

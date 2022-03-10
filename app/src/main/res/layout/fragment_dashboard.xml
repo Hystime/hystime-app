@@ -136,7 +136,7 @@
                                 android:id="@+id/date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
+                                android:layout_marginEnd="12dp"
                                 android:text="@string/default_date" />
 
                             <com.google.android.material.textview.MaterialTextView
@@ -157,7 +157,7 @@
                                 android:id="@+id/end"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="16dp"
+                                android:layout_marginEnd="12dp"
                                 android:text="@string/default_time" />
 
                             <com.google.android.material.textview.MaterialTextView
