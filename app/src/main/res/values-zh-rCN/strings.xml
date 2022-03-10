@@ -91,4 +91,5 @@
     <string name="work_finish_hint">刚刚完成了一个时间片</string>
     <string name="break_finish_hint">准备开始专注</string>
     <string name="work_start">开始专注</string>
+    <string name="msg_login_first">请先登录。</string>
 </resources>

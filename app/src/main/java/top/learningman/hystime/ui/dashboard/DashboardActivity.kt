@@ -95,7 +95,7 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (savedInstanceState == null) {
-            loadFragment()
+            loadListFragment()
         }
     }
 
@@ -109,20 +109,7 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFragment() {
-        fun switchFragment(data: Statistic) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, DashboardFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(
-                            DashboardFragment.FRAGMENT_DATA_KEY,
-                            data
-                        )
-                    }
-                })
-                .commitNow()
-        }
-
+    private fun loadListFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, LoadingFragment {
                 lifecycleScope.launch {
@@ -130,31 +117,28 @@ class DashboardActivity : AppCompatActivity() {
                     var data: Statistic? = null
                     val type = intent.getSerializableExtra(TYPE_KEY) as Type
 
+                    val targetId = intent.getStringExtra(TARGET_ID_KEY)
+                    val username = intent.getStringExtra(USER_NAME_KEY)
+                    val targetName = intent.getStringExtra(TARGET_NAME_KEY)
+
                     when (type) {
                         Type.USER -> {
-                            val username = intent.getStringExtra(USER_NAME_KEY)
                             supportActionBar?.title = username
                             client.getUserStatistic(username!!)
                         }
                         Type.TARGET -> {
-                            val targetId = intent.getStringExtra(TARGET_ID_KEY)
-                            val username = intent.getStringExtra(USER_NAME_KEY)
-                            val targetName = intent.getStringExtra(TARGET_NAME_KEY)
                             supportActionBar?.title = targetName
                             client.getTargetStatistic(username!!, targetId!!)
                         }
                     }.fold({
                         data = when (type) {
                             Type.USER -> {
-                                val username = intent.getStringExtra(USER_NAME_KEY)!!
                                 Statistic.fromUser(username, it as UserStatisticQuery.User)
                             }
                             Type.TARGET -> {
-                                val targetId = intent.getStringExtra(TARGET_ID_KEY)!!
-                                val username = intent.getStringExtra(USER_NAME_KEY)!!
                                 Statistic.fromTarget(
                                     username,
-                                    targetId,
+                                    targetId!!,
                                     it as TargetStatisticQuery.Target
                                 )
                             }
@@ -167,7 +151,16 @@ class DashboardActivity : AppCompatActivity() {
                         finish()
                         return@launch
                     })
-                    switchFragment(data!!)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, DashboardFragment().apply {
+                            arguments = Bundle().apply {
+                                putSerializable(
+                                    DashboardFragment.FRAGMENT_DATA_KEY,
+                                    data
+                                )
+                            }
+                        })
+                        .commitNow()
                 }
             })
             .commitNow()

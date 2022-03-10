@@ -118,6 +118,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     _user.postValue(null)
                     _userStatus.postValue(Status.FAILED)
                     _error.postValue(it)
+                    _targets.postValue(emptyList())
                 }
             }
         }

@@ -85,16 +85,14 @@ class DashboardFragment : Fragment() {
                 binding.target.visibility = View.VISIBLE
                 binding.target.text = data.tpTargetName
             }
-
         } else {
+            binding.timepieceButton.visibility = View.GONE
             binding.timepiece.visibility = View.GONE
             binding.placeholderTimepiece.visibility = View.VISIBLE
         }
 
         // Render heatmap
         binding.heatmap.setData(data.heatMap)
-
-
 
         binding.heatmap.doOnLayout {
             binding.scroll.isSmoothScrollingEnabled = false

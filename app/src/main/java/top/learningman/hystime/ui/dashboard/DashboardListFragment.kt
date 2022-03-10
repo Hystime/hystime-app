@@ -21,6 +21,7 @@ import top.learningman.hystime.databinding.FragmentDashboardListBinding
 import top.learningman.hystime.databinding.ItemDashboardTargetBinding
 import top.learningman.hystime.repo.SharedPrefRepo
 import top.learningman.hystime.utils.Interface
+import top.learningman.hystime.utils.Status
 import top.learningman.hystime.utils.toSafeInt
 import type.TargetType
 
@@ -48,6 +49,10 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
         toolbar.setTitle(R.string.title_dashboard)
         toolbar.inflateMenu(R.menu.dashboard_toolbar_menu)
         toolbar.setOnMenuItemClickListener { item ->
+            if (viewModel.userStatus.value != Status.SUCCESS) {
+               viewModel.showSnackBarMessage(getString(R.string.msg_login_first))
+                return@setOnMenuItemClickListener true
+            }
             return@setOnMenuItemClickListener when (item.itemId) {
                 R.id.refresh -> {
                     refresh()
@@ -85,7 +90,6 @@ class DashboardListFragment : Fragment(), Interface.RefreshableFragment {
                 )
             }
             // TODO: design a diff algorithm
-
         }
 
         return root
